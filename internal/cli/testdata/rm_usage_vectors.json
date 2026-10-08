@@ -1,0 +1,308 @@
+[
+ {
+  "args": [
+   "rm"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm [-h]\n                 {skill,skills,subagent,subagents,mcp,mcps,memory,inbox} ...\naikito rm: error: the following arguments are required: rm_target\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "skill"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm skill [-h] [--project PROJECT] [--sync] [--force] name\naikito rm skill: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "skills"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm skill [-h] [--project PROJECT] [--sync] [--force] name\naikito rm skill: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "subagent"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm subagent [-h] [--sync] name\naikito rm subagent: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "subagents"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm subagent [-h] [--sync] name\naikito rm subagent: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "mcp"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm mcp [-h] [--sync] [--force] name\naikito rm mcp: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "mcps"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm mcp [-h] [--sync] [--force] name\naikito rm mcp: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "memory"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm memory [-h] target\naikito rm memory: error: the following arguments are required: target\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "inbox"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm inbox [-h] target\naikito rm inbox: error: the following arguments are required: target\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "bogus"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm [-h]\n                 {skill,skills,subagent,subagents,mcp,mcps,memory,inbox} ...\naikito rm: error: argument rm_target: invalid choice: 'bogus' (choose from skill, skills, subagent, subagents, mcp, mcps, memory, inbox)\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "skill",
+   "a",
+   "b"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: b\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "mcp",
+   "--bogus",
+   "x"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --bogus\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "memory",
+   "--sync",
+   "x"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --sync\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "subagent",
+   "--sy"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm subagent [-h] [--sync] name\naikito rm subagent: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "skill",
+   "--project"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito rm skill [-h] [--project PROJECT] [--sync] [--force] name\naikito rm skill: error: argument --project: expected one argument\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "rm",
+   "inbox",
+   "a",
+   "b"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: b\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove [-h]\n                     {skill,skills,subagent,subagents,mcp,mcps,memory,inbox} ...\naikito remove: error: the following arguments are required: remove_target\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "skill"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove skill [-h] [--project PROJECT] [--sync] [--force] name\naikito remove skill: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "skills"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove skill [-h] [--project PROJECT] [--sync] [--force] name\naikito remove skill: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "subagent"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove subagent [-h] [--sync] name\naikito remove subagent: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "subagents"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove subagent [-h] [--sync] name\naikito remove subagent: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "mcp"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove mcp [-h] [--sync] [--force] name\naikito remove mcp: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "mcps"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove mcp [-h] [--sync] [--force] name\naikito remove mcp: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "memory"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove memory [-h] target\naikito remove memory: error: the following arguments are required: target\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "inbox"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove inbox [-h] target\naikito remove inbox: error: the following arguments are required: target\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "bogus"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove [-h]\n                     {skill,skills,subagent,subagents,mcp,mcps,memory,inbox} ...\naikito remove: error: argument remove_target: invalid choice: 'bogus' (choose from skill, skills, subagent, subagents, mcp, mcps, memory, inbox)\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "skill",
+   "a",
+   "b"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: b\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "mcp",
+   "--bogus",
+   "x"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --bogus\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "memory",
+   "--sync",
+   "x"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --sync\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "subagent",
+   "--sy"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove subagent [-h] [--sync] name\naikito remove subagent: error: the following arguments are required: name\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "skill",
+   "--project"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito remove skill [-h] [--project PROJECT] [--sync] [--force] name\naikito remove skill: error: argument --project: expected one argument\n",
+  "exit": 2
+ },
+ {
+  "args": [
+   "remove",
+   "inbox",
+   "a",
+   "b"
+  ],
+  "stdout": "",
+  "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: b\n",
+  "exit": 2
+ }
+]

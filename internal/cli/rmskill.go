@@ -16,14 +16,14 @@ import (
 )
 
 // cmdRmSkill ports cli.py cmd_rm_skill and remove.py remove_skill.
-func cmdRmSkill(args []string, stdout, stderr io.Writer, env Environment) int {
-	parsed, ok := parseArgparseOpts("rm skill", args, []string{"--sync", "--force"}, []string{"--project"}, nil, 1, stderr)
+func cmdRmSkill(verb string, args []string, stdout, stderr io.Writer, env Environment) int {
+	path := verb + " skill"
+	parsed, ok := parseArgparseOpts(path, args, []string{"--sync", "--force"}, []string{"--project"}, nil, 1, stderr)
 	if !ok {
 		return 2
 	}
 	if len(parsed.positionals) == 0 {
-		fmt.Fprintf(stderr, "%saikito rm skill: error: the following arguments are required: name\n", subcommandUsage("rm skill"))
-		return 2
+		return argparseRequired(stderr, path, "name")
 	}
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {

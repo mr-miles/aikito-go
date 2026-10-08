@@ -105,8 +105,6 @@ Each of these says so when used, rather than being silently ignored:
 
 - **TOML parse errors** (for example a broken `agent.toml`) are reported
   with Go's TOML library's wording rather than Python's `tomllib` wording.
-- **`remove skill` usage errors** show `rm skill` in the usage line (the
-  two spellings share one handler).
 - **Bundled skill file modes.** `init workspace` writes the bundled skills'
   files as 0644. Python copies the installed package's file modes, which
   depend on how it was installed.

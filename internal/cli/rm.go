@@ -15,49 +15,43 @@ import (
 
 // cmdRm dispatches `aikito rm|remove <target> ...`, ported from
 // remove.py/cli.py's cmd_rm_* family.
-func cmdRm(args []string, stdout, stderr io.Writer, env Environment) int {
+// verb is "rm" or "remove", the spelling the user typed: argparse names it
+// in every usage and error line.
+func cmdRm(verb string, args []string, stdout, stderr io.Writer, env Environment) int {
+	choices := "skill, skills, subagent, subagents, mcp, mcps, memory, inbox"
 	if len(args) == 0 {
-		fmt.Fprintln(stderr, "usage: aikito rm skill|subagent|mcp|memory|inbox ...")
-		return 2
+		return argparseRequired(stderr, verb, verb+"_target")
 	}
 	switch args[0] {
 	case "skill", "skills":
-		return cmdRmSkill(args[1:], stdout, stderr, env)
+		return cmdRmSkill(verb, args[1:], stdout, stderr, env)
 	case "subagent", "subagents":
-		return cmdRmSubagent(args[1:], stdout, stderr, env)
+		return cmdRmSubagent(verb, args[1:], stdout, stderr, env)
 	case "mcp", "mcps":
-		return cmdRmMCP(args[1:], stdout, stderr, env)
+		return cmdRmMCP(verb, args[1:], stdout, stderr, env)
 	case "memory":
-		return cmdRmMemory(args[1:], stdout, stderr, env)
+		return cmdRmMemory(verb, args[1:], stdout, stderr, env)
 	case "inbox":
-		return cmdRmInbox(args[1:], stdout, stderr, env)
+		return cmdRmInbox(verb, args[1:], stdout, stderr, env)
 	default:
-		fmt.Fprintf(stderr, "[ERROR] Unknown rm target: %s\n", args[0])
-		return 2
+		return argparseSubError(stderr, verb, fmt.Sprintf(
+			"argument %s_target: invalid choice: '%s' (choose from %s)", verb, args[0], choices))
 	}
 }
 
 // --- rm subagent ---
 
-func cmdRmSubagent(args []string, stdout, stderr io.Writer, env Environment) int {
-	var name string
-	var syncFlag bool
-	var positional []string
-	for i := 0; i < len(args); i++ {
-		a := args[i]
-		switch {
-		case a == "--sync":
-			syncFlag = true
-		case strings.HasPrefix(a, "-"):
-			fmt.Fprintf(stderr, "[ERROR] Unknown flag: %s\n", a)
-			return 2
-		default:
-			positional = append(positional, a)
-		}
+func cmdRmSubagent(verb string, args []string, stdout, stderr io.Writer, env Environment) int {
+	path := verb + " subagent"
+	parsed, ok := parseArgparseOpts(path, args, []string{"--sync"}, nil, nil, 1, stderr)
+	if !ok {
+		return 2
 	}
-	if len(positional) > 0 {
-		name = positional[0]
+	if len(parsed.positionals) == 0 {
+		return argparseRequired(stderr, path, "name")
 	}
+	name := parsed.positionals[0]
+	syncFlag := parsed.flags["--sync"]
 
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {
@@ -104,27 +98,17 @@ func cmdRmSubagent(args []string, stdout, stderr io.Writer, env Environment) int
 
 // --- rm mcp ---
 
-func cmdRmMCP(args []string, stdout, stderr io.Writer, env Environment) int {
-	var name string
-	var syncFlag, force bool
-	var positional []string
-	for i := 0; i < len(args); i++ {
-		a := args[i]
-		switch {
-		case a == "--sync":
-			syncFlag = true
-		case a == "--force":
-			force = true
-		case strings.HasPrefix(a, "-"):
-			fmt.Fprintf(stderr, "[ERROR] Unknown flag: %s\n", a)
-			return 2
-		default:
-			positional = append(positional, a)
-		}
+func cmdRmMCP(verb string, args []string, stdout, stderr io.Writer, env Environment) int {
+	path := verb + " mcp"
+	parsed, ok := parseArgparseOpts(path, args, []string{"--sync", "--force"}, nil, nil, 1, stderr)
+	if !ok {
+		return 2
 	}
-	if len(positional) > 0 {
-		name = positional[0]
+	if len(parsed.positionals) == 0 {
+		return argparseRequired(stderr, path, "name")
 	}
+	name := parsed.positionals[0]
+	syncFlag, force := parsed.flags["--sync"], parsed.flags["--force"]
 
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {
@@ -194,12 +178,16 @@ func cmdRmMCP(args []string, stdout, stderr io.Writer, env Environment) int {
 // warns about them (memory_runtime.py's wikilink index, not ported). This
 // build removes the file and skips that scan — a real, documented gap, not
 // a silent one.
-func cmdRmMemory(args []string, stdout, stderr io.Writer, env Environment) int {
-	if len(args) == 0 {
-		fmt.Fprintln(stderr, "[ERROR] Usage: aikito rm memory <target>")
+func cmdRmMemory(verb string, args []string, stdout, stderr io.Writer, env Environment) int {
+	cmdPath := verb + " memory"
+	parsed, ok := parseArgparseOpts(cmdPath, args, nil, nil, nil, 1, stderr)
+	if !ok {
 		return 2
 	}
-	target := args[0]
+	if len(parsed.positionals) == 0 {
+		return argparseRequired(stderr, cmdPath, "target")
+	}
+	target := parsed.positionals[0]
 
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {
@@ -262,12 +250,16 @@ func cmdRmMemory(args []string, stdout, stderr io.Writer, env Environment) int {
 
 // --- rm inbox ---
 
-func cmdRmInbox(args []string, stdout, stderr io.Writer, env Environment) int {
-	if len(args) == 0 {
-		fmt.Fprintln(stderr, "[ERROR] Usage: aikito rm inbox <target>")
+func cmdRmInbox(verb string, args []string, stdout, stderr io.Writer, env Environment) int {
+	cmdPath := verb + " inbox"
+	parsed, ok := parseArgparseOpts(cmdPath, args, nil, nil, nil, 1, stderr)
+	if !ok {
 		return 2
 	}
-	target := args[0]
+	if len(parsed.positionals) == 0 {
+		return argparseRequired(stderr, cmdPath, "target")
+	}
+	target := parsed.positionals[0]
 
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {

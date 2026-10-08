@@ -90,3 +90,15 @@ func parseArgparse(path string, args []string, flags []string, maxPositional int
 	}
 	return res, true
 }
+
+// argparseSubError prints argparse's error for the subparser at path
+// (e.g. "remove skill"): its usage block, then "aikito <path>: error: msg".
+func argparseSubError(stderr io.Writer, path, msg string) int {
+	fmt.Fprintf(stderr, "%saikito %s: error: %s\n", subcommandUsage(path), path, msg)
+	return 2
+}
+
+// argparseRequired is argparse's missing-positional error.
+func argparseRequired(stderr io.Writer, path string, names ...string) int {
+	return argparseSubError(stderr, path, "the following arguments are required: "+strings.Join(names, ", "))
+}

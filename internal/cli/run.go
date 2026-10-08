@@ -45,7 +45,7 @@ func Run(args []string, stdin io.Reader, stdout, stderr io.Writer, env Environme
 	case "edit":
 		return cmdEdit(args[1:], stdout, stderr, env)
 	case "rm", "remove":
-		return cmdRm(args[1:], stdout, stderr, env)
+		return cmdRm(args[0], args[1:], stdout, stderr, env)
 	case "diff":
 		return cmdDiff(args[1:], stdout, stderr, env)
 	case "auth":
