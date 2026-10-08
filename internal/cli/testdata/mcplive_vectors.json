@@ -1,0 +1,242 @@
+{
+ "live": {
+  "commands": [
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--live"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+------------+-------------+-------+\n| MCP Server | Claude Code | Codex |\n+------------+-------------+-------+\n| broken     | ! E         | ! E   |\n| noversion  | -           | ! E   |\n| toolbox    | 3           | 3     |\n+------------+-------------+-------+\n\nLegend: v synced * - n/a * 0 none * ! M missing * ! C conflict * ! D drift * ! E error\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcps",
+     "--live",
+     "--color",
+     "always"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "┌────────────┬─────────────┬───────┐\n\u001b[1m│ MCP Server │ Claude Code │ Codex │\u001b[0m\n├────────────┼─────────────┼───────┤\n│ broken     │ \u001b[31m⚠ E\u001b[0m         │ \u001b[31m⚠ E\u001b[0m   │\n│ noversion  │ \u001b[2m–\u001b[0m           │ \u001b[31m⚠ E\u001b[0m   │\n│ toolbox    │ \u001b[32m3\u001b[0m           │ \u001b[32m3\u001b[0m     │\n└────────────┴─────────────┴───────┘\n\n\u001b[2mLegend: ✓ synced · – n/a · 0 none · ⚠ M missing · ⚠ C conflict · ⚠ D drift · ⚠ E error\u001b[0m\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "toolbox",
+     "--live"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  toolbox\nCanonical source:  H/aikito/mcps/toolbox.toml\n\n+-------------+---------+-------------+-------+\n| Agent       | Connect | Auth method | Tools |\n+-------------+---------+-------------+-------+\n| Claude Code | v       | None        | 3     |\n| Codex       | v       | None        | 3     |\n+-------------+---------+-------------+-------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "tool",
+     "--live",
+     "--agent",
+     "codex"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  toolbox\nCanonical source:  H/aikito/mcps/toolbox.toml\n\n+-------+---------+-------------+-------+\n| Agent | Connect | Auth method | Tools |\n+-------+---------+-------------+-------+\n| Codex | v       | None        | 3     |\n+-------+---------+-------------+-------+\n\nTools (3):\n- alpha\n- beta\n- gamma\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "toolbox",
+     "--live",
+     "--agent"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  toolbox\nCanonical source:  H/aikito/mcps/toolbox.toml\n\n+-------------+---------+-------------+-------+\n| Agent       | Connect | Auth method | Tools |\n+-------------+---------+-------------+-------+\n| Claude Code | v       | None        | 3     |\n| Codex       | v       | None        | 3     |\n+-------------+---------+-------------+-------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "broken",
+     "--live"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  broken\nCanonical source:  H/aikito/mcps/broken.toml\n\n+-------------+---------+-------------+-------+\n| Agent       | Connect | Auth method | Tools |\n+-------------+---------+-------------+-------+\n| Claude Code | ! E     | None        | -     |\n| Codex       | ! E     | None        | -     |\n+-------------+---------+-------------+-------+\n\nLegend: v synced * - n/a * 0 none * ! M missing * ! C conflict * ! D drift * ! E error\n\n[ERROR] Claude Code: HTTP 400: bad fixture request\n[ERROR] Codex: HTTP 400: bad fixture request\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "noversion",
+     "--live",
+     "--agent",
+     "cod"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  noversion\nCanonical source:  H/aikito/mcps/noversion.toml\n\n+-------+---------+-------------+-------+\n| Agent | Connect | Auth method | Tools |\n+-------+---------+-------------+-------+\n| Codex | ! E     | None        | -     |\n+-------+---------+-------------+-------+\n\nLegend: v synced * - n/a * 0 none * ! M missing * ! C conflict * ! D drift * ! E error\n\n[ERROR] Codex: MCP initialize response has no protocol version\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "noversion",
+     "--live",
+     "--agent",
+     "claude-code"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] No MCP configuration found for 'noversion/claude-code'\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "toolbox",
+     "--live",
+     "--no-color"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  toolbox\nCanonical source:  H/aikito/mcps/toolbox.toml\n\n+-------------+---------+-------------+-------+\n| Agent       | Connect | Auth method | Tools |\n+-------------+---------+-------------+-------+\n| Claude Code | v       | None        | 3     |\n| Codex       | v       | None        | 3     |\n+-------------+---------+-------------+-------+\n"
+   }
+  ],
+  "setup": [
+   [
+    "mkdir",
+    ".claude"
+   ],
+   [
+    "mkdir",
+    ".codex"
+   ],
+   [
+    "cli",
+    "init",
+    "workspace"
+   ],
+   [
+    "cli",
+    "sync",
+    "global"
+   ],
+   [
+    "cli",
+    "add",
+    "mcp",
+    "toolbox",
+    "--transport",
+    "remote",
+    "--url",
+    "{URL}/mcp",
+    "--agents",
+    "claude-code,codex"
+   ],
+   [
+    "cli",
+    "add",
+    "mcp",
+    "broken",
+    "--transport",
+    "remote",
+    "--url",
+    "{URL}/broken",
+    "--agents",
+    "claude-code,codex"
+   ],
+   [
+    "cli",
+    "add",
+    "mcp",
+    "noversion",
+    "--transport",
+    "remote",
+    "--url",
+    "{URL}/noversion",
+    "--agents",
+    "codex"
+   ],
+   [
+    "cli",
+    "sync",
+    "mcp"
+   ]
+  ]
+ },
+ "live_drifted": {
+  "commands": [
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--live"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+------------+-------------+-------+\n| MCP Server | Claude Code | Codex |\n+------------+-------------+-------+\n| toolbox    | ! D         | 3     |\n+------------+-------------+-------+\n\nLegend: v synced * - n/a * 0 none * ! M missing * ! C conflict * ! D drift * ! E error\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "toolbox",
+     "--live"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  toolbox\nCanonical source:  H/aikito/mcps/toolbox.toml\n\n+-------------+---------+-------------+-------+\n| Agent       | Connect | Auth method | Tools |\n+-------------+---------+-------------+-------+\n| Claude Code | v       | None        | 3     |\n| Codex       | v       | None        | 3     |\n+-------------+---------+-------------+-------+\n"
+   }
+  ],
+  "setup": [
+   [
+    "mkdir",
+    ".claude"
+   ],
+   [
+    "mkdir",
+    ".codex"
+   ],
+   [
+    "cli",
+    "init",
+    "workspace"
+   ],
+   [
+    "cli",
+    "sync",
+    "global"
+   ],
+   [
+    "cli",
+    "add",
+    "mcp",
+    "toolbox",
+    "--transport",
+    "remote",
+    "--url",
+    "{URL}/mcp",
+    "--agents",
+    "claude-code,codex"
+   ],
+   [
+    "cli",
+    "sync",
+    "mcp"
+   ],
+   [
+    "edit_json",
+    ".claude.json",
+    "mcpServers.toolbox.url",
+    "{URL}/elsewhere"
+   ]
+  ]
+ }
+}

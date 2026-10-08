@@ -11,14 +11,13 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
+	"github.com/mr-miles/aikito-go/internal/mcp"
 	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/registry"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
-// cmdShow ports cli_show.py. Not implemented yet: `show mcp --live` and the
-// `--agent` detail views of `show mcp` / `show subagents`, which say so
-// rather than being ignored.
+// cmdShow ports cli_show.py.
 func cmdShow(args []string, stdout, stderr io.Writer, env Environment) int {
 	if len(args) == 0 {
 		fmt.Fprintln(stderr, "[ERROR] Usage: aikito show <project|skill|instructions|mcp|subagent|inbox|memory> [target]")
@@ -73,6 +72,7 @@ type showArgs struct {
 	noColor              bool
 	agentSet, live       bool
 	agent                string
+	agentHasValue        bool // --agent VALUE; Python's bare --agent is True, not a string
 	projectSet, all      bool
 	project              string
 	exclusiveErr         string // argparse mutually exclusive group error
@@ -105,9 +105,11 @@ func parseShowArgs(kind string, args []string) (showArgs, []string, bool) {
 			sa.noColor = true
 		case allowAgent && a == "--agent":
 			sa.agentSet = true
+			j := i
 			sa.agent, i = optionalValue(i)
+			sa.agentHasValue = i != j
 		case allowAgent && strings.HasPrefix(a, "--agent="):
-			sa.agentSet, sa.agent = true, strings.TrimPrefix(a, "--agent=")
+			sa.agentSet, sa.agentHasValue, sa.agent = true, true, strings.TrimPrefix(a, "--agent=")
 		case allowLive && a == "--live":
 			sa.live = true
 		case allowMemory && a == "--project":
@@ -751,8 +753,9 @@ func mcpNames(aikitoDir string) ([]string, error) {
 	return names, nil
 }
 
-// collectMCPMatrix ports status.py collect_mcp_matrix (without --live).
-func collectMCPMatrix(c *inspectionContext) ([]subagentRow, []string, error) {
+// collectMCPMatrix ports status.py collect_mcp_matrix. With live, servers
+// already in sync are probed and shown as "OK (<tools>)" or "ERROR".
+func collectMCPMatrix(c *inspectionContext, live bool) ([]subagentRow, []string, error) {
 	reg, _, err := c.agents()
 	if err != nil {
 		return nil, nil, err
@@ -781,6 +784,24 @@ func collectMCPMatrix(c *inspectionContext) ([]subagentRow, []string, error) {
 			st = c.mcpStatus(spec)
 		}
 		servers[spec.Server][d] = st
+	}
+	if live {
+		var liveSpecs []mcp.AgentSpec
+		for _, spec := range specs {
+			d, known := display[spec.Agent]
+			if spec.Enabled && known && servers[spec.Server][d] == "OK" {
+				liveSpecs = append(liveSpecs, spec)
+			}
+		}
+		for i, r := range mcp.ProbeMCPToolsForSpecs(liveSpecs, mcpProbeTimeout) {
+			d := display[liveSpecs[i].Agent]
+			switch r.Status {
+			case "OK":
+				servers[liveSpecs[i].Server][d] = fmt.Sprintf("OK (%d)", len(r.ToolNames))
+			case "ERROR":
+				servers[liveSpecs[i].Server][d] = "ERROR"
+			}
+		}
 	}
 	var rows []subagentRow
 	for name, st := range servers {
@@ -816,13 +837,15 @@ func renderStatusMatrix(firstHeader string, rows []subagentRow, agentNames []str
 }
 
 func cmdShowMCP(sa showArgs, aikitoDir string, env Environment, stdout, stderr io.Writer) int {
-	if sa.live {
-		fmt.Fprintln(stderr, "[ERROR] --live is not yet implemented in this Go build.")
+	if sa.live && sa.target == "" && sa.agentSet {
+		fmt.Fprintln(stderr, "[ERROR] --agent with --live requires an MCP server target")
 		return 2
 	}
-	if sa.agentSet {
-		fmt.Fprintln(stderr, "[ERROR] --agent detail views are not yet implemented in this Go build.")
-		return 2
+	if sa.live && sa.target != "" {
+		return showMCPLive(sa, aikitoDir, env, stdout, stderr)
+	}
+	if sa.agentHasValue || (sa.target != "" && sa.agentSet) {
+		return showMCPAgentDetails(sa, aikitoDir, env, stdout, stderr)
 	}
 	if sa.target != "" {
 		names, err := mcpNames(aikitoDir)
@@ -840,7 +863,7 @@ func cmdShowMCP(sa showArgs, aikitoDir string, env Environment, stdout, stderr i
 		}
 		return printResourceFile(filepath.Join(aikitoDir, "mcps", matched+".toml"), "MCP config file", stdout, stderr)
 	}
-	rows, agentNames, err := collectMCPMatrix(newInspectionContext(aikitoDir, env.Home))
+	rows, agentNames, err := collectMCPMatrix(newInspectionContext(aikitoDir, env.Home), sa.live)
 	if err != nil {
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
@@ -867,9 +890,8 @@ func subagentNames(aikitoDir string) []string {
 }
 
 func cmdShowSubagent(sa showArgs, aikitoDir string, env Environment, stdout, stderr io.Writer) int {
-	if sa.agentSet {
-		fmt.Fprintln(stderr, "[ERROR] --agent detail views are not yet implemented in this Go build.")
-		return 2
+	if sa.agentHasValue || (sa.target != "" && sa.agentSet) {
+		return showSubagentAgentDetails(sa, aikitoDir, env, stdout, stderr)
 	}
 	if sa.target != "" {
 		matched, ok := resolveByName(subagentNames(aikitoDir), sa.target, "show", resolveLabels{

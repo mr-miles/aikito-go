@@ -54,7 +54,7 @@ gaps; see the Go file's doc comment), **not ported**.
 | `subagent.py` `execute_subagent_plan` (per-file writes, backups) | `internal/sync/subagents_apply.go`, `filesnapshot.go` (`FileSnapshot`, `capture_file_snapshot`) | ported |
 | `workspace/inspection.py`, `inspection.py` (and each plan's `inspect()`) | `internal/cli/inspection.go`, `internal/linkplan/inspect.go`, `internal/cli/projectmemoryviews.go` | ported |
 | `agents.py` | `internal/registry/` | ported (`resolve_targets` in `targets.go`) |
-| `registry.py` (agent schema migration) | — | not ported (`doctor --fix` backfill) |
+| `registry.py` (agent schema migration), `doctor.py` `run_doctor_fixes` | `internal/cli/agentfix.go`, `agentfields.go`, `doctor.go` | ported |
 | `config.py`, `config_runtime.py` | `internal/workspace/resources.go`, `internal/mcp/configtarget.go` | partial: physical-identity resolution simplified |
 | `project_config.py`, `project_runtime.py`, `project.py` | `internal/project/` | ported (config layer); `project.py`'s status layer is in `internal/cli/status.go` |
 | `project_sync.py`, `skill_plan.py`, `skill_runtime.py`, `skill_state.py` (state, journal, recovery) | `internal/projectsync/` | ported; state documents and journals are interchangeable with Python's |
@@ -72,7 +72,7 @@ gaps; see the Go file's doc comment), **not ported**.
 | `cli_show.py`, `resolve.py`, `memory.py`, `inbox.py` | `internal/cli/show.go`, `edit.go`, `rm.go`, `rename.go` | ported |
 | `adopt.py`, `cli.py` `cmd_adopt`, `doctor.py` `check_adoption` | `internal/cli/adopt.go`, `doctor.go` (`checkAdoption`) | ported |
 | `add.py`, `remove.py`, `init.py`, `templating.py`, `bundled_skills.py` | `internal/cli/add.go`, `sanitize.go`, `rm.go`, `init.go` | partial (see README Status) |
-| `status.py`, `render.py`, `context_footprint.py`, `project.py` (summaries, health) | `internal/cli/status.go`, `statusagents.go`, `statusmemory.go`, `projectsummary.go`, `subagentmatrix.go`, `render.go`, `table.go` | ported |
+| `status.py`, `render.py`, `context_footprint.py`, `project.py` (summaries, health) | `internal/cli/status.go`, `statusagents.go`, `statusmemory.go`, `projectsummary.go`, `subagentmatrix.go`, `render.go`, `table.go`, `showdetails.go` (`--agent` detail views, `--live`) | ported (no animated loading line for `--live`) |
 | `diff.py`, `diff_model.py` | `internal/cli/diff.go`, `unifieddiff.go` | partial (`diff project` missing) |
 | `doctor.py`, `conflict.py`, `local_state.py` | `internal/cli/doctor.go`, `localstate.go`, `agentfields.go` | ported (`--fix` cleans stale local state; the agent-registry backfill is not ported; the interpreter-consistency check is Python-only) |
 | `maintain.py`, `memory_runtime.py` | `internal/cli/maintain.go`, `rm.go` | partial |
@@ -104,6 +104,8 @@ diff.
 | `internal/cli/testdata/syncall_vectors.json` (bare `aikito sync`, parent flags, `sync subagents` backups) | `python3 internal/cli/testdata/gen_syncall_vectors.py` |
 | `internal/registry/testdata/targets_vectors.json` | `python3 internal/registry/testdata/gen_targets_vectors.py` |
 | `internal/cli/testdata/report_vectors.json` (status, doctor, show) | `python3 internal/cli/testdata/gen_report_vectors.py`; compare a binary without writing: `... --compare ./aikito [scenario...]` |
+| `internal/cli/testdata/doctorfix_vectors.json` (`doctor --fix` output and resulting agent files) | `python3 internal/cli/testdata/gen_doctorfix_vectors.py` |
+| `internal/cli/testdata/mcplive_vectors.json` (`show mcp --live` against a local fixture server; `mcplive_test.go` serves the same responses) | `python3 internal/cli/testdata/gen_mcplive_vectors.py` |
 | `internal/cli/testdata/adopt/adopt_vectors.json` (33 whole-command `adopt` scenarios) | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/cli/testdata/adopt/gen_adopt_vectors.py`; `--compare ./aikito` diffs a built Go binary against them |
 | `internal/cli/testdata/adopt_mcp_secrets/want/` | `internal/cli/testdata/adopt_mcp_secrets/gen.sh` |
 | `internal/mcp/testdata/pyjson_errors.json` (CPython `json.loads` messages) | `python3 internal/mcp/testdata/gen_pyjson_errors.py` (captured with CPython 3.14; wording can differ between Python versions) |

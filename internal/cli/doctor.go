@@ -1,29 +1,8 @@
-// Deep workspace diagnostics, ported from doctor.py. Full Python parity
-// would need several unported subsystems (adopt.py's full build_adopt_plan,
-// workspace/inspection.py's ResourceInspectionView/skill_views,
-// local_state.py's inspect_local_state) — this is a breadth-first partial
-// port: every check area gets at least a real, cross-validated
-// implementation OR an honest "not yet implemented" stub section (never
-// silent omission), prioritizing the checks that are both well-specified
-// and achievable with primitives already built elsewhere in this Go port
-// (the resource scanner, the MCP/subagent planners, the agent registry).
-//
-// Orphans (check_orphans) is a full real check, reusing the already-built
-// sync.BuildSubagentPlan (for orphan subagent files) and mcp.LoadState (for
-// residual managed MCP entries); its one documented simplification is the
-// "stale entries in ~/.agents/skills/" sub-check, which reports every entry
-// not in skills.toml uniformly rather than distinguishing a locally-
-// conflicting unmanaged item via the unported skill_views machinery — see
-// checkOrphans's doc comment.
-//
-// NOT implemented (each still appears in the report as a stub section
-// saying so, matching run_doctor's section list so `--json` output shape
-// stays recognizable): LocalState (needs local_state.py's remote-sync
-// bookkeeping — phase 2 territory), the Python-interpreter-consistency
-// check within Environment (meaningless for a compiled Go binary, dropped
-// rather than stubbed), and --fix's registry-field-backfill behavior
-// (add_missing_agent_fields — reported as WARN findings without an
-// automated fix).
+// Deep workspace diagnostics, ported from doctor.py. The one deliberate
+// omission is Environment's Python-interpreter-consistency check, which is
+// meaningless for a compiled binary. --fix ports run_doctor_fixes (stale
+// local-state cleanup and the additive agent registry backfill, see
+// agentfix.go).
 package cli
 
 import (
@@ -364,10 +343,18 @@ func runDoctor(aikitoDir string, env Environment, staleDays int) DoctorReport {
 	}}
 }
 
-// runDoctorFixes ports run_doctor_fixes' local-state cleanup. The agent
-// registry backfill (add_missing_agent_fields) is not ported.
+// runDoctorFixes ports run_doctor_fixes: stale local-state cleanup, then
+// the additive agent registry backfill for registered and installed agents.
 func runDoctorFixes(aikitoDir string, env Environment) []string {
 	fixes, _ := cleanLocalState(env.Home, env.Env.Getenv)
+	agentsDir := filepath.Join(aikitoDir, "agents")
+	if st, err := os.Stat(agentsDir); err == nil && st.IsDir() {
+		var installed []string
+		for _, d := range detectExistingAgents(env.Home) {
+			installed = append(installed, d.name)
+		}
+		fixes = append(fixes, addMissingAgentFields(agentsDir, installed)...)
+	}
 	return fixes
 }
 
@@ -1449,8 +1436,6 @@ func checkSymlinks(c *inspectionContext) DoctorSection {
 	}
 	return DoctorSection{Name: "Symlinks", Findings: findings}
 }
-
-// --- Stub sections (honestly not yet implemented; see package doc comment) ---
 
 // checkAdoption ports doctor.py's check_adoption: the adopt plan's blocking
 // findings as warnings, then the pending-change count. It never writes.

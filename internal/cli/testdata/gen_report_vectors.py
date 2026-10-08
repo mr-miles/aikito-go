@@ -150,6 +150,22 @@ SCENARIOS = {
         ["cli", "add", "subagent", "verifier", "--description", "Verifies work"],
         ["cli", "sync", "subagents"],
     ],
+    # Detail views: an unmanaged server next to managed ones, a missing
+    # agent config, and a subagent with platform options and a drifted copy.
+    "mcp_details": SYNCED + [
+        ["cli", "add", "mcp", "fetcher", "--transport", "remote", "--url", "https://example.com/mcp", "--agents", "claude-code,codex"],
+        ["cli", "sync", "mcp"],
+        ["append", ".codex/config.toml", '\n[mcp_servers.handmade]\ncommand = "handmade"\n'],
+        ["edit_json", ".claude.json", "mcpServers.fetcher.url", "https://example.com/other"],
+    ],
+    "subagent_details": SYNCED + [
+        ["cli", "add", "subagent", "verifier", "--description", "Verifies work", "--agents", "claude-code,codex"],
+        ["write", "aikito/subagents/reviewer.md",
+         '---\ndescription: "Reviews changes"\nagents: ["claude-code"]\n'
+         'claude-code: {"effort": "high", "model": "sonnet"}\n---\n# Reviewer\n\nReview the diff.\n'],
+        ["cli", "sync", "subagents"],
+        ["append", ".claude/agents/verifier.md", "\nHand edit.\n"],
+    ],
 }
 
 COMMON = [
@@ -198,6 +214,24 @@ EXTRA = {
     "mcp_synced": [["show", "mcp", "fetcher"], ["show", "mcps"], ["show", "mcp", "--color", "always"]],
     "mcp_drifted": [["show", "mcp", "fetcher"], ["show", "mcp", "--color", "always"]],
     "subagent": [["show", "subagent", "verifier"]],
+    "mcp_details": [
+        ["show", "mcp", "--agent", "claude-code"], ["show", "mcp", "--agent", "cod"],
+        ["show", "mcp", "fetcher", "--agent"], ["show", "mcp", "fetch", "--agent", "codex"],
+        ["show", "mcp", "--agent=", "fetcher"],
+        ["show", "mcp", "--agent", "nosuch"], ["show", "mcp", "--agent", "c"], ["show", "mcp", "nosuch", "--agent"],
+        ["show", "mcps", "--agent", "codex", "--color", "always"], ["show", "mcp", "fetcher", "--agent", "--no-color"],
+        # --live here only covers argument errors: probing would reach the
+        # network. gen_mcplive_vectors.py probes a local server.
+        ["show", "mcp", "--agent", "agy"], ["show", "mcp", "--live", "--agent"], ["show", "mcp", "--live", "--agent", "codex"],
+        ["show", "mcp", "nosuch", "--live"], ["show", "mcp", "fetcher", "--live", "--agent", "agy"],
+    ],
+    "subagent_details": [
+        ["show", "subagents", "--agent", "claude-code"], ["show", "subagents", "--agent", "codex"],
+        ["show", "subagent", "reviewer", "--agent"], ["show", "subagent", "rev", "--agent", "codex"],
+        ["show", "subagent", "verifier", "--agent"], ["show", "subagent", "--agent", "nosuch"],
+        ["show", "subagent", "nosuch", "--agent"], ["show", "subagents", "--agent", "claude-code", "--color", "always"],
+        ["show", "subagent", "--agent=", "verifier"], ["show", "subagents", "--agent", "agy"],
+    ],
 }
 
 
@@ -218,6 +252,9 @@ def apply_setup(home: Path, steps, cli):
                 shutil.rmtree(p)
             else:
                 p.unlink()
+        elif op == "append":
+            with (home / args[0]).open("a", encoding="utf-8") as f:
+                f.write(args[1])
         elif op == "mtime":
             os.utime(home / args[0], (int(args[1]), int(args[1])))
         elif op == "edit_json":

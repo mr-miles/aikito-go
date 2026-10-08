@@ -663,6 +663,318 @@
    ]
   ]
  },
+ "mcp_details": {
+  "commands": [
+   {
+    "args": [
+     "status"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+---------+-------+--------+--------+---------+-------+------+--------+\n| Project | Instr | Skills | Memory | Context | Paths | Mode | Status |\n+---------+-------+--------+--------+---------+-------+------+--------+\n+---------+-------+--------+--------+---------+-------+------+--------+\n\nGlobal: ! 1 issue · Instr - · Skills 2 · Memory 0 · MCP 1 · Sub -\nConsumers (2): claude · codex\nAll in one workspace: ~/aikito (default)\n"
+   },
+   {
+    "args": [
+     "doctor"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✓ Global instructions OK (2 targets across 2 agents)\n  ✓ Global skills OK (2 skills, 2 agents)\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n  ✓ No stale entries in ~/.agents/skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✗ claude-code × fetcher: managed MCP config differs (unmanaged modification)\n    → aikito sync mcp --force\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude, codex)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ⚠ MCP server 'fetcher' cannot be merged\n      Resource: mcp/fetcher\n      Source: H/.claude.json, H/.codex/config.toml\n      Reason: MCP server 'fetcher' has different URLs in claude-code and codex\n    → Align the Agent configurations or rename one MCP server\n  ⚠ 1 local Agent resource(s) are available to adopt\n      Resource: adoption\n      Review: aikito adopt --dry-run --verbose\n      Apply: aikito adopt\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (0 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ agents/codex.toml: valid TOML\n  ✓ mcps/fetcher.toml: valid TOML\n  ✓ Claude Code config: valid JSON (~/.claude.json)\n  ✓ Codex config: valid TOML (~/.codex/config.toml)\n\nFound 1 issue, 3 warnings.\n"
+   },
+   {
+    "args": [
+     "doctor",
+     "--json"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "{\n  \"sections\": [\n    {\n      \"name\": \"Symlinks\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"Global instructions OK (2 targets across 2 agents)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"Global skills OK (2 skills, 2 agents)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Orphans\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No orphan subagent files\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"No orphan skill directories in skills/\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"No stale entries in ~/.agents/skills/\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"LocalState\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No stale or unverifiable local skill state\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Memory\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No memory notes found\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Drift\",\n      \"findings\": [\n        {\n          \"status\": \"FAIL\",\n          \"message\": \"claude-code × fetcher: managed MCP config differs (unmanaged modification)\",\n          \"fix_hint\": \"aikito sync mcp --force\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"No managed subagent entries to check\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Security\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No secret-bearing credential config files detected\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \".gitignore covers .local/state/\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Environment\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"AIKITO_DIR not set; using configured workspace: ~/aikito\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"WARN\",\n          \"message\": \"No supported agent CLI found in $PATH (install at least one: claude, codex)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Adoption\",\n      \"findings\": [\n        {\n          \"status\": \"WARN\",\n          \"message\": \"MCP server 'fetcher' cannot be merged\",\n          \"fix_hint\": \"Align the Agent configurations or rename one MCP server\",\n          \"code\": \"adopt.mcp_conflict\",\n          \"resource\": \"mcp/fetcher\",\n          \"source\": \"H/.claude.json, H/.codex/config.toml\",\n          \"reason\": \"MCP server 'fetcher' has different URLs in claude-code and codex\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"WARN\",\n          \"message\": \"1 local Agent resource(s) are available to adopt\",\n          \"fix_hint\": \"\",\n          \"code\": \"adopt.pending\",\n          \"resource\": \"adoption\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": [\n            {\n              \"label\": \"Review\",\n              \"command\": \"aikito adopt --dry-run --verbose\"\n            },\n            {\n              \"label\": \"Apply\",\n              \"command\": \"aikito adopt\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"name\": \"ConflictMarkers\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No conflict markers detected (6 files checked)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Projects\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"Project runtimes OK (0 projects)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Configuration\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"config.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"layout.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"skills.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"agents/claude-code.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"agents/codex.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"mcps/fetcher.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"Claude Code config: valid JSON (~/.claude.json)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"Codex config: valid TOML (~/.codex/config.toml)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    }\n  ],\n  \"fail_count\": 1,\n  \"warn_count\": 3,\n  \"fixes\": []\n}\n"
+   },
+   {
+    "args": [
+     "show",
+     "skills"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+----------------+--------+--------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n| Skill          | Scope  | Source | Description                                                                                                                                                                                                                                                           |\n+----------------+--------+--------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n| aikito         | Global | v      | Operate Aikito workspaces and resources, including reading inbox notes, managing memory, skills, projects, MCP servers, subagents, and synchronization.                                                                                                               |\n| durable-memory | Global | v      | Git-versioned memory stored in the Aikito workspace, separate from any Agent's built-in memory. Use to search, retrieve, or persist cross-project and project-scoped durable knowledge, historical decisions, user preferences, or verified architecture constraints. |\n+----------------+--------+--------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+------------+-------------+-------+\n| MCP Server | Claude Code | Codex |\n+------------+-------------+-------+\n| fetcher    | ! D         | v     |\n+------------+-------------+-------+\n\nLegend: v synced * - n/a * 0 none * ! M missing * ! C conflict * ! D drift * ! E error\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagents"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+----------+-------------+-------+\n| Subagent | Claude Code | Codex |\n+----------+-------------+-------+\n+----------+-------------+-------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "projects"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+---------+-------+--------+--------+---------+-------+------+--------+\n| Project | Instr | Skills | Memory | Context | Paths | Mode | Status |\n+---------+-------+--------+--------+---------+-------+------+--------+\n+---------+-------+--------+--------+---------+-------+------+--------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "memory"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+-------+-----------+-------+------+---------+\n| Scope | Note File | Title | Link | Updated |\n+-------+-----------+-------+------+---------+\n+-------+-----------+-------+------+---------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "inbox"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Inbox directory does not exist: H/aikito/inbox\n"
+   },
+   {
+    "args": [
+     "show",
+     "instructions"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Instructions\n\n Agent:  Claude Code\nStatus:  linked\nTarget:  ~/.claude/CLAUDE.md\n\n Agent:  Codex\nStatus:  linked\nTarget:  ~/.codex/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--agent",
+     "claude-code"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      Agent:  Claude Code\n  Agent key:  claude-code\n     Config:  H/.claude.json\n     Format:  claude_json\nMCP Servers:  1 managed, 0 synced, 1 drifted, 0 unmanaged\n\n+------------+---------+--------+\n| MCP Server | Source  | Status |\n+------------+---------+--------+\n| fetcher    | Managed | ! D    |\n+------------+---------+--------+\n\nLegend: v synced * - n/a * 0 none * ! M missing * ! C conflict * ! D drift * ! E error\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--agent",
+     "cod"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      Agent:  Codex\n  Agent key:  codex\n     Config:  H/.codex/config.toml\n     Format:  toml\nMCP Servers:  1 managed, 1 synced, 0 drifted, 1 unmanaged\n\n+------------+-----------+--------+\n| MCP Server | Source    | Status |\n+------------+-----------+--------+\n| fetcher    | Managed   | v      |\n| handmade   | Unmanaged | P      |\n+------------+-----------+--------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "fetcher",
+     "--agent"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  fetcher\nCanonical source:  H/aikito/mcps/fetcher.toml\n\n+----------------+\n| Claude Code    |\n+----------------+\nAgent key:  claude-code\n   Status:  drift\n   Config:  H/.claude.json\n   Format:  claude_json\n\nManaged entry:\n{\n  \"type\": \"http\",\n  \"url\": \"https://example.com/other\"\n}\n\n+----------+\n| Codex    |\n+----------+\nAgent key:  codex\n   Status:  synced\n   Config:  H/.codex/config.toml\n   Format:  toml\n\nManaged entry:\n{\n  \"url\": \"https://example.com/mcp\"\n}\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "fetch",
+     "--agent",
+     "codex"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  fetcher\nCanonical source:  H/aikito/mcps/fetcher.toml\n\n+----------+\n| Codex    |\n+----------+\nAgent key:  codex\n   Status:  synced\n   Config:  H/.codex/config.toml\n   Format:  toml\n\nManaged entry:\n{\n  \"url\": \"https://example.com/mcp\"\n}\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--agent=",
+     "fetcher"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  fetcher\nCanonical source:  H/aikito/mcps/fetcher.toml\n\n+----------------+\n| Claude Code    |\n+----------------+\nAgent key:  claude-code\n   Status:  drift\n   Config:  H/.claude.json\n   Format:  claude_json\n\nManaged entry:\n{\n  \"type\": \"http\",\n  \"url\": \"https://example.com/other\"\n}\n\n+----------+\n| Codex    |\n+----------+\nAgent key:  codex\n   Status:  synced\n   Config:  H/.codex/config.toml\n   Format:  toml\n\nManaged entry:\n{\n  \"url\": \"https://example.com/mcp\"\n}\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--agent",
+     "nosuch"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unknown agent 'nosuch'; available: claude-code, codex\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--agent",
+     "c"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Ambiguous agent 'c'; matches: claude-code, codex\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "nosuch",
+     "--agent"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unknown MCP server 'nosuch'; available: fetcher\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "mcps",
+     "--agent",
+     "codex",
+     "--color",
+     "always"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      Agent:  Codex\n  Agent key:  codex\n     Config:  H/.codex/config.toml\n     Format:  toml\nMCP Servers:  1 managed, 1 synced, 0 drifted, 1 unmanaged\n\n┌────────────┬───────────┬────────┐\n\u001b[1m│ MCP Server │ Source    │ Status │\u001b[0m\n├────────────┼───────────┼────────┤\n│ fetcher    │ Managed   │ \u001b[32m✓\u001b[0m      │\n│ handmade   │ Unmanaged │ \u001b[2mP\u001b[0m      │\n└────────────┴───────────┴────────┘\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "fetcher",
+     "--agent",
+     "--no-color"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "      MCP Server:  fetcher\nCanonical source:  H/aikito/mcps/fetcher.toml\n\n+----------------+\n| Claude Code    |\n+----------------+\nAgent key:  claude-code\n   Status:  drift\n   Config:  H/.claude.json\n   Format:  claude_json\n\nManaged entry:\n{\n  \"type\": \"http\",\n  \"url\": \"https://example.com/other\"\n}\n\n+----------+\n| Codex    |\n+----------+\nAgent key:  codex\n   Status:  synced\n   Config:  H/.codex/config.toml\n   Format:  toml\n\nManaged entry:\n{\n  \"url\": \"https://example.com/mcp\"\n}\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--agent",
+     "agy"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unknown agent 'agy'; available: claude-code, codex\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--live",
+     "--agent"
+    ],
+    "exit": 2,
+    "stderr": "[ERROR] --agent with --live requires an MCP server target\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "--live",
+     "--agent",
+     "codex"
+    ],
+    "exit": 2,
+    "stderr": "[ERROR] --agent with --live requires an MCP server target\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "nosuch",
+     "--live"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unknown MCP server 'nosuch'; available: fetcher\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "mcp",
+     "fetcher",
+     "--live",
+     "--agent",
+     "agy"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unknown agent 'agy'; available: claude-code, codex\n",
+    "stdout": ""
+   }
+  ],
+  "setup": [
+   [
+    "mkdir",
+    ".claude"
+   ],
+   [
+    "mkdir",
+    ".codex"
+   ],
+   [
+    "cli",
+    "init",
+    "workspace"
+   ],
+   [
+    "cli",
+    "sync",
+    "global"
+   ],
+   [
+    "cli",
+    "add",
+    "mcp",
+    "fetcher",
+    "--transport",
+    "remote",
+    "--url",
+    "https://example.com/mcp",
+    "--agents",
+    "claude-code,codex"
+   ],
+   [
+    "cli",
+    "sync",
+    "mcp"
+   ],
+   [
+    "append",
+    ".codex/config.toml",
+    "\n[mcp_servers.handmade]\ncommand = \"handmade\"\n"
+   ],
+   [
+    "edit_json",
+    ".claude.json",
+    "mcpServers.fetcher.url",
+    "https://example.com/other"
+   ]
+  ]
+ },
  "mcp_drifted": {
   "commands": [
    {
@@ -2382,6 +2694,256 @@
     "cli",
     "sync",
     "subagents"
+   ]
+  ]
+ },
+ "subagent_details": {
+  "commands": [
+   {
+    "args": [
+     "status"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+---------+-------+--------+--------+---------+-------+------+--------+\n| Project | Instr | Skills | Memory | Context | Paths | Mode | Status |\n+---------+-------+--------+--------+---------+-------+------+--------+\n+---------+-------+--------+--------+---------+-------+------+--------+\n\nGlobal: ! 1 issue · Instr - · Skills 2 · Memory 0 · MCP - · Sub 2\nConsumers (2): claude · codex\nAll in one workspace: ~/aikito (default)\n"
+   },
+   {
+    "args": [
+     "doctor"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✓ Global instructions OK (2 targets across 2 agents)\n  ✓ Global skills OK (2 skills, 2 agents)\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n  ✓ No stale entries in ~/.agents/skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✗ claude-code/verifier: managed subagent drift (~/.claude/agents/verifier.md)\n    → aikito sync subagents\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude, codex)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (7 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (0 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ agents/codex.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ Subagent platform options: all valid\n\nFound 1 issue, 1 warning.\n"
+   },
+   {
+    "args": [
+     "doctor",
+     "--json"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "{\n  \"sections\": [\n    {\n      \"name\": \"Symlinks\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"Global instructions OK (2 targets across 2 agents)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"Global skills OK (2 skills, 2 agents)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Orphans\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No orphan subagent files\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"No orphan skill directories in skills/\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"No stale entries in ~/.agents/skills/\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"LocalState\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No stale or unverifiable local skill state\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Memory\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No memory notes found\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Drift\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No managed MCP entries to check\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"FAIL\",\n          \"message\": \"claude-code/verifier: managed subagent drift (~/.claude/agents/verifier.md)\",\n          \"fix_hint\": \"aikito sync subagents\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Security\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No secret-bearing credential config files detected\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \".gitignore covers .local/state/\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Environment\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"AIKITO_DIR not set; using configured workspace: ~/aikito\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"WARN\",\n          \"message\": \"No supported agent CLI found in $PATH (install at least one: claude, codex)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Adoption\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No external Agent configuration needs adoption\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"ConflictMarkers\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"No conflict markers detected (7 files checked)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Projects\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"Project runtimes OK (0 projects)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    },\n    {\n      \"name\": \"Configuration\",\n      \"findings\": [\n        {\n          \"status\": \"OK\",\n          \"message\": \"config.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"layout.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"skills.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"agents/claude-code.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"agents/codex.toml: valid TOML\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"mcps: directory present (empty)\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        },\n        {\n          \"status\": \"OK\",\n          \"message\": \"Subagent platform options: all valid\",\n          \"fix_hint\": \"\",\n          \"code\": \"\",\n          \"resource\": \"\",\n          \"source\": \"\",\n          \"reason\": \"\",\n          \"actions\": []\n        }\n      ]\n    }\n  ],\n  \"fail_count\": 1,\n  \"warn_count\": 1,\n  \"fixes\": []\n}\n"
+   },
+   {
+    "args": [
+     "show",
+     "skills"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+----------------+--------+--------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n| Skill          | Scope  | Source | Description                                                                                                                                                                                                                                                           |\n+----------------+--------+--------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n| aikito         | Global | v      | Operate Aikito workspaces and resources, including reading inbox notes, managing memory, skills, projects, MCP servers, subagents, and synchronization.                                                                                                               |\n| durable-memory | Global | v      | Git-versioned memory stored in the Aikito workspace, separate from any Agent's built-in memory. Use to search, retrieve, or persist cross-project and project-scoped durable knowledge, historical decisions, user preferences, or verified architecture constraints. |\n+----------------+--------+--------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "mcp"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+------------+-------------+-------+\n| MCP Server | Claude Code | Codex |\n+------------+-------------+-------+\n+------------+-------------+-------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagents"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+----------+-------------+-------+\n| Subagent | Claude Code | Codex |\n+----------+-------------+-------+\n| reviewer | v           | -     |\n| verifier | ! D         | v     |\n+----------+-------------+-------+\n\nLegend: v synced * - n/a * 0 none * ! M missing * ! C conflict * ! D drift * ! E error\n"
+   },
+   {
+    "args": [
+     "show",
+     "projects"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+---------+-------+--------+--------+---------+-------+------+--------+\n| Project | Instr | Skills | Memory | Context | Paths | Mode | Status |\n+---------+-------+--------+--------+---------+-------+------+--------+\n+---------+-------+--------+--------+---------+-------+------+--------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "memory"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "+-------+-----------+-------+------+---------+\n| Scope | Note File | Title | Link | Updated |\n+-------+-----------+-------+------+---------+\n+-------+-----------+-------+------+---------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "inbox"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Inbox directory does not exist: H/aikito/inbox\n"
+   },
+   {
+    "args": [
+     "show",
+     "instructions"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Instructions\n\n Agent:  Claude Code\nStatus:  linked\nTarget:  ~/.claude/CLAUDE.md\n\n Agent:  Codex\nStatus:  linked\nTarget:  ~/.codex/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagents",
+     "--agent",
+     "claude-code"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "     Agent:  Claude Code\n Agent key:  claude-code\nTarget dir:  H/.claude/agents\n    Format:  claude_markdown\n Subagents:  2 managed, 1 synced, 1 drifted, 0 missing\n\n+----------+--------+-----------------------------+-----------------+\n| Subagent | Status | Overrides                   | Description     |\n+----------+--------+-----------------------------+-----------------+\n| reviewer | v      | effort: high, model: sonnet | Reviews changes |\n| verifier | ! D    | (defaults)                  | Verifies work   |\n+----------+--------+-----------------------------+-----------------+\n\nLegend: v synced * - n/a * 0 none * ! M missing * ! C conflict * ! D drift * ! E error\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagents",
+     "--agent",
+     "codex"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "     Agent:  Codex\n Agent key:  codex\nTarget dir:  H/.codex/agents\n    Format:  codex_toml\n Subagents:  1 managed, 1 synced, 0 drifted, 0 missing\n\n+----------+--------+------------+---------------+\n| Subagent | Status | Overrides  | Description   |\n+----------+--------+------------+---------------+\n| verifier | v      | (defaults) | Verifies work |\n+----------+--------+------------+---------------+\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagent",
+     "reviewer",
+     "--agent"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "        Subagent:  reviewer\n     Description:  Reviews changes\nCanonical source:  H/aikito/subagents/reviewer.md\n\n+----------------+\n| Claude Code    |\n+----------------+\nAgent key:  claude-code\n   Status:  synced\n   Target:  H/.claude/agents/reviewer.md\n   Format:  claude_markdown\n\nPlatform options:\neffort:  high\n model:  sonnet\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagent",
+     "rev",
+     "--agent",
+     "codex"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "        Subagent:  reviewer\n     Description:  Reviews changes\nCanonical source:  H/aikito/subagents/reviewer.md\n\n+----------+\n| Codex    |\n+----------+\nAgent key:  codex\n   Status:  not targeted by this subagent\n   Target:  H/.codex/agents/reviewer.toml\n   Format:  codex_toml\n\nPlatform options:\nn/a (not targeted by this subagent)\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagent",
+     "verifier",
+     "--agent"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "        Subagent:  verifier\n     Description:  Verifies work\nCanonical source:  H/aikito/subagents/verifier.md\n\n+----------------+\n| Claude Code    |\n+----------------+\nAgent key:  claude-code\n   Status:  drift\n   Target:  H/.claude/agents/verifier.md\n   Format:  claude_markdown\n\nPlatform options:\n(defaults)\n\n+----------+\n| Codex    |\n+----------+\nAgent key:  codex\n   Status:  synced\n   Target:  H/.codex/agents/verifier.toml\n   Format:  codex_toml\n\nPlatform options:\n(defaults)\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagent",
+     "--agent",
+     "nosuch"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unknown agent 'nosuch'; available: claude-code, codex\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "subagent",
+     "nosuch",
+     "--agent"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unknown subagent 'nosuch'; available: reviewer, verifier\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "show",
+     "subagents",
+     "--agent",
+     "claude-code",
+     "--color",
+     "always"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "     Agent:  Claude Code\n Agent key:  claude-code\nTarget dir:  H/.claude/agents\n    Format:  claude_markdown\n Subagents:  2 managed, 1 synced, 1 drifted, 0 missing\n\n┌──────────┬────────┬─────────────────────────────┬─────────────────┐\n\u001b[1m│ Subagent │ Status │ Overrides                   │ Description     │\u001b[0m\n├──────────┼────────┼─────────────────────────────┼─────────────────┤\n│ reviewer │ \u001b[32m✓\u001b[0m      │ effort: high, model: sonnet │ Reviews changes │\n│ verifier │ \u001b[31m⚠ D\u001b[0m    │ (defaults)                  │ Verifies work   │\n└──────────┴────────┴─────────────────────────────┴─────────────────┘\n\n\u001b[2mLegend: ✓ synced · – n/a · 0 none · ⚠ M missing · ⚠ C conflict · ⚠ D drift · ⚠ E error\u001b[0m\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagent",
+     "--agent=",
+     "verifier"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "        Subagent:  verifier\n     Description:  Verifies work\nCanonical source:  H/aikito/subagents/verifier.md\n\n+----------------+\n| Claude Code    |\n+----------------+\nAgent key:  claude-code\n   Status:  drift\n   Target:  H/.claude/agents/verifier.md\n   Format:  claude_markdown\n\nPlatform options:\n(defaults)\n\n+----------+\n| Codex    |\n+----------+\nAgent key:  codex\n   Status:  synced\n   Target:  H/.codex/agents/verifier.toml\n   Format:  codex_toml\n\nPlatform options:\n(defaults)\n"
+   },
+   {
+    "args": [
+     "show",
+     "subagents",
+     "--agent",
+     "agy"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unknown agent 'agy'; available: claude-code, codex\n",
+    "stdout": ""
+   }
+  ],
+  "setup": [
+   [
+    "mkdir",
+    ".claude"
+   ],
+   [
+    "mkdir",
+    ".codex"
+   ],
+   [
+    "cli",
+    "init",
+    "workspace"
+   ],
+   [
+    "cli",
+    "sync",
+    "global"
+   ],
+   [
+    "cli",
+    "add",
+    "subagent",
+    "verifier",
+    "--description",
+    "Verifies work",
+    "--agents",
+    "claude-code,codex"
+   ],
+   [
+    "write",
+    "aikito/subagents/reviewer.md",
+    "---\ndescription: \"Reviews changes\"\nagents: [\"claude-code\"]\nclaude-code: {\"effort\": \"high\", \"model\": \"sonnet\"}\n---\n# Reviewer\n\nReview the diff.\n"
+   ],
+   [
+    "cli",
+    "sync",
+    "subagents"
+   ],
+   [
+    "append",
+    ".claude/agents/verifier.md",
+    "\nHand edit.\n"
    ]
   ]
  },
