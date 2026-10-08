@@ -1,4 +1,1019 @@
 {
+ "add_mcp_force_and_args": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "mcp",
+     "keep",
+     "--url",
+     "https://k2.example.com/mcp",
+     "--force"
+    ],
+    "exit": 0,
+    "stderr": "[WARN] [SECURITY] Detected plaintext secret in header 'Authorization'. Replaced with environment variable reference '${AIKITO_KEEP_AUTHORIZATION}' to prevent secret leakage into workspace.\n       To provide this credential at runtime, set the environment variable and run:\n         export AIKITO_KEEP_AUTHORIZATION=<your-secret-value>\n       (or configure canonical [authentication] via 'aikito auth mcp')\n",
+    "stdout": "[UPDATE FILE] ~/aikito/mcps/keep.toml\n\n[SUCCESS] Updated MCP server 'keep'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/keep.toml (or run 'aikito edit mcp keep')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "stdio-one",
+     "--command",
+     "node",
+     "--force"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/mcps/stdio-one.toml\n\n[SUCCESS] Updated MCP server 'stdio-one'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/stdio-one.toml (or run 'aikito edit mcp stdio-one')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "stdio-one",
+     "--force"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] --force requires --from or server configuration arguments when updating an MCP server.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--transport",
+     "bogus"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito add mcp [-h] [--from FROM_SOURCE] [--transport {stdio,remote}]\n                      [--command COMMAND] [--url URL] [--agents AGENTS]\n                      [--sync] [--force]\n                      [name]\naikito add mcp: error: argument --transport: invalid choice: 'bogus' (choose from stdio, remote)\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--transport",
+     "stdio",
+     "--url",
+     "https://e.example.com"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Cannot specify --url when --transport is 'stdio'.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--transport",
+     "remote"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] --url is required when --transport is 'remote'.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--command",
+     "a",
+     "--url",
+     "https://e.example.com"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Cannot specify both --command and --url.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--from"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito add mcp [-h] [--from FROM_SOURCE] [--transport {stdio,remote}]\n                      [--command COMMAND] [--url URL] [--agents AGENTS]\n                      [--sync] [--force]\n                      [name]\naikito add mcp: error: argument --from: expected one argument\n",
+    "stdout": ""
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/mcps/keep.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://k2.example.com/mcp\\\"\\nagents = [\\\"codex\\\"]\\nheaders = { Authorization = \\\"${AIKITO_KEEP_AUTHORIZATION}\\\", X-A = \\\"a\\\" }\\n\\n[authentication]\\ntype = \\\"oauth\\\"\\n\\n[overrides.codex]\\nenabled = false\\n\"",
+     "F aikito/mcps/stdio-one.toml \"command = \\\"node\\\"\\nargs = [\\\"a\\\", \\\"b\\\"]\\nagents = [\\\"claude-code\\\"]\\nenv = { A = \\\"1\\\", B = \\\"2\\\" }\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://k.example.com/mcp\"\nagents = [\"codex\"]\nheaders = { Authorization = \"Bearer fake-value-for-tests-0000000000\", X-A = \"a\" }\n\n[authentication]\ntype = \"oauth\"\n\n[overrides.codex]\nenabled = false\n",
+    "op": "write",
+    "path": "aikito/mcps/keep.toml"
+   },
+   {
+    "content": "command = \"uvx\"\nargs = [\"a\", \"b\"]\nagents = [\"claude-code\"]\nenv = { A = \"1\", B = 2 }\n",
+    "op": "write",
+    "path": "aikito/mcps/stdio-one.toml"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "keep",
+     "--url",
+     "https://k2.example.com/mcp",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "stdio-one",
+     "--command",
+     "node",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "stdio-one",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--transport",
+     "bogus"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--transport",
+     "stdio",
+     "--url",
+     "https://e.example.com"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--transport",
+     "remote"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--command",
+     "a",
+     "--url",
+     "https://e.example.com"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "x",
+     "--from"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_mcp_from_files": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/multi.json"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Source file contains multiple MCP servers (first_srv, local, second). Please specify which server to import via 'name'.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "first-srv",
+     "--from",
+     "src/multi.json"
+    ],
+    "exit": 0,
+    "stderr": "[WARN] [SECURITY] Detected plaintext secret in header 'Authorization'. Replaced with environment variable reference '${AIKITO_FIRST_SRV_AUTHORIZATION}' to prevent secret leakage into workspace.\n       To provide this credential at runtime, set the environment variable and run:\n         export AIKITO_FIRST_SRV_AUTHORIZATION=<your-secret-value>\n       (or configure canonical [authentication] via 'aikito auth mcp')\n",
+    "stdout": "[CREATE FILE] ~/aikito/mcps/first-srv.toml\n\n[SUCCESS] Added MCP server 'first-srv'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/first-srv.toml (or run 'aikito edit mcp first-srv')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "local",
+     "--from",
+     "src/multi.json"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Aikito currently supports synchronizing remote MCP servers. Stdio server 'local' without a URL cannot be imported as a remote MCP.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "nothere",
+     "--from",
+     "src/multi.json"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Server 'nothere' not found in '~/src/multi.json'.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/single.json"
+    ],
+    "exit": 0,
+    "stderr": "[WARN] [SECURITY] Detected plaintext secret in header 'X-Api-Key'. Replaced with environment variable reference '${AIKITO_REMOTE_ONE_X_API_KEY}' to prevent secret leakage into workspace.\n       To provide this credential at runtime, set the environment variable and run:\n         export AIKITO_REMOTE_ONE_X_API_KEY=<your-secret-value>\n       (or configure canonical [authentication] via 'aikito auth mcp')\n[WARN] [SECURITY] URL for 'remote-one' contains sensitive query parameter(s): api_key. Stripped from canonical TOML to prevent leakage into workspace. Supply credentials via headers or environment variables.\n",
+    "stdout": "[CREATE FILE] ~/aikito/mcps/remote-one.toml\n\n[SUCCESS] Added MCP server 'remote-one'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/remote-one.toml (or run 'aikito edit mcp remote-one')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/codex.toml",
+     "--agents",
+     "codex"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE FILE] ~/aikito/mcps/toml-srv.toml\n\n[SUCCESS] Added MCP server 'toml-srv'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/toml-srv.toml (or run 'aikito edit mcp toml-srv')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/flat-srv.toml"
+    ],
+    "exit": 0,
+    "stderr": "[WARN] [SECURITY] Detected plaintext secret in header 'Cookie'. Replaced with environment variable reference '${AIKITO_FLAT_SRV_COOKIE}' to prevent secret leakage into workspace.\n       To provide this credential at runtime, set the environment variable and run:\n         export AIKITO_FLAT_SRV_COOKIE=<your-secret-value>\n       (or configure canonical [authentication] via 'aikito auth mcp')\n",
+    "stdout": "[CREATE FILE] ~/aikito/mcps/flat-srv.toml\n\n[SUCCESS] Added MCP server 'flat-srv'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/flat-srv.toml (or run 'aikito edit mcp flat-srv')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/c.jsonc"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE FILE] ~/aikito/mcps/jc.toml\n\n[SUCCESS] Added MCP server 'jc'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/jc.toml (or run 'aikito edit mcp jc')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/list.json"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] JSON content in '~/src/list.json' must be an object.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/bad.json"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Failed to parse JSON from '~/src/bad.json': JSONC object keys must be strings\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/x.yaml"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unsupported file format 'x.yaml'. Expected .json, .jsonc, or .toml\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/missing.json"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Source file does not exist: src/missing.json\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/dir.json"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Source path must be a JSON or TOML file: ~/src/dir.json\n",
+    "stdout": ""
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/mcps/first-srv.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://one.example.com/mcp\\\"\\nagents = [\\\"codex\\\", \\\"claude-code\\\", \\\"opencode\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\nheaders = { Authorization = \\\"${AIKITO_FIRST_SRV_AUTHORIZATION}\\\", X-Plain = \\\"p\\\" }\\n\"",
+     "F aikito/mcps/flat-srv.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://flat.example.com/endpoint\\\"\\nagents = [\\\"codex\\\", \\\"claude-code\\\", \\\"opencode\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\nheaders = { Cookie = \\\"${AIKITO_FLAT_SRV_COOKIE}\\\" }\\n\"",
+     "F aikito/mcps/jc.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://jc.example.com/x\\\"\\nagents = [\\\"codex\\\", \\\"claude-code\\\", \\\"opencode\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\n\"",
+     "F aikito/mcps/remote-one.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://r1.example.com/mcp?mode=x\\\"\\nagents = [\\\"codex\\\", \\\"claude-code\\\"]\\nheaders = { X-Api-Key = \\\"${AIKITO_REMOTE_ONE_X_API_KEY}\\\", X-Blank = \\\" \\\", X-Override = \\\"h\\\", X-Ref = \\\"${ALREADY}\\\" }\\n\"",
+     "F aikito/mcps/toml-srv.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://t.example.com/v1\\\"\\nagents = [\\\"codex\\\"]\\nheaders = { Authorization = \\\"${TOKEN_ENV}\\\" }\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "{\n  \"mcpServers\": {\n    \"first_srv\": {\n      \"url\": \"https://one.example.com/mcp\",\n      \"headers\": {\n        \"Authorization\": \"Bearer fake-value-for-tests-0000000000\",\n        \"X-Plain\": \"p\"\n      }\n    },\n    \"second\": {\n      \"type\": \"http\",\n      \"url\": \"https://two.example.com/sse\"\n    },\n    \"local\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"x\"\n      ]\n    }\n  }\n}",
+    "op": "write",
+    "path": "src/multi.json"
+   },
+   {
+    "content": "{\"servers\": {\"Remote_One\": {\"url\": \"https://r1.example.com/mcp?api_key=fake-value-for-tests-0000000000&mode=x\", \"env_http_headers\": {\"X-Api-Key\": \"MY_KEY\", \"X-Ref\": \"${ALREADY}\", \"X-Blank\": \" \"}, \"http_headers\": {\"X-Override\": \"h\", \"X-Api-Key\": \"literal\"}, \"agents\": [\"codex\", \" claude-code \", \"\"]}}}",
+    "op": "write",
+    "path": "src/single.json"
+   },
+   {
+    "content": "[mcp_servers.toml_srv]\nurl = \"https://t.example.com/v1\"\n[mcp_servers.toml_srv.env_http_headers]\nAuthorization = \"TOKEN_ENV\"\n",
+    "op": "write",
+    "path": "src/codex.toml"
+   },
+   {
+    "content": "url = \"https://flat.example.com/endpoint\"\n[headers]\nCookie = \"c\"\n",
+    "op": "write",
+    "path": "src/flat-srv.toml"
+   },
+   {
+    "content": "{\n  // comment\n  \"mcpServers\": {\"jc\": {\"url\": \"https://jc.example.com/x\",},},\n}\n",
+    "op": "write",
+    "path": "src/c.jsonc"
+   },
+   {
+    "content": "[1, 2]",
+    "op": "write",
+    "path": "src/list.json"
+   },
+   {
+    "content": "{nope",
+    "op": "write",
+    "path": "src/bad.json"
+   },
+   {
+    "content": "a: b\n",
+    "op": "write",
+    "path": "src/x.yaml"
+   },
+   {
+    "op": "mkdir",
+    "path": "src/dir.json"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/multi.json"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "first-srv",
+     "--from",
+     "src/multi.json"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "local",
+     "--from",
+     "src/multi.json"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "nothere",
+     "--from",
+     "src/multi.json"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/single.json"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/codex.toml",
+     "--agents",
+     "codex"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/flat-srv.toml"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/c.jsonc"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/list.json"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/bad.json"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/x.yaml"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/missing.json"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "src/dir.json"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_mcp_from_urls": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://api.example.com/github_tools"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE FILE] ~/aikito/mcps/github-tools.toml\n\n[SUCCESS] Added MCP server 'github-tools'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/github-tools.toml (or run 'aikito edit mcp github-tools')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://user:fake-value-for-tests-0000000000@Host.Example.com:8443/Linear?token=fake-value-for-tests-0000000000&x=1"
+    ],
+    "exit": 0,
+    "stderr": "[WARN] [SECURITY] URL for 'linear' contains userinfo credentials. Stripped from canonical TOML to prevent leakage into workspace. Supply credentials via headers or environment variables.\n[WARN] [SECURITY] URL for 'linear' contains sensitive query parameter(s): token. Stripped from canonical TOML to prevent leakage into workspace. Supply credentials via headers or environment variables.\n",
+    "stdout": "[CREATE FILE] ~/aikito/mcps/linear.toml\n\n[SUCCESS] Added MCP server 'linear'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/linear.toml (or run 'aikito edit mcp linear')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://example.com/v1/mcp"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] MCP server name is required. Please specify a name or provide a source via --from.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "named",
+     "--from",
+     "https://example.com/v1/mcp"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE FILE] ~/aikito/mcps/named.toml\n\n[SUCCESS] Added MCP server 'named'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/named.toml (or run 'aikito edit mcp named')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Invalid remote MCP URL: https://\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://example.com/Bad.Name"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] MCP server name is required. Please specify a name or provide a source via --from.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://example.com/github_tools",
+     "--force"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/mcps/github-tools.toml\n\n[SUCCESS] Updated MCP server 'github-tools'.\n💡 Next steps:\n  1. Configure server in ~/aikito/mcps/github-tools.toml (or run 'aikito edit mcp github-tools')\n  2. Synchronize to agents: aikito sync mcp\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/mcps/github-tools.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://example.com/github_tools\\\"\\nagents = [\\\"codex\\\", \\\"claude-code\\\", \\\"opencode\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\n\"",
+     "F aikito/mcps/linear.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://host.example.com:8443/Linear?x=1\\\"\\nagents = [\\\"codex\\\", \\\"claude-code\\\", \\\"opencode\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\n\"",
+     "F aikito/mcps/named.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://example.com/v1/mcp\\\"\\nagents = [\\\"codex\\\", \\\"claude-code\\\", \\\"opencode\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://api.example.com/github_tools"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://user:fake-value-for-tests-0000000000@Host.Example.com:8443/Linear?token=fake-value-for-tests-0000000000&x=1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://example.com/v1/mcp"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "named",
+     "--from",
+     "https://example.com/v1/mcp"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://example.com/Bad.Name"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "--from",
+     "https://example.com/github_tools",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_mcp_sync": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "mcp",
+     "remote-a",
+     "--url",
+     "https://a.example.com/mcp",
+     "--agents",
+     "claude-code",
+     "--sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "\n[SYNC] Synchronizing MCP server 'remote-a' to target agent platforms...\n[SYNC] claude-code/remote-a: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-a\n[CREATE FILE] ~/aikito/mcps/remote-a.toml\n\n[SUCCESS] Added MCP server 'remote-a'.\n"
+   },
+   {
+    "content": "{\n  \"mcpServers\": {\n    \"remote-a\": {\n      \"type\": \"http\",\n      \"url\": \"https://a.example.com/mcp\"\n    }\n  }\n}\n",
+    "read": ".claude.json"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/mcps/remote-a.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://a.example.com/mcp\\\"\\nagents = [\\\"claude-code\\\"]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "remote-a",
+     "--url",
+     "https://a.example.com/mcp",
+     "--agents",
+     "claude-code",
+     "--sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "read",
+    "path": ".claude.json"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_mcp_sync_conflict": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "mcp",
+     "remote-b",
+     "--url",
+     "https://b.example.com/mcp",
+     "--agents",
+     "claude-code",
+     "--sync"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] claude-code/remote-b: existing config was not last written by aikito; review it or rerun with --force\n[ERROR] Synchronization preflight failed due to conflict. Reverted changes to ~/aikito/mcps/remote-b.toml.\n",
+    "stdout": "\n[SYNC] Synchronizing MCP server 'remote-b' to target agent platforms...\n"
+   },
+   {
+    "content": "{\"mcpServers\": {\"remote-b\": {\"type\": \"http\", \"url\": \"https://mine.example.com\"}}}\n",
+    "read": ".claude.json"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "remote-b",
+     "--url",
+     "https://b.example.com/mcp",
+     "--agents",
+     "claude-code",
+     "--sync",
+     "--force"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] claude-code/remote-b: existing config was not last written by aikito; review it or rerun with --force\n[ERROR] Synchronization preflight failed due to conflict. Reverted changes to ~/aikito/mcps/remote-b.toml.\n",
+    "stdout": "\n[SYNC] Synchronizing MCP server 'remote-b' to target agent platforms...\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/mcps/remote-b.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://old.example.com\\\"\\nagents = [\\\"codex\\\"]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "{\"mcpServers\": {\"remote-b\": {\"type\": \"http\", \"url\": \"https://mine.example.com\"}}}\n",
+    "op": "write",
+    "path": ".claude.json"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "remote-b",
+     "--url",
+     "https://b.example.com/mcp",
+     "--agents",
+     "claude-code",
+     "--sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "read",
+    "path": ".claude.json"
+   },
+   {
+    "op": "wtree"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://old.example.com\"\nagents = [\"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-b.toml"
+   },
+   {
+    "args": [
+     "add",
+     "mcp",
+     "remote-b",
+     "--url",
+     "https://b.example.com/mcp",
+     "--agents",
+     "claude-code",
+     "--sync",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
  "add_skill_detected_project": {
   "expect": [
    {

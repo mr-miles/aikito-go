@@ -190,6 +190,71 @@ scenario("add_skill_two_projects_conflict", init(".claude") + project("q1") + pr
             run("add", "skill", "c1", cwd="q1")])
 
 
+# --- add mcp ---
+FAKE = "fake-value-for-tests-0000000000"
+MCP_JSON_MULTI = json.dumps({"mcpServers": {
+    "first_srv": {"url": "https://one.example.com/mcp", "headers": {"Authorization": f"Bearer {FAKE}", "X-Plain": "p"}},
+    "second": {"type": "http", "url": "https://two.example.com/sse"},
+    "local": {"command": "npx", "args": ["-y", "x"]}}}, indent=2)
+MCP_JSON_SINGLE = json.dumps({"servers": {"Remote_One": {
+    "url": "https://r1.example.com/mcp?api_key=" + FAKE + "&mode=x",
+    "env_http_headers": {"X-Api-Key": "MY_KEY", "X-Ref": "${ALREADY}", "X-Blank": " "},
+    "http_headers": {"X-Override": "h", "X-Api-Key": "literal"},
+    "agents": ["codex", " claude-code ", ""]}}})
+MCP_TOML = ('[mcp_servers.toml_srv]\nurl = "https://t.example.com/v1"\n'
+            '[mcp_servers.toml_srv.env_http_headers]\nAuthorization = "TOKEN_ENV"\n')
+MCP_TOML_FLAT = 'url = "https://flat.example.com/endpoint"\n[headers]\nCookie = "c"\n'
+MCP_JSONC = '{\n  // comment\n  "mcpServers": {"jc": {"url": "https://jc.example.com/x",},},\n}\n'
+scenario("add_mcp_from_files", init(".claude")
+         + [w("src/multi.json", MCP_JSON_MULTI), w("src/single.json", MCP_JSON_SINGLE),
+            w("src/codex.toml", MCP_TOML), w("src/flat-srv.toml", MCP_TOML_FLAT), w("src/c.jsonc", MCP_JSONC),
+            w("src/list.json", "[1, 2]"), w("src/bad.json", "{nope"), w("src/x.yaml", "a: b\n"),
+            {"op": "mkdir", "path": "src/dir.json"},
+            run("add", "mcp", "--from", "src/multi.json"),
+            run("add", "mcp", "first-srv", "--from", "src/multi.json"),
+            run("add", "mcp", "local", "--from", "src/multi.json"),
+            run("add", "mcp", "nothere", "--from", "src/multi.json"),
+            run("add", "mcp", "--from", "src/single.json"),
+            run("add", "mcp", "--from", "src/codex.toml", "--agents", "codex"),
+            run("add", "mcp", "--from", "src/flat-srv.toml"),
+            run("add", "mcp", "--from", "src/c.jsonc"),
+            run("add", "mcp", "--from", "src/list.json"), run("add", "mcp", "--from", "src/bad.json"),
+            run("add", "mcp", "--from", "src/x.yaml"), run("add", "mcp", "--from", "src/missing.json"),
+            run("add", "mcp", "--from", "src/dir.json"), WTREE])
+scenario("add_mcp_from_urls", init(".claude")
+         + [run("add", "mcp", "--from", "https://api.example.com/github_tools"),
+            run("add", "mcp", "--from", "https://user:" + FAKE + "@Host.Example.com:8443/Linear?token=" + FAKE + "&x=1"),
+            run("add", "mcp", "--from", "https://example.com/v1/mcp"),
+            run("add", "mcp", "named", "--from", "https://example.com/v1/mcp"),
+            run("add", "mcp", "--from", "https://"),
+            run("add", "mcp", "--from", "https://example.com/Bad.Name"),
+            run("add", "mcp", "--from", "https://example.com/github_tools", "--force"), WTREE])
+scenario("add_mcp_force_and_args", init(".claude")
+         + [w("aikito/mcps/keep.toml", 'transport = "remote"\nurl = "https://k.example.com/mcp"\nagents = ["codex"]\n'
+                                      'headers = { Authorization = "Bearer ' + FAKE + '", X-A = "a" }\n\n'
+                                      '[authentication]\ntype = "oauth"\n\n[overrides.codex]\nenabled = false\n'),
+            w("aikito/mcps/stdio-one.toml", 'command = "uvx"\nargs = ["a", "b"]\nagents = ["claude-code"]\n'
+                                            'env = { A = "1", B = 2 }\n'),
+            run("add", "mcp", "keep", "--url", "https://k2.example.com/mcp", "--force"),
+            run("add", "mcp", "stdio-one", "--command", "node", "--force"),
+            run("add", "mcp", "stdio-one", "--force"),
+            run("add", "mcp", "x", "--transport", "bogus"),
+            run("add", "mcp", "x", "--transport", "stdio", "--url", "https://e.example.com"),
+            run("add", "mcp", "x", "--transport", "remote"),
+            run("add", "mcp", "x", "--command", "a", "--url", "https://e.example.com"),
+            run("add", "mcp", "x", "--from"), WTREE])
+scenario("add_mcp_sync", init(".claude")
+         + [run("add", "mcp", "remote-a", "--url", "https://a.example.com/mcp", "--agents", "claude-code", "--sync"),
+            {"op": "read", "path": ".claude.json"}, WTREE])
+scenario("add_mcp_sync_conflict", init(".claude")
+         + [w(".claude.json", '{"mcpServers": {"remote-b": {"type": "http", "url": "https://mine.example.com"}}}\n'),
+            run("add", "mcp", "remote-b", "--url", "https://b.example.com/mcp", "--agents", "claude-code", "--sync"),
+            {"op": "read", "path": ".claude.json"}, WTREE,
+            w("aikito/mcps/remote-b.toml", 'transport = "remote"\nurl = "https://old.example.com"\nagents = ["codex"]\n'),
+            run("add", "mcp", "remote-b", "--url", "https://b.example.com/mcp", "--agents", "claude-code", "--sync", "--force"),
+            WTREE])
+
+
 def main():
     vectors = {name: {"steps": steps, "expect": run_scenario(steps)} for name, steps in SCENARIOS.items()}
     with open(os.path.join(HERE, "options_vectors.json"), "w") as f:

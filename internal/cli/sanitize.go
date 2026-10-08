@@ -22,8 +22,16 @@ func SanitizeMCPURL(rawURL, serverName string) (string, []string) {
 	}
 	var warnings []string
 
-	if u.User != nil {
+	pw, _ := u.User.Password()
+	if u.User != nil && (u.User.Username() != "" || pw != "") {
 		u.User = nil
+		// Python rebuilds the netloc from urlsplit's hostname, which is
+		// lowercased, plus the port.
+		host := strings.ToLower(u.Hostname())
+		if p := u.Port(); p != "" {
+			host += ":" + p
+		}
+		u.Host = host
 		warnings = append(warnings, fmt.Sprintf(
 			"[SECURITY] URL for '%s' contains userinfo credentials. "+
 				"Stripped from canonical TOML to prevent leakage into workspace. "+
