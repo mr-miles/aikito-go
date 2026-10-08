@@ -99,8 +99,8 @@ func TestRenderSubagentText(t *testing.T) {
 
 func TestValidateResourceName(t *testing.T) {
 	cases := []struct {
-		name    string
-		valid   bool
+		name  string
+		valid bool
 	}{
 		{"codex", true},
 		{"my-agent-1", true},

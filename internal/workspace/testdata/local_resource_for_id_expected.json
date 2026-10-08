@@ -1,0 +1,280 @@
+[
+  {
+    "id": "config:memory.stale_days",
+    "ok": true,
+    "kind": "config",
+    "name": "memory.stale_days",
+    "fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "parts": [
+      [
+        "config.toml",
+        "memory"
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "config:inbox.path",
+    "ok": false,
+    "error": "Host-local resource ID: config:inbox.path"
+  },
+  {
+    "id": "skill-selection:my-skill",
+    "ok": true,
+    "kind": "skill-selection",
+    "name": "my-skill",
+    "fingerprint": "",
+    "parts": [
+      [
+        "skills.toml",
+        ""
+      ]
+    ],
+    "references": [
+      "skill:my-skill"
+    ]
+  },
+  {
+    "id": "skill-selection:aikito",
+    "ok": true,
+    "kind": "skill-selection",
+    "name": "aikito",
+    "fingerprint": "",
+    "parts": [
+      [
+        "skills.toml",
+        ""
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "project:proj1",
+    "ok": true,
+    "kind": "project",
+    "name": "proj1",
+    "fingerprint": "",
+    "parts": [
+      [
+        "projects/proj1/agent.toml",
+        ""
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "project-field:proj1/sync_mode",
+    "ok": true,
+    "kind": "project-field",
+    "name": "proj1/sync_mode",
+    "fingerprint": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "parts": [
+      [
+        "projects/proj1/agent.toml",
+        ""
+      ]
+    ],
+    "references": [
+      "project:proj1"
+    ]
+  },
+  {
+    "id": "project-field:proj1/path",
+    "ok": false,
+    "error": "Invalid project field ID: project-field:proj1/path"
+  },
+  {
+    "id": "project-path:proj1//tmp/proj1",
+    "ok": true,
+    "kind": "project-path",
+    "name": "proj1//tmp/proj1",
+    "fingerprint": "",
+    "parts": [
+      [
+        "projects/proj1/agent.toml",
+        ""
+      ]
+    ],
+    "references": [
+      "project:proj1"
+    ]
+  },
+  {
+    "id": "project-skill:proj1/my-skill",
+    "ok": true,
+    "kind": "project-skill",
+    "name": "proj1/my-skill",
+    "fingerprint": "",
+    "parts": [
+      [
+        "projects/proj1/agent.toml",
+        ""
+      ]
+    ],
+    "references": [
+      "project:proj1",
+      "skill:my-skill"
+    ]
+  },
+  {
+    "id": "project-skill:proj1/aikito",
+    "ok": true,
+    "kind": "project-skill",
+    "name": "proj1/aikito",
+    "fingerprint": "",
+    "parts": [
+      [
+        "projects/proj1/agent.toml",
+        ""
+      ]
+    ],
+    "references": [
+      "project:proj1"
+    ]
+  },
+  {
+    "id": "project-memory:proj1/notes/arch.md",
+    "ok": true,
+    "kind": "project-memory",
+    "name": "proj1/notes/arch.md",
+    "fingerprint": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "parts": [
+      [
+        "projects/proj1/memory/notes/arch.md",
+        ""
+      ]
+    ],
+    "references": [
+      "project:proj1"
+    ]
+  },
+  {
+    "id": "project-instructions:proj1",
+    "ok": true,
+    "kind": "project-instructions",
+    "name": "proj1",
+    "fingerprint": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "parts": [
+      [
+        "projects/proj1/AGENTS.md",
+        ""
+      ]
+    ],
+    "references": [
+      "project:proj1"
+    ]
+  },
+  {
+    "id": "global-instructions:AGENTS.md",
+    "ok": true,
+    "kind": "global-instructions",
+    "name": "AGENTS.md",
+    "fingerprint": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "parts": [
+      [
+        "global/AGENTS.md",
+        ""
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "global-instructions:other.md",
+    "ok": false,
+    "error": "Invalid resource ID: global-instructions:other.md"
+  },
+  {
+    "id": "agent:codex",
+    "ok": true,
+    "kind": "agent",
+    "name": "codex",
+    "fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "parts": [
+      [
+        "agents/codex.toml",
+        ""
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "mcp:filesystem",
+    "ok": true,
+    "kind": "mcp",
+    "name": "filesystem",
+    "fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "parts": [
+      [
+        "mcps/filesystem.toml",
+        ""
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "subagent:reviewer",
+    "ok": true,
+    "kind": "subagent",
+    "name": "reviewer",
+    "fingerprint": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "parts": [
+      [
+        "subagents/reviewer.md",
+        ""
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "skill:my-skill",
+    "ok": true,
+    "kind": "skill",
+    "name": "my-skill",
+    "fingerprint": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "parts": [
+      [
+        "skills/my-skill",
+        ""
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "memory:notes/decision-1.md",
+    "ok": true,
+    "kind": "memory",
+    "name": "notes/decision-1.md",
+    "fingerprint": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "parts": [
+      [
+        "memory/notes/decision-1.md",
+        ""
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "inbox:idea.md",
+    "ok": true,
+    "kind": "inbox",
+    "name": "idea.md",
+    "fingerprint": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "parts": [
+      [
+        "inbox/idea.md",
+        ""
+      ]
+    ],
+    "references": []
+  },
+  {
+    "id": "bogus:thing",
+    "ok": false,
+    "error": "Unsupported resource ID: bogus:thing"
+  },
+  {
+    "id": "project:proj1/extra",
+    "ok": false,
+    "error": "Invalid resource ID: project:proj1/extra"
+  }
+]

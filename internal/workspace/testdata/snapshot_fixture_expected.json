@@ -1,0 +1,239 @@
+{
+  "findings": [
+    {
+      "code": "invalid-skill",
+      "message": "Skill has no regular SKILL.md",
+      "resource": "skills/empty-skill",
+      "status": "error"
+    }
+  ],
+  "resources": {
+    "agent:codex": {
+      "fingerprint": "e42499605cc5b3ca4624ab6e230824e827c39a28c1b6ab26be5620e301aa817a",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "agents/codex.toml",
+          ""
+        ]
+      ],
+      "references": []
+    },
+    "config:inbox.path": {
+      "fingerprint": "44cb8de0fc3427e6267340f588d93fa83a9646158158eb43e5fc253d3aa4a6b5",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "config.toml",
+          "inbox"
+        ]
+      ],
+      "references": []
+    },
+    "config:memory.stale_days": {
+      "fingerprint": "811786ad1ae74adfdd20dd0372abaaebc6246e343aebd01da0bfc4c02bf0106c",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "config.toml",
+          "memory"
+        ]
+      ],
+      "references": []
+    },
+    "global-instructions:AGENTS.md": {
+      "fingerprint": "e03e4dad2939c7f145c9c9102207a78446b5f4466eadd4f3ed0988a2e52f3026",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "global/AGENTS.md",
+          ""
+        ]
+      ],
+      "references": []
+    },
+    "inbox:idea.md": {
+      "fingerprint": "0fabe0ccc8ccf9e071990ca13efe717b7934e8b5f554c762b4850b3c0947d547",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "inbox/idea.md",
+          ""
+        ]
+      ],
+      "references": []
+    },
+    "mcp:filesystem": {
+      "fingerprint": "01c92e70f7cbffd87306bf4b6db78edb9a449dd3c2f8c1bd1994b8d3babf3b67",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "mcps/filesystem.toml",
+          ""
+        ]
+      ],
+      "references": [
+        "agent:codex"
+      ]
+    },
+    "memory:general.md": {
+      "fingerprint": "a4141c9015630d1432709154ff019b2ae46d150fc9d36620fd96a8e6898210a7",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "memory/general.md",
+          ""
+        ]
+      ],
+      "references": []
+    },
+    "memory:notes/decision-1.md": {
+      "fingerprint": "37dbd2d9fb0f91b8862791abb187188bec486ebc32b816df388ae5fe62adb417",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "memory/notes/decision-1.md",
+          ""
+        ]
+      ],
+      "references": []
+    },
+    "project-field:proj1/sync_mode": {
+      "fingerprint": "6efec98683cc8a510eed3cef394bc29ac75d238b37525f77035541e142b7ee45",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "projects/proj1/agent.toml",
+          ""
+        ]
+      ],
+      "references": [
+        "project:proj1"
+      ]
+    },
+    "project-instructions:proj1": {
+      "fingerprint": "d60fc6d200bca25f8609ab6724f31a3fb21a80b88bebc82c1241a7a30f64ee65",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "projects/proj1/AGENTS.md",
+          ""
+        ]
+      ],
+      "references": [
+        "project:proj1"
+      ]
+    },
+    "project-memory:proj1/notes/arch.md": {
+      "fingerprint": "2e7cb38229f7877e569cc05dd9c8fb71b30954ad2c9978328d69f5d377f81505",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "projects/proj1/memory/notes/arch.md",
+          ""
+        ]
+      ],
+      "references": [
+        "project:proj1"
+      ]
+    },
+    "project-path:proj1//tmp/proj1": {
+      "fingerprint": "",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "projects/proj1/agent.toml",
+          ""
+        ]
+      ],
+      "references": [
+        "project:proj1"
+      ]
+    },
+    "project-skill:proj1/my-skill": {
+      "fingerprint": "",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "projects/proj1/agent.toml",
+          ""
+        ]
+      ],
+      "references": [
+        "project:proj1",
+        "skill:my-skill"
+      ]
+    },
+    "project:proj1": {
+      "fingerprint": "",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "projects/proj1/agent.toml",
+          ""
+        ]
+      ],
+      "references": []
+    },
+    "skill-selection:aikito": {
+      "fingerprint": "",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "skills.toml",
+          ""
+        ]
+      ],
+      "references": []
+    },
+    "skill-selection:my-skill": {
+      "fingerprint": "",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "skills.toml",
+          ""
+        ]
+      ],
+      "references": [
+        "skill:my-skill"
+      ]
+    },
+    "skill:empty-dir-skill": {
+      "fingerprint": "715f7b777ff6f9917cc264bf683c6202054b71264b8afbac1e5033ad0b8a56a9",
+      "mode_fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "parts": [
+        [
+          "skills/empty-dir-skill",
+          ""
+        ]
+      ],
+      "references": []
+    },
+    "skill:my-skill": {
+      "fingerprint": "3c28507bad8f60703f54d9d3e686cd942fab395b513e950f6097daf6e5a9f3f7",
+      "mode_fingerprint": "e46ff6b050f53a4ed34dffe1b64fe02917a1934532b0a3edcae457e7a68f0dd6",
+      "parts": [
+        [
+          "skills/my-skill",
+          ""
+        ]
+      ],
+      "references": []
+    },
+    "subagent:reviewer": {
+      "fingerprint": "126926e1ed2004363c14915319fb64bbcf6bdbc2697bc915085bc6792a149ee5",
+      "mode_fingerprint": null,
+      "parts": [
+        [
+          "subagents/reviewer.md",
+          ""
+        ]
+      ],
+      "references": [
+        "agent:codex"
+      ]
+    }
+  },
+  "skipped": []
+}
