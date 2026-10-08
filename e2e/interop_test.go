@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"testing"
@@ -21,6 +22,7 @@ func goCLIIn(t *testing.T, home, dir string, args ...string) runResult {
 // status, and the resulting home, must match what Python itself did on the
 // same state.
 func TestInteropGoOnPythonState(t *testing.T) {
+	skipInteropOnWindows(t)
 	for _, sc := range ioScenarios {
 		t.Run(sc.name, func(t *testing.T) {
 			state := ioLoad(t, sc.name, "python_state")
@@ -39,6 +41,7 @@ func TestInteropGoOnPythonState(t *testing.T) {
 // built. It also checks the committed record of Python running on a
 // Go-built home: Python must see exactly what it sees on its own state.
 func TestInteropGoWritesPythonState(t *testing.T) {
+	skipInteropOnWindows(t)
 	for _, sc := range ioScenarios {
 		t.Run(sc.name, func(t *testing.T) {
 			state, build := ioRunScenarioBuild(t, sc, goCLIIn, goFaultCLI(sc))
@@ -50,6 +53,14 @@ func TestInteropGoWritesPythonState(t *testing.T) {
 			ioCompareText(t, "Python on Go-built state vs Python on its own", ioLoadText(t, sc.name, "python_on_go.txt"), ioLoadText(t, sc.name, "python_on_python.txt"))
 			ioCompareSnapshots(t, "home after Python on Go state vs on its own", ioLoad(t, sc.name, "python_on_go_after"), ioLoad(t, sc.name, "python_on_python_after"))
 		})
+	}
+}
+
+// skipInteropOnWindows: the snapshots were captured on POSIX and compare
+// file modes and symlinks literally.
+func skipInteropOnWindows(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("interop snapshots compare POSIX modes and symlinks")
 	}
 }
 

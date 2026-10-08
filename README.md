@@ -8,7 +8,9 @@ out to each agent and project.
 The original is a Python tool. This port builds to a single, self-contained
 binary with no runtime to install, and aims to behave the same as the Python
 version on the same workspace. The two read and write the same workspace
-format, so you can switch between them.
+and runtime state, so you can switch between them at any point, even after
+one of them was interrupted mid-write (see [Switching between the Go and
+Python versions](#switching-between-the-go-and-python-versions)).
 
 All eight of the original's default agents are supported: Codex, Claude Code,
 Antigravity CLI (`agy`), OpenCode, GitHub Copilot CLI, DeepSeek Harness
@@ -113,6 +115,30 @@ Each of these says so when used, rather than being silently ignored:
 - **`show mcp --live`** doesn't draw Python's animated "loading" line on a
   terminal's stderr while probes run. Output is otherwise identical.
 
+## Switching between the Go and Python versions
+
+The end-to-end suite checks this directly (`e2e/interop_test.go`):
+
+- **Python's state, read and changed by Go.** Homes built by Python v1.57.7
+  (adopt with MCP headers, global skills, MCP servers, subagents, link- and
+  copy-mode projects, memory, inbox, a hand-edited copied skill, an offline
+  project) are restored elsewhere and driven by the Go binary: `status`,
+  `diff --all`, `show …`, every `sync` with and without `--dry-run`, and
+  `sync project --force`. Every line of output, every exit code and the
+  resulting files match what Python did on the same state, and a fully
+  synced Python home needs no changes.
+- **Go's state is Python's state.** The same steps run with Go leave a home
+  identical to Python's, file for file (including copy-mode state files,
+  journals and backups), and Python sees no difference between the two.
+- **Interrupted writes.** A project sync stopped after its first, second or
+  third journal write, and a legacy workspace migration stopped at five
+  points, are recovered by the other implementation exactly as by the one
+  that was interrupted.
+- **Legacy workspaces.** `migrate workspace-resources` on a pre-v2 workspace
+  gives Python's output and files.
+
+The only state difference is the bundled skills' file modes (see below).
+
 ## Development
 
 ```bash
@@ -173,6 +199,7 @@ internal/projectsync/ sync project: skill state, transactions, memory
 internal/linkplan/   symlink planning, global skills and instructions
 internal/writerlock/ the workspace writer lock
 internal/compat/     OS-specific helpers
+internal/faultinject/ crash points for recovery tests (-tags aikito_faultinject)
 e2e/                 end-to-end tests and captured snapshots
 docs/                documentation from the original project
 ```
