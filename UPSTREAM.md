@@ -56,7 +56,9 @@ gaps; see the Go file's doc comment), **not ported**.
 | `config.py`, `config_runtime.py` | `internal/workspace/resources.go`, `internal/mcp/configtarget.go` | partial: physical-identity resolution simplified |
 | `project_config.py`, `project_runtime.py`, `project.py` | `internal/project/` | ported (config layer); `project.py`'s status layer is in `internal/cli/status.go` |
 | `project_sync.py`, `skill_plan.py`, `skill_runtime.py`, `skill_state.py` | `internal/sync/projectskills.go` | partial: simplified state file, no CAS/revision engine |
-| `global_skills.py`, `instructions.py`, `link.py` | `internal/sync/globalskills.go`, `globalinstructions.go`, `link.go` | partial: per-agent links, no shared `~/.agents/skills` hub |
+| `global_skills.py`, `instructions.py`, `link.py` | `internal/linkplan/` | ported for `sync global` (shared `~/.agents/skills` hub); `build_project_instruction_batch` not ported; `sync project` still uses `internal/sync/link.go` |
+| `workspace/sync.py` (`build_global_sync_plan`, `execute_global_sync_plan`, bundled refresh), `cli.py` `sync_global_resources` | `internal/cli/syncglobal.go`, `bundledrefresh.go` | ported |
+| `skill_state.py` `WorkspaceWriterLock` | `internal/writerlock/` | ported (no OS lock on Windows) |
 | `subagent.py`, `subagent_adapters.py`, `subagent_validation.py` | `internal/subagent/`, `internal/sync/subagents.go` | ported |
 | `mcp/model.py`, `mcp/adapters/*` | `internal/mcp/model.go`, `adapters.go`, `toml.go`, `jsonc.go`, `cordis.go`, `orderedjson.go` | ported |
 | `mcp/loader.py`, `planner.py`, `executor.py` | `internal/mcp/loader.go`, `planner.go`, `executor.go`, `state.go` | ported |
@@ -89,6 +91,7 @@ diff.
 | `internal/mcp/testdata/redact_vectors.json` | `python3 internal/mcp/testdata/gen_redact_vectors.py` |
 | `internal/cli/testdata/unified_diff_vectors.json` | `python3 internal/cli/testdata/gen_unified_diff_vectors.py` |
 | `internal/cli/testdata/completion_vectors.json` | `python3 internal/cli/testdata/gen_completion_vectors.py` |
+| `internal/cli/testdata/syncglobal_vectors.json` | `python3 internal/cli/testdata/gen_syncglobal_vectors.py` |
 | `internal/registry/testdata/targets_vectors.json` | `python3 internal/registry/testdata/gen_targets_vectors.py` |
 | `internal/cli/helptext/help.json` (embedded `--help` text) | `python3 internal/cli/helptext/gen_help.py`, then fix any marker `help_test.go` reports in `helpAnnotations` (`help.go`) |
 

@@ -107,10 +107,6 @@ Each of these says so when used, rather than being silently ignored:
 
 ### Behaviour that differs from the Python version
 
-- **Global skill layout.** The Python version links every agent's skills
-  through one shared `~/.agents/skills` folder. This port links each skill
-  directly into each agent's own skills folder. The agent sees the same skills
-  either way; the folder layout differs when several agents share a path.
 - **`sync project` copy mode** tracks drift in a small local state file
   rather than Python's full revision-tracking engine. It still detects a
   hand-edited copy and refuses to overwrite it without `--force`.

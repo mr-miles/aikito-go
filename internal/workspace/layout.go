@@ -112,7 +112,7 @@ func ReadAgentDocuments(root string) (map[string]map[string]any, error) {
 		}
 		document, err := DecodeTOML(data)
 		if err != nil {
-			return nil, layoutErrorf("Invalid Agent file: %s: %v", path, err)
+			return nil, layoutErrorf("Invalid Agent file: %s", path)
 		}
 		if len(document) != 1 {
 			return nil, layoutErrorf("Agent file must contain only [agents.%s]: %s", stem, path)

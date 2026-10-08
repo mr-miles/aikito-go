@@ -1,0 +1,2316 @@
+{
+ "agent_marker_removed": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[OK] Codex skills: shared path H/.agents/skills\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[DRY RUN LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SKIP] Codex not detected: H/.codex\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SKIP] Codex not detected: H/.codex\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "rm",
+    "path": ".codex"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "all_markers": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[OK] Codex/DeepSeek Harness/GitHub Copilot CLI/Grok Build/OpenCode/Pi skills: shared path H/.agents/skills\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[DRY RUN LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[DRY RUN LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[DRY RUN LINK] OpenCode instructions: H/.config/opencode/AGENTS.md -> H/aikito/global/AGENTS.md\n[DRY RUN LINK] GitHub Copilot CLI instructions: H/.copilot/copilot-instructions.md -> H/aikito/global/AGENTS.md\n[DRY RUN LINK] DeepSeek Harness instructions: H/.dsh/AGENTS.md -> H/aikito/global/AGENTS.md\n[DRY RUN LINK] Grok Build instructions: H/.grok/rules/aikito.md -> H/aikito/global/AGENTS.md\n[DRY RUN LINK] Pi instructions: H/.pi/agent/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 7 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[OK] Codex/DeepSeek Harness/GitHub Copilot CLI/Grok Build/OpenCode/Pi skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[LINK] OpenCode instructions: H/.config/opencode/AGENTS.md -> H/aikito/global/AGENTS.md\n[LINK] GitHub Copilot CLI instructions: H/.copilot/copilot-instructions.md -> H/aikito/global/AGENTS.md\n[LINK] DeepSeek Harness instructions: H/.dsh/AGENTS.md -> H/aikito/global/AGENTS.md\n[LINK] Grok Build instructions: H/.grok/rules/aikito.md -> H/aikito/global/AGENTS.md\n[LINK] Pi instructions: H/.pi/agent/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 7 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Codex/DeepSeek Harness/GitHub Copilot CLI/Grok Build/OpenCode/Pi skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] OpenCode instructions: H/.config/opencode/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] GitHub Copilot CLI instructions: H/.copilot/copilot-instructions.md -> H/aikito/global/AGENTS.md\n[OK] DeepSeek Harness instructions: H/.dsh/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] Grok Build instructions: H/.grok/rules/aikito.md -> H/aikito/global/AGENTS.md\n[OK] Pi instructions: H/.pi/agent/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 7 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Codex/DeepSeek Harness/GitHub Copilot CLI/Grok Build/OpenCode/Pi skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] OpenCode instructions: H/.config/opencode/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] GitHub Copilot CLI instructions: H/.copilot/copilot-instructions.md -> H/aikito/global/AGENTS.md\n[OK] DeepSeek Harness instructions: H/.dsh/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] Grok Build instructions: H/.grok/rules/aikito.md -> H/aikito/global/AGENTS.md\n[OK] Pi instructions: H/.pi/agent/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 7 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .codex",
+     "D .config",
+     "D .config/opencode",
+     "D .copilot",
+     "D .deepseek",
+     "D .dsh",
+     "D .gemini",
+     "D .grok",
+     "D .grok/rules",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .pi",
+     "D .pi/agent",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L .config/opencode/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L .copilot/copilot-instructions.md -> H/aikito/global/AGENTS.md",
+     "L .dsh/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L .grok/rules/aikito.md -> H/aikito/global/AGENTS.md",
+     "L .pi/agent/AGENTS.md -> H/aikito/global/AGENTS.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "mkdir",
+    "path": ".gemini"
+   },
+   {
+    "op": "mkdir",
+    "path": ".config/opencode"
+   },
+   {
+    "op": "mkdir",
+    "path": ".copilot"
+   },
+   {
+    "op": "mkdir",
+    "path": ".grok"
+   },
+   {
+    "op": "mkdir",
+    "path": ".pi"
+   },
+   {
+    "op": "mkdir",
+    "path": ".dsh"
+   },
+   {
+    "op": "mkdir",
+    "path": ".deepseek"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "broken_stale_hub_entry": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/foo -> H/aikito/skills/foo\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (3 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CLEANUP] Removed stale managed item: H/.agents/skills/foo\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: foo\ndescription: test\n---\nbody\n",
+    "op": "write",
+    "path": "aikito/skills/foo/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"foo\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/skills/foo"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "bundled_skill_drift": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY-RUN] Would refresh bundled skill: aikito\n[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[DRY RUN LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[BACKUP] Bundled skill 'aikito': H/.aikito/backups/bundled-skills_TS/aikito\n[REFRESH] Bundled skill 'aikito' updated from installed Aikito\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .aikito",
+     "D .aikito/backups",
+     "D .aikito/backups/bundled-skills_TS",
+     "D .aikito/backups/bundled-skills_TS/aikito",
+     "D .aikito/backups/bundled-skills_TS/aikito/references",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .aikito/backups/bundled-skills_TS/aikito/SKILL.md",
+     "F .aikito/backups/bundled-skills_TS/aikito/references/adoption.md",
+     "F .aikito/backups/bundled-skills_TS/aikito/references/installation.md",
+     "F .aikito/backups/bundled-skills_TS/aikito/references/projects.md",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   },
+   {
+    "content": "---\nname: aikito\ndescription: Operate Aikito workspaces and resources, including reading inbox notes, managing memory, skills, projects, MCP servers, subagents, and synchronization.\n---\n\n# Aikito\n\n## Purpose\n\nUse Aikito as the canonical, Git-managed source for Agent resources shared\nacross tools, projects, and machines. Existing Agent setups normally enter the\nworkspace through adoption; newly created resources start in the workspace.\n\n## Core Model\n\nKeep the CLI installation separate from the canonical user workspace\n(`<workspace>`, normally `~/aikito`). When developing Aikito itself, keep its\nsource checkout separate from the workspace too:\n\n```text\n<workspace>/\n├── layout.toml + skills.toml\n├── agents/*.toml\n├── subagents/*.md\n├── global/AGENTS.md\n├── skills/ + subagents/ + mcps/\n├── memory/\n└── projects/<name>/\n```\n\nAgent configuration directories and project `.agents/` directories are runtime\ntargets, not independent sources. Modify canonical resources first and then\nsynchronize them. Never treat generated Agent-native instructions, skills,\nsubagents, or MCP entries as sources.\n\nThe bundled `aikito` and `durable-memory` skills are system-managed snapshots,\nnot user-customizable canonical resources. Aikito refreshes them from the\ninstalled package during workspace initialization and global synchronization,\nbacking up divergent contents first. Put lasting custom behavior in global or\nproject instructions, or in a separately named skill.\n\nResolve `<workspace>` with `aikito path workspace` before editing canonical\nfiles directly. `AIKITO_DIR` temporarily overrides the persisted workspace.\nUse the installed `aikito` command and treat `aikito <command> --help` as the\nauthority for the installed version's options.\n\n## Choose a Workflow\n\nRead [references/installation.md](references/installation.md) when the CLI is\nnot installed or the user asks to install or upgrade Aikito.\n\nBring an existing local Agent setup under management:\n\n```bash\naikito init workspace ~/aikito\naikito adopt\naikito sync\naikito status\n```\n\nSkip `adopt` when there are no supported external resources. On another\nmachine, clone or download the existing workspace, bind it with\n`aikito init workspace <path>`, and run `aikito sync`.\n\nNew resources follow `add → edit → show → sync → status / diff / doctor`.\nExisting resources follow `adopt → show → sync → status`. Bare `aikito sync`\norchestrates the entire workspace.\n\n## Core Rules\n\n- Inspect relevant canonical files and current status before changing anything;\n  run `aikito status` or the narrowest resource-specific check afterward.\n- Use `--dry-run` when the user requests a preview. Adoption and synchronization\n  already preflight their complete plans before writing by default.\n- Never silently replace unmanaged targets, drifted copies, or conflicting\n  instructions. Do not use `--force` or `--prune` merely to make status green.\n- Preserve unrelated changes in both the workspace and runtime targets.\n- Keep credentials out of the workspace and Git. Canonical MCP definitions\n  should reference environment variables; never print or persist their values.\n- Before publishing a workspace repository, review memory and configuration for\n  private data. A local Git repository is not automatically safe to publish.\n\n## Resource Routing\n\nUse `aikito <command> --help` for exact arguments.\n\n- Global instructions and skills: `aikito add skill` (supports `--from <path>` to\n  import, `--from <path> --force` to refresh an imported snapshot, and\n  `--project <A,B>` / `--sync` to distribute), `aikito rm skill` (supports\n  unregistering via `--project <A,B>` and global deletion via `--force`),\n  `aikito show skill`, and `aikito sync global`.\n- Projects: `aikito init project`, `aikito show project`,\n  `aikito sync project`, `aikito status`, and `aikito diff`.\n- MCP servers: `aikito add mcp` (supports `--from <source>`, `--sync`, and `--force`),\n  `aikito rm mcp` (supports `--sync`), `aikito show mcp`, `aikito sync mcp`, and\n  `aikito auth mcp`.\n- Subagents: `aikito add subagent`, `aikito rm subagent` (supports `--sync`),\n  `aikito show subagent`, and `aikito sync subagents`.\n- Memory: `aikito show|edit|rename|rm memory`; use the `durable-memory` skill to\n  decide scope, content, and versioning.\n- Inbox notes: use `aikito show inbox <name>.md` to read a named note, or\n  `aikito show inbox` to list notes. Use `aikito edit|rm inbox` for changes.\n\nRead [references/projects.md](references/projects.md) when registering or\nsynchronizing projects, choosing `sync_mode`, handling multi-machine paths, or\nusing the public project API.\n\nRead [references/adoption.md](references/adoption.md) when importing an existing\nAgent setup or resolving adoption diagnostics.\n",
+    "read": "aikito/skills/aikito/SKILL.md"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "extra\n",
+    "op": "append",
+    "path": "aikito/skills/aikito/SKILL.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "op": "read",
+    "path": "aikito/skills/aikito/SKILL.md"
+   }
+  ]
+ },
+ "bundled_skill_missing": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY-RUN] Would refresh bundled skill: durable-memory\n[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[DRY RUN LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[REFRESH] Bundled skill 'durable-memory' updated from installed Aikito\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/skills/durable-memory"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "claude_codex": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[OK] Codex skills: shared path H/.agents/skills\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[DRY RUN LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[DRY RUN LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "claude_only": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[DRY RUN LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "claude_skills_symlink_elsewhere": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.claude/skills. Symbolic link points to unauthorized destination: H/other/skills (expected H/.agents/skills). External or unexpected consumer symlink will not be overwritten automatically; inspect manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.claude/skills. Symbolic link points to unauthorized destination: H/other/skills (expected H/.agents/skills). External or unexpected consumer symlink will not be overwritten automatically; inspect manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D other",
+     "D other/skills",
+     "L .claude/skills -> H/other/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": "other/skills"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "symlink",
+    "path": ".claude/skills",
+    "target": "H/other/skills"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "consumer_is_file": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.claude/skills. Target is an unexpected entry type 'file' (expected link to H/.agents/skills). Will not overwrite automatically; inspect manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .claude",
+     "F .claude/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "x\n",
+    "op": "write",
+    "path": ".claude/skills"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "container_is_file": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.agents/skills. Container path is an invalid entry type 'file' (expected directory). Will not overwrite automatically; inspect manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .claude",
+     "F .agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "x\n",
+    "op": "write",
+    "path": ".agents/skills"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "container_symlink_elsewhere": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.agents/skills. Current legacy container symlink points outside current workspace: H/elsewhere, expected: H/aikito/skills. Legacy container migration only allows exact root link to current workspace skills; inspect manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .claude",
+     "L .agents/skills -> H/elsewhere"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": ".agents"
+   },
+   {
+    "op": "symlink",
+    "path": ".agents/skills",
+    "target": "H/elsewhere"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "container_symlink_subpath": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.agents/skills. Current legacy container symlink points to a subpath instead of skills root: H/aikito/skills/aikito, expected: H/aikito/skills. Legacy container migration only allows exact root link to current workspace skills; inspect manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .claude",
+     "L .agents/skills -> H/aikito/skills/aikito"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": ".agents"
+   },
+   {
+    "op": "symlink",
+    "path": ".agents/skills",
+    "target": "H/aikito/skills/aikito"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "custom_agent_shares_claude_paths": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code/ZZ Custom skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code/ZZ Custom instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Claude Code/ZZ Custom skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code/ZZ Custom instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "[agents.zz-custom]\ndisplay_name = \"ZZ Custom\"\nskills_path = \".claude/skills\"\ninstruction_path = \".claude/CLAUDE.md\"\n",
+    "op": "write",
+    "path": "aikito/agents/zz-custom.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "dangling_selected_entry": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/foo -> H/aikito/skills/foo\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (3 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Broken symbolic link points to missing canonical skill 'foo'\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .agents/skills/foo -> H/aikito/skills/foo",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: foo\ndescription: test\n---\nbody\n",
+    "op": "write",
+    "path": "aikito/skills/foo/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"foo\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/skills/foo"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "foreign_hub_entries": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.agents/skills/ext. Stale entry symlink destination: H/elsewhere, expected: H/aikito/skills/ext. Other workspace or unmanaged skill symlink will not be deleted automatically; inspect manually, then run 'aikito sync global' again.\n[CONFLICT] Target preserved: H/.agents/skills/mine. Stale target is a regular directory (expected symlink to H/aikito/skills/mine). Matching directory is not owned by link-only global skills and will not be deleted; inspect or remove manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.agents/skills/ext. Stale entry symlink destination: H/elsewhere, expected: H/aikito/skills/ext. Other workspace or unmanaged skill symlink will not be deleted automatically; inspect manually, then run 'aikito sync global' again.\n[CONFLICT] Target preserved: H/.agents/skills/mine. Stale target is a regular directory (expected symlink to H/aikito/skills/mine). Matching directory is not owned by link-only global skills and will not be deleted; inspect or remove manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .agents/skills/mine",
+     "D .claude",
+     "D elsewhere",
+     "L .agents/skills/ext -> H/elsewhere"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": ".agents/skills/mine"
+   },
+   {
+    "op": "mkdir",
+    "path": "elsewhere"
+   },
+   {
+    "op": "symlink",
+    "path": ".agents/skills/ext",
+    "target": "H/elsewhere"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "grok_legacy_file": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[OK] Grok Build skills: shared path H/.agents/skills\n[LINK] Grok Build instructions: H/.grok/rules/aikito.md -> H/aikito/global/AGENTS.md\n[OK] Grok (legacy) instructions: H/.grok/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .grok",
+     "D .grok/rules",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .grok/AGENTS.md",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .grok/rules/aikito.md -> H/aikito/global/AGENTS.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".grok"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "mine\n",
+    "op": "write",
+    "path": ".grok/AGENTS.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "grok_legacy_link": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[OK] Grok Build skills: shared path H/.agents/skills\n[DRY RUN LINK] Grok Build instructions: H/.grok/rules/aikito.md -> H/aikito/global/AGENTS.md\n[DRY RUN CLEANUP] Would remove stale managed item: H/.grok/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[OK] Grok Build skills: shared path H/.agents/skills\n[LINK] Grok Build instructions: H/.grok/rules/aikito.md -> H/aikito/global/AGENTS.md\n[CLEANUP] Removed stale managed item: H/.grok/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .grok",
+     "D .grok/rules",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .grok/rules/aikito.md -> H/aikito/global/AGENTS.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".grok"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "symlink",
+    "path": ".grok/AGENTS.md",
+    "target": "H/aikito/global/AGENTS.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "instruction_symlink_elsewhere": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Claude Code instructions: Target preserved: H/.claude/CLAUDE.md. Symbolic link points to unauthorized destination: H/elsewhere.md (expected H/aikito/global/AGENTS.md). Foreign or external instruction symlinks will not be overwritten automatically; inspect manually, then run sync again.\n[ERROR] Global skills were synced successfully, but one or more Agent instruction runtime targets have conflicts.\n",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/elsewhere.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "symlink",
+    "path": ".claude/CLAUDE.md",
+    "target": "H/elsewhere.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "instruction_target_is_dir": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Claude Code instructions: Target preserved: H/.claude/CLAUDE.md. Target is a regular directory (expected symlink to H/aikito/global/AGENTS.md). Unmanaged or matching directory will not be overwritten automatically; move or merge it manually, then run 'aikito sync global' again.\n[ERROR] Global skills were synced successfully, but one or more Agent instruction runtime targets have conflicts.\n",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .claude/CLAUDE.md",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": ".claude/CLAUDE.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "legacy_container_symlink": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Replacing old top-level symlink at H/.agents/skills with directory\n[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[DRY RUN LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Replacing old top-level symlink at H/.agents/skills with directory\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": ".agents"
+   },
+   {
+    "op": "symlink",
+    "path": ".agents/skills",
+    "target": "H/aikito/skills"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "missing_canonical_skill": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Canonical skill source missing or unreadable: Canonical skill source does not exist: H/aikito/skills/nope\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Canonical skill source missing or unreadable: Canonical skill source does not exist: H/aikito/skills/nope\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .claude"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "skills = [\"aikito\", \"nope\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "missing_global_instructions": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Global instruction file not found: H/aikito/global/AGENTS.md\n",
+    "stdout": "[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Global instruction file not found: H/aikito/global/AGENTS.md\n",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/global/AGENTS.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "missing_skills_toml": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Global skills configuration not found.\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "no_markers": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 0 Agent skill entries across 0 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 0 Agent skill entries across 0 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "no_skills_key": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (0 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "x = 1\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "no_workspace": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Global skills configuration not found.\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "old_go_layout": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.claude/skills. Target is a regular directory (expected symlink to H/.agents/skills). Unmanaged or matching directory will not be overwritten automatically; move or merge it manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.claude/skills. Target is a regular directory (expected symlink to H/.agents/skills). Unmanaged or matching directory will not be overwritten automatically; move or merge it manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .claude/skills",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills/aikito -> H/aikito/skills/aikito",
+     "L .claude/skills/durable-memory -> H/aikito/skills/durable-memory"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": ".claude/skills"
+   },
+   {
+    "op": "symlink",
+    "path": ".claude/skills/aikito",
+    "target": "H/aikito/skills/aikito"
+   },
+   {
+    "op": "symlink",
+    "path": ".claude/skills/durable-memory",
+    "target": "H/aikito/skills/durable-memory"
+   },
+   {
+    "op": "symlink",
+    "path": ".claude/CLAUDE.md",
+    "target": "H/aikito/global/AGENTS.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "old_layout": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Workspace needs migration: H/aikito\nRun: aikito migrate workspace-resources --dry-run\nThen: aikito migrate workspace-resources\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/layout.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/agents.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "prepopulated_claude_skills": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.claude/skills. Target is a regular directory (expected symlink to H/.agents/skills). Unmanaged or matching directory will not be overwritten automatically; move or merge it manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Target preserved: H/.claude/skills. Target is a regular directory (expected symlink to H/.agents/skills). Unmanaged or matching directory will not be overwritten automatically; move or merge it manually, then run 'aikito sync global' again.\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .claude/skills",
+     "D .claude/skills/mine",
+     "F .claude/skills/mine/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude/skills/mine"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "hi\n",
+    "op": "write",
+    "path": ".claude/skills/mine/SKILL.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "relative_hub_link": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> ../../aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": ".agents/skills"
+   },
+   {
+    "op": "symlink",
+    "path": ".agents/skills/aikito",
+    "target": "../../aikito/skills/aikito"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "skill_conflict_marker": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] ~/aikito/skills/foo/SKILL.md:6: Git conflict marker detected\n[ERROR] ~/aikito/skills/foo/SKILL.md:8: Git conflict marker detected\n[ERROR] ~/aikito/skills/foo/SKILL.md:10: Git conflict marker detected\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: foo\ndescription: test\n---\nbody\n",
+    "op": "write",
+    "path": "aikito/skills/foo/SKILL.md"
+   },
+   {
+    "content": "skills = [\"foo\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "<<<<<<< a\nx\n=======\ny\n>>>>>>> b\n",
+    "op": "append",
+    "path": "aikito/skills/foo/SKILL.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "skills_not_a_list": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Global skills configuration is malformed (expected a list of skill names).\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "skills = \"x\"\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "skills_toml_conflict_marker": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] ~/aikito/skills.toml:2: Git conflict marker detected\n[ERROR] Global synchronization aborted.\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "skills = [\"aikito\"]\n<<<<<<< HEAD\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "stale_hub_entry": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/foo -> H/aikito/skills/foo\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (3 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY RUN CLEANUP] Would remove stale managed item: H/.agents/skills/foo\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CLEANUP] Removed stale managed item: H/.agents/skills/foo\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: foo\ndescription: test\n---\nbody\n",
+    "op": "write",
+    "path": "aikito/skills/foo/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"foo\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "unmanaged_claude_md": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Claude Code instructions: Target preserved: H/.claude/CLAUDE.md. Target is a regular file; Aikito does not overwrite existing instruction files. Move or remove it manually, then run sync again.\n[ERROR] Global skills were synced successfully, but one or more Agent instruction runtime targets have conflicts.\n",
+    "stdout": "[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[OK] Codex skills: shared path H/.agents/skills\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Claude Code instructions: Target preserved: H/.claude/CLAUDE.md. Target is a regular file; Aikito does not overwrite existing instruction files. Move or remove it manually, then run sync again.\n[ERROR] Global skills were synced successfully, but one or more Agent instruction runtime targets have conflicts.\n",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .claude/CLAUDE.md",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "mine\n",
+    "op": "write",
+    "path": ".claude/CLAUDE.md"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "unrecognized_arguments": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "global",
+     "--force"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --force\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "foo",
+     "--dry-run"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: foo\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "global",
+     "foo",
+     "--dry-run"
+    ],
+    "op": "run"
+   }
+  ]
+ }
+}

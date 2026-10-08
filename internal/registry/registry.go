@@ -9,6 +9,7 @@ import (
 	"os"
 	stdpath "path"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/mr-miles/aikito-go/internal/workspace"
@@ -98,6 +99,17 @@ func (r *AgentRegistry) Contains(name string) bool {
 }
 
 func (r *AgentRegistry) Len() int { return len(r.agents) }
+
+// InFileOrder returns the same agents ordered as Python's load_agent_document
+// reads them: sorted agents/<name>.toml file names. Iteration order decides
+// consumer order in grouped targets (e.g. "Codex/DeepSeek Harness/..."),
+// which surfaces in `sync global` output.
+func (r *AgentRegistry) InFileOrder() *AgentRegistry {
+	order := make([]string, len(r.order))
+	copy(order, r.order)
+	sort.Slice(order, func(i, j int) bool { return order[i]+".toml" < order[j]+".toml" })
+	return &AgentRegistry{agents: r.agents, order: order}
+}
 
 // Names returns agent names in the order they were loaded (not sorted).
 func (r *AgentRegistry) Names() []string {

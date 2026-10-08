@@ -63,16 +63,14 @@ out in the commit message, not something to accept blindly.
   tests.
 - `testdata/`: committed golden fixtures.
 
-## A documented, intentional real divergence
+## Command output goldens
 
-`TestE2ESyncGlobal` in `sync_test.go` is the one scenario that does *not*
-expect structural equality — Python's global skill sync routes every agent
-through one shared consumer directory (`~/.agents/skills/`) with
-per-agent indirection symlinks; this Go port currently plans one
-independent symlink per (skill × agent) directly inside each agent's own
-`skills_path`. Both are functionally equivalent for a single-agent host,
-but diverge in raw layout when multiple agents share one physical
-`skills_path` convention. The test checks the *functional* property
-(the fully-resolved set of visible skill names) rather than the raw
-directory shape — see that test's doc comment, and
-`internal/registry/targets_todo.go`, for the underlying gap.
+Some scenarios (`sync_global_output`, `sync_global_prepopulated_output`)
+also capture the command's exit code, stdout and stderr as `output.txt`,
+with the temp home replaced by `H` (see `outputGolden`). A symlink compared
+as a tree root (e.g. `~/.claude/skills`) is recorded as a single symlink
+entry, so a real directory in its place fails the comparison.
+
+The full `sync global` behaviour matrix (conflicts, stale entries, legacy
+layouts, dry runs, bundled-skill refresh) is covered in-process by
+`internal/cli/syncglobal_test.go` against vectors generated from Python.

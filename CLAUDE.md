@@ -77,6 +77,16 @@ time it was applied.
   stripped body everywhere (sync and diff both).
 - **Quoting in messages.** Python f-strings like `f'chmod 600 "{path}"'`
   don't escape; Go's `%q` does. Match Python literally.
+- **Comparing CLI output.** Capture stdout and stderr separately. With both
+  piped to one file, Python's buffered stdout lands after its unbuffered
+  stderr, which makes the line order look different from what users see.
+- **Agent order.** Python iterates agents in sorted `agents/<name>.toml`
+  file order; Go's `AgentRegistry` uses policy order (`BuiltinAgents`
+  first). Where order is visible (e.g. "Codex/DeepSeek Harness/…" in
+  `sync global`), use `reg.InFileOrder()`.
+- **`Path / raw_link`** keeps `..` components; `filepath.Join` cleans them.
+  Messages that show a symlink's destination use `linkplan`'s
+  `pathlibJoin`.
 
 ## Architecture notes
 
@@ -143,9 +153,13 @@ debugged locally; expect path-separator and `PATH` issues there first.
 
 ## Open gaps worth knowing before changing nearby code
 
-- `sync global` uses one link per (skill × agent); Python uses a shared
-  `~/.agents/skills` hub via `agents.resolve_targets`
-  (`internal/registry/targets_todo.go`).
+- `internal/linkplan` (link.py, global_skills.py, instructions.py) drives
+  `sync global` only. `sync project` still uses `internal/sync/link.go`'s
+  simpler `PlanSymlink`; the project-scope branches of
+  `linkplan.PlanInstructions` are ported but not yet called.
+  `build_project_instruction_batch` is not ported.
+- `writerlock` holds no OS lock on Windows (no `LockFileEx` without
+  `x/sys`); the lock file is still created.
 - `sync project` copy mode uses a simple state file, not `skill_plan.py`'s
   CAS engine.
 - `adopt`/`import workspace` compare against current templates only, with no

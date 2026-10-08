@@ -3,43 +3,16 @@
 package e2e
 
 import (
-	"encoding/json"
 	"os"
-	"path/filepath"
-	"sort"
 	"strings"
 	"testing"
 )
 
-// TestE2ESyncGlobal confirms `sync global` is functionally equivalent to
-// Python, but NOT structurally identical — a real, significant
-// architectural divergence this comparison surfaced (not a cosmetic one):
-// Python's global_skills.py routes every agent's skills through ONE shared
-// canonical consumer directory (~/.agents/skills/, populated with one
-// symlink per selected skill) and then makes each agent's own declared
-// skills_path a symlink pointing AT that shared directory — even when (as
-// with Claude Code, whose own skills_path is literally ".claude/skills",
-// not ".agents/skills") the agent's path string doesn't match the shared
-// convention at all. This Go port's internal/sync/globalskills.go instead
-// plans one independent symlink per (skill x agent) directly inside each
-// agent's own skills_path, so ".claude/skills" becomes a real directory
-// containing its own per-skill symlinks rather than a single symlink to a
-// shared location. End users see the same skill set either way for a
-// single-agent setup, but the two approaches diverge for a HOST WITH
-// MULTIPLE AGENTS sharing one physical skills_path convention (6 of 8
-// built-in agents use ".agents/skills" literally) — Python writes the
-// shared symlinks once and every such agent's path IS that directory; this
-// port currently duplicates the same symlinks independently per agent.
-// Confirmed by running the real Python CLI and inspecting its output
-// directly (not assumed) when this golden fixture was captured — see
-// e2e/testdata/sync_global_skills/ (a captured, functional skill-name
-// list, not a raw directory layout) and the skill-resolution check below,
-// which passes because it checks the FUNCTIONAL property (what skills end
-// up visible once every symlink hop is followed), not the raw layout. The
-// raw-layout divergence itself is a known, real gap — flag for a follow-up
-// port of the shared managed-consumer-directory architecture
-// (internal/registry/targets_todo.go already tracks the underlying
-// resolve_targets dependency this needs).
+// TestE2ESyncGlobal compares `sync global` structurally against Python:
+// selected skills are linked into the shared ~/.agents/skills hub, and an
+// agent whose skills_path differs (Claude Code's ~/.claude/skills) gets a
+// single symlink to that hub, not a directory of per-skill links. The
+// command output must match too.
 func TestE2ESyncGlobal(t *testing.T) {
 	home := initWorkspace(t)
 
@@ -52,25 +25,21 @@ func TestE2ESyncGlobal(t *testing.T) {
 		t.Fatalf("go sync global failed (exit %d): %s\n%s", res.ExitCode, res.Stdout, res.Stderr)
 	}
 
-	// Instructions: a single-hop symlink, structurally identical once the
-	// target is normalized relative to home.
 	compareAgainstGolden(t, "sync global (CLAUDE.md)", home+"/.claude/CLAUDE.md", home, "sync_global_claude_md")
+	compareAgainstGolden(t, "sync global (.claude/skills)", home+"/.claude/skills", home, "sync_global_claude_skills")
+	compareAgainstGolden(t, "sync global (.agents/skills)", home+"/.agents/skills", home, "sync_global_agents_skills")
+	compareManifests(t, "sync global (output)", outputGolden(res, home), loadGolden(t, "sync_global_output"))
+}
 
-	// Skills: functional equivalence only (see doc comment above for why
-	// structural equivalence is not expected here).
-	goSkills := resolvedSkillNames(t, filepath.Join(home, ".claude", "skills"))
-	sort.Strings(goSkills)
+// TestE2ESyncGlobalPrepopulated: a real ~/.claude/skills directory is
+// never replaced; Python reports a conflict and aborts before writing.
+func TestE2ESyncGlobalPrepopulated(t *testing.T) {
+	home := initWorkspace(t)
+	writePrepopulatedClaudeSkills(t, home)
 
-	wantData := loadGoldenSingleFile(t, "sync_global_skills", "resolved_skills.json")
-	var wantSkills []string
-	if err := json.Unmarshal(wantData, &wantSkills); err != nil {
-		t.Fatalf("parsing golden resolved_skills.json: %v", err)
-	}
-	sort.Strings(wantSkills)
-
-	if strings.Join(goSkills, ",") != strings.Join(wantSkills, ",") {
-		t.Errorf("resolved skill set differs: go=%v golden(python)=%v", goSkills, wantSkills)
-	}
+	res := runGo(t, home, "sync", "global")
+	compareManifests(t, "sync global prepopulated (output)", outputGolden(res, home), loadGolden(t, "sync_global_prepopulated_output"))
+	compareAgainstGolden(t, "sync global prepopulated (.claude)", home+"/.claude", home, "sync_global_prepopulated_claude")
 }
 
 func TestE2ESyncMCPLifecycle(t *testing.T) {
