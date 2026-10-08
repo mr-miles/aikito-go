@@ -1,24 +1,31 @@
 // Deep workspace diagnostics, ported from doctor.py. Full Python parity
 // would need several unported subsystems (adopt.py's full build_adopt_plan,
-// inspection.py/workspace/inspection.py's ResourceInspectionView, status.py's
-// collect_subagents_matrix, local_state.py's inspect_local_state) — this is
-// a breadth-first partial port: every check area gets at least a real,
-// cross-validated implementation OR an honest "not yet implemented" stub
-// section (never silent omission), prioritizing the checks that are both
-// well-specified and achievable with primitives already built elsewhere in
-// this Go port (the resource scanner, the MCP/subagent planners, the agent
-// registry).
+// workspace/inspection.py's ResourceInspectionView/skill_views,
+// local_state.py's inspect_local_state) — this is a breadth-first partial
+// port: every check area gets at least a real, cross-validated
+// implementation OR an honest "not yet implemented" stub section (never
+// silent omission), prioritizing the checks that are both well-specified
+// and achievable with primitives already built elsewhere in this Go port
+// (the resource scanner, the MCP/subagent planners, the agent registry).
+//
+// Orphans (check_orphans) is a full real check, reusing the already-built
+// sync.BuildSubagentPlan (for orphan subagent files) and mcp.LoadState (for
+// residual managed MCP entries); its one documented simplification is the
+// "stale entries in ~/.agents/skills/" sub-check, which reports every entry
+// not in skills.toml uniformly rather than distinguishing a locally-
+// conflicting unmanaged item via the unported skill_views machinery — see
+// checkOrphans's doc comment.
 //
 // NOT implemented (each still appears in the report as a stub section
 // saying so, matching run_doctor's section list so `--json` output shape
 // stays recognizable): Adoption (needs adopt.py's full plan builder; this
 // Go port's `aikito adopt` is itself a reduced global-instructions-only
-// slice, see adopt.go), Orphans (needs inspection.py), LocalState (needs
-// local_state.py's remote-sync bookkeeping — phase 2 territory), the
-// Python-interpreter-consistency check within Environment (meaningless for
-// a compiled Go binary, dropped rather than stubbed), and --fix's
-// registry-field-backfill behavior (add_missing_agent_fields — reported as
-// WARN findings without an automated fix).
+// slice, see adopt.go), LocalState (needs local_state.py's remote-sync
+// bookkeeping — phase 2 territory), the Python-interpreter-consistency
+// check within Environment (meaningless for a compiled Go binary, dropped
+// rather than stubbed), and --fix's registry-field-backfill behavior
+// (add_missing_agent_fields — reported as WARN findings without an
+// automated fix).
 package cli
 
 import (
@@ -322,13 +329,13 @@ func renderFindingLines(f Finding, symbol string, useUnicode, useColor bool) []s
 func runDoctor(aikitoDir, home string, staleDays int) DoctorReport {
 	return DoctorReport{Sections: []DoctorSection{
 		checkSymlinks(aikitoDir, home),
-		checkOrphansStub(),
+		checkOrphans(aikitoDir, home),
 		checkLocalStateStub(),
 		checkMemory(aikitoDir, home, staleDays),
 		checkDrift(aikitoDir, home),
 		checkSecurity(aikitoDir, home),
 		checkEnvironment(aikitoDir, home),
-		checkAdoptionStub(),
+		checkAdoption(aikitoDir, home),
 		checkConflictMarkers(aikitoDir, home),
 		checkProjects(aikitoDir, home),
 		checkConfigSyntax(aikitoDir, home),
@@ -1133,16 +1140,252 @@ func checkSymlinks(aikitoDir, home string) DoctorSection {
 
 // --- Stub sections (honestly not yet implemented; see package doc comment) ---
 
-func checkAdoptionStub() DoctorSection {
-	return DoctorSection{Name: "Adoption", Findings: []Finding{
-		warn("Adoption diagnostics are not yet implemented in this Go build (needs the full adopt-plan builder; run 'aikito adopt' directly for the reduced global-instructions check this port does support).", ""),
-	}}
+// checkAdoption reuses buildAdoptPlan (adopt.go) read-only — it never
+// writes anything, it just reports how many agent-native resources (global
+// instructions, MCP servers, subagents) `aikito adopt` would currently
+// bring into the canonical workspace, plus any adoption conflicts found.
+func checkAdoption(aikitoDir, home string) DoctorSection {
+	defs, err := registry.LoadAgentDefinitions(aikitoDir, home)
+	if err != nil {
+		return DoctorSection{Name: "Adoption", Findings: []Finding{
+			warn(fmt.Sprintf("Cannot check adoptable resources: %v", err), ""),
+		}}
+	}
+	plan := buildAdoptPlan(aikitoDir, home, defs, map[string]bool{})
+
+	adoptable := len(plan.MCPServers) + len(plan.Subagents)
+	if plan.Instructions != nil && plan.Instructions.Action == "CREATE" {
+		adoptable++
+	}
+	var findings []Finding
+	if adoptable == 0 {
+		findings = append(findings, ok("No agent-native resources pending adoption"))
+	} else {
+		findings = append(findings, warn(
+			fmt.Sprintf("%d resource(s) adoptable into the canonical workspace", adoptable),
+			"aikito adopt --dry-run"))
+	}
+	if plan.Instructions != nil && plan.Instructions.Action == "CONFLICT" {
+		findings = append(findings, warn("Global instructions: canonical content diverges from agent-native source(s)", "aikito adopt --verbose"))
+	}
+	for _, c := range plan.MCPConflicts {
+		findings = append(findings, warn(fmt.Sprintf("MCP server '%s': %s", c.Name, c.Reason), "aikito adopt --skip "+c.Name))
+	}
+	return DoctorSection{Name: "Adoption", Findings: findings}
 }
 
-func checkOrphansStub() DoctorSection {
-	return DoctorSection{Name: "Orphans", Findings: []Finding{
-		warn("Orphan detection is not yet implemented in this Go build (needs workspace/inspection.py's ResourceInspectionView, not yet ported).", ""),
-	}}
+// --- Orphans ---
+//
+// Ports doctor.py's check_orphans. Sub-checks 2a (orphan subagent files) and
+// 2c (residual managed MCP entries) are full, faithful ports — they reuse
+// primitives already built for `sync subagents`/`sync mcp` rather than
+// reimplementing detection logic. Sub-check 2b's "stale entries in
+// ~/.agents/skills/" half is a documented simplification: Python's version
+// goes through workspace/inspection.py's skill_views to distinguish a
+// locally-conflicting unmanaged item from a plain "not in skills.toml"
+// absence; that inspection framework isn't ported, so this reports every
+// ~/.agents/skills/ entry not in skills.toml's current selection uniformly
+// as "not in skills.toml" rather than drawing that distinction.
+func checkOrphans(aikitoDir, home string) DoctorSection {
+	var findings []Finding
+
+	// 2a. Orphan subagent files: an agent-native subagent file/entry with no
+	// canonical subagents/<name>.md counterpart. BuildSubagentPlan already
+	// computes this (the SAOrphan action, already relied on elsewhere in
+	// this file — see checkDrift's `op.Action == sync.SAOrphan` exclusion).
+	ops, serr := sync.BuildSubagentPlan(aikitoDir, home, sync.BuildSubagentPlanOptions{})
+	if serr != nil {
+		findings = append(findings, warn(fmt.Sprintf("Cannot check subagent orphans: %v", serr), ""))
+	} else {
+		orphanCount := 0
+		for _, op := range ops {
+			if op.Action != sync.SAOrphan {
+				continue
+			}
+			orphanCount++
+			findings = append(findings, fail(
+				fmt.Sprintf("%s: orphan subagent file %s", op.Agent, homeRel(op.TargetPath, home)),
+				"aikito sync subagents --prune"))
+		}
+		if orphanCount == 0 {
+			findings = append(findings, ok("No orphan subagent files"))
+		}
+	}
+
+	// 2b. Orphan skill directories in <workspace>/skills/: a directory not
+	// referenced by skills.toml's global selection or any project's
+	// agent.toml skills list.
+	globalSkills := readTOMLStringSet(filepath.Join(aikitoDir, "skills.toml"), "skills")
+	projectSkills := map[string]bool{}
+	if entries, derr := os.ReadDir(filepath.Join(aikitoDir, "projects")); derr == nil {
+		for _, e := range entries {
+			if !e.IsDir() {
+				continue
+			}
+			for s := range readTOMLStringSet(filepath.Join(aikitoDir, "projects", e.Name(), "agent.toml"), "skills") {
+				projectSkills[s] = true
+			}
+		}
+	}
+	allRegisteredSkills := map[string]bool{}
+	for s := range globalSkills {
+		allRegisteredSkills[s] = true
+	}
+	for s := range projectSkills {
+		allRegisteredSkills[s] = true
+	}
+
+	skillsDir := filepath.Join(aikitoDir, "skills")
+	if entries, derr := os.ReadDir(skillsDir); derr == nil {
+		var orphanNames []string
+		for _, e := range entries {
+			if e.IsDir() && !allRegisteredSkills[e.Name()] {
+				orphanNames = append(orphanNames, e.Name())
+			}
+		}
+		sort.Strings(orphanNames)
+		if len(orphanNames) == 0 {
+			findings = append(findings, ok("No orphan skill directories in skills/"))
+		} else {
+			for _, name := range orphanNames {
+				target := filepath.Join(skillsDir, name)
+				if hasUserFiles(target) {
+					findings = append(findings, warn(
+						fmt.Sprintf("skills/%s: orphan skill directory (not in skills.toml or any project agent.toml)", name), ""))
+				} else {
+					findings = append(findings, warn(
+						fmt.Sprintf("skills/%s: empty directory, safe to delete", name),
+						fmt.Sprintf("Remove the empty directory manually: %s", target)))
+				}
+			}
+		}
+	}
+
+	// 2b (simplified): stale entries in ~/.agents/skills/ not in skills.toml.
+	agentsSkillsDir := filepath.Join(home, ".agents", "skills")
+	if entries, derr := os.ReadDir(agentsSkillsDir); derr == nil {
+		var staleNames []string
+		for _, e := range entries {
+			if !globalSkills[e.Name()] {
+				staleNames = append(staleNames, e.Name())
+			}
+		}
+		sort.Strings(staleNames)
+		if len(staleNames) == 0 {
+			findings = append(findings, ok("No stale entries in ~/.agents/skills/"))
+		} else {
+			for _, name := range staleNames {
+				findings = append(findings, fail(
+					fmt.Sprintf("~/.agents/skills/%s: not in skills.toml", name), "aikito sync global"))
+			}
+		}
+	}
+
+	// 2c. Residual managed MCP entries: an agent-native config still has an
+	// entry this tool previously wrote (per the state file's recorded
+	// target_name), but that server is no longer defined in mcps/*.toml —
+	// i.e. it was deleted from the canonical workspace without ever being
+	// un-synced, and `sync mcp`'s own sweep (executor.go's REMOVE handling)
+	// only runs when the removal is actually synced, not detected passively.
+	specs, lerr := mcp.LoadAgentSpecs(aikitoDir, home)
+	if lerr == nil {
+		currentlyDefined := map[[2]string]bool{}
+		for _, spec := range specs {
+			currentlyDefined[[2]string{spec.Agent, spec.TargetName}] = true
+		}
+		previouslyManaged := map[[2]string]bool{}
+		if state, serr2 := mcp.LoadState(home); serr2 == nil {
+			for key, entry := range state.Entries {
+				agentPart, _, found := strings.Cut(key, ":")
+				if found && entry.TargetName != "" {
+					previouslyManaged[[2]string{agentPart, entry.TargetName}] = true
+				}
+			}
+		}
+		if defs, derr2 := registry.LoadAgentDefinitions(aikitoDir, home); derr2 == nil {
+			var agentNames []string
+			for name := range defs {
+				agentNames = append(agentNames, name)
+			}
+			sort.Strings(agentNames)
+			for _, agentName := range agentNames {
+				def := defs[agentName]
+				if def.MCP == nil || !def.MCP.IsSupported() {
+					continue
+				}
+				data, rerr := os.ReadFile(def.MCP.ConfigPath)
+				if rerr != nil {
+					continue
+				}
+				existing, eerr := mcp.ReadAllEntries(def.MCP.Adapter, string(data))
+				if eerr != nil {
+					continue
+				}
+				keys := existing.Keys()
+				sort.Strings(keys)
+				for _, srvKey := range keys {
+					pair := [2]string{agentName, srvKey}
+					if previouslyManaged[pair] && !currentlyDefined[pair] {
+						findings = append(findings, fail(
+							fmt.Sprintf("%s: residual managed MCP entry '%s' in %s", def.DisplayName, srvKey, homeRel(def.MCP.ConfigPath, home)),
+							"aikito sync mcp"))
+					}
+				}
+			}
+		}
+	}
+
+	return DoctorSection{Name: "Orphans", Findings: findings}
+}
+
+// readTOMLStringSet reads field (expected []string, e.g. "skills") from the
+// TOML document at path, returning an empty set on any read/parse/shape
+// error (matching doctor.py's orphan check, which silently treats a
+// malformed skills.toml/agent.toml as "no selections" rather than failing
+// the whole check).
+func readTOMLStringSet(path, field string) map[string]bool {
+	set := map[string]bool{}
+	data, rerr := os.ReadFile(path)
+	if rerr != nil {
+		return set
+	}
+	doc, derr := workspace.DecodeTOML(data)
+	if derr != nil {
+		return set
+	}
+	raw, ok2 := doc[field].([]any)
+	if !ok2 {
+		return set
+	}
+	for _, v := range raw {
+		if s, ok3 := v.(string); ok3 {
+			set[s] = true
+		}
+	}
+	return set
+}
+
+// hasUserFiles mirrors doctor.py's _has_user_files: true if dir contains
+// any regular file or symlink anywhere in its tree (an unreadable entry
+// also counts as "has files", matching Python's fail-safe OSError handling
+// — don't misidentify an inaccessible directory as empty).
+func hasUserFiles(dir string) bool {
+	found := false
+	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			found = true
+			return filepath.SkipAll
+		}
+		if path == dir {
+			return nil
+		}
+		if d.Type()&os.ModeSymlink != 0 || d.Type().IsRegular() {
+			found = true
+			return filepath.SkipAll
+		}
+		return nil
+	})
+	return found || err != nil
 }
 
 func checkLocalStateStub() DoctorSection {

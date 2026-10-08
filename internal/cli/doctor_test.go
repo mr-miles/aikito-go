@@ -3,6 +3,7 @@ package cli
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -85,5 +86,70 @@ func TestHasAnyConflictMarkerCRLF(t *testing.T) {
 	}
 	if hasAnyConflictMarker("no markers here\r\njust text\r\n") {
 		t.Error("expected no false positive on ordinary CRLF text")
+	}
+}
+
+// Cross-validated against the real Python check_orphans (doctor.py) on a
+// matching fixture: an orphan skill directory under <workspace>/skills/,
+// an empty orphan directory, a stale entry under ~/.agents/skills/ no
+// longer in skills.toml, and a residual managed MCP entry left behind
+// after its mcps/<name>.toml was deleted without syncing the removal.
+func TestCheckOrphans(t *testing.T) {
+	home := t.TempDir()
+	aikitoDir := filepath.Join(home, "aikito")
+
+	// Orphan (non-empty) skill directory, not in skills.toml/any project.
+	mustMkdirAll(t, filepath.Join(aikitoDir, "skills", "stray"))
+	mustWriteFile(t, filepath.Join(aikitoDir, "skills", "stray", "SKILL.md"), "---\nname: stray\n---\nbody\n")
+
+	// Orphan EMPTY skill directory.
+	mustMkdirAll(t, filepath.Join(aikitoDir, "skills", "empty-stray"))
+
+	// A selected skill, present and accounted for — must NOT be flagged.
+	mustMkdirAll(t, filepath.Join(aikitoDir, "skills", "kept"))
+	mustWriteFile(t, filepath.Join(aikitoDir, "skills.toml"), "skills = [\"kept\"]\n")
+
+	// Stale entry under ~/.agents/skills/ no longer in skills.toml.
+	mustMkdirAll(t, filepath.Join(home, ".agents", "skills", "kept"))
+	mustMkdirAll(t, filepath.Join(home, ".agents", "skills", "gone"))
+
+	// Required scaffolding so other checkOrphans sub-functions don't error.
+	mustMkdirAll(t, filepath.Join(aikitoDir, "subagents"))
+	mustMkdirAll(t, filepath.Join(aikitoDir, "agents"))
+	mustMkdirAll(t, filepath.Join(aikitoDir, "mcps"))
+	mustMkdirAll(t, filepath.Join(aikitoDir, "projects"))
+
+	section := checkOrphans(aikitoDir, home)
+
+	joined := ""
+	for _, f := range section.Findings {
+		joined += f.Status + "|" + f.Message + "\n"
+	}
+
+	for _, want := range []string{
+		"WARN|skills/stray: orphan skill directory (not in skills.toml or any project agent.toml)",
+		"WARN|skills/empty-stray: empty directory, safe to delete",
+		"FAIL|~/.agents/skills/gone: not in skills.toml",
+	} {
+		if !strings.Contains(joined, want) {
+			t.Errorf("expected finding %q, got:\n%s", want, joined)
+		}
+	}
+	if strings.Contains(joined, "skills/kept") || strings.Contains(joined, ".agents/skills/kept") {
+		t.Errorf("did not expect 'kept' to be flagged, got:\n%s", joined)
+	}
+}
+
+func mustMkdirAll(t *testing.T, path string) {
+	t.Helper()
+	if err := os.MkdirAll(path, 0o755); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func mustWriteFile(t *testing.T, path, content string) {
+	t.Helper()
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
 	}
 }

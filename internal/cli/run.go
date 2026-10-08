@@ -51,6 +51,10 @@ func Run(args []string, stdin io.Reader, stdout, stderr io.Writer, env Environme
 		return cmdCompletion(args[1:], stdout, stderr, env)
 	case "doctor":
 		return cmdDoctor(args[1:], stdout, stderr, env)
+	case "import":
+		return cmdImport(args[1:], stdout, stderr, env)
+	case "migrate":
+		return cmdMigrate(args[1:], stdout, stderr, env)
 	default:
 		fmt.Fprintf(stderr, "[ERROR] Unknown command: %s\n", args[0])
 		return 2
