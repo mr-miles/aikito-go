@@ -9,7 +9,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // splitLinesNoEnds mirrors Python's str.splitlines() (no keepends): splits

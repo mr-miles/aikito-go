@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // MCPCapability mirrors MCPCapability: the MCP capability declared in an

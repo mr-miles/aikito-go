@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mr-miles/aikito-rs/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/registry"
 )
 
 // MCPConfigError mirrors Python's MCPConfigError: an MCP definition or

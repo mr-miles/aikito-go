@@ -39,12 +39,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mr-miles/aikito-rs/internal/compat"
-	"github.com/mr-miles/aikito-rs/internal/mcp"
-	"github.com/mr-miles/aikito-rs/internal/project"
-	"github.com/mr-miles/aikito-rs/internal/registry"
-	"github.com/mr-miles/aikito-rs/internal/sync"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/compat"
+	"github.com/mr-miles/aikito-go/internal/mcp"
+	"github.com/mr-miles/aikito-go/internal/project"
+	"github.com/mr-miles/aikito-go/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/sync"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // Finding mirrors diagnostics.py's Finding: a diagnostic with stable

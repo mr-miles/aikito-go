@@ -34,7 +34,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // DefaultSyncMode mirrors project_config.py's DEFAULT_PROJECT_SYNC_MODE.

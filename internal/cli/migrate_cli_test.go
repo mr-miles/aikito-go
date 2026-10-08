@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // mgLegacyWorkspace builds a pre-v2 workspace: monolithic agents.toml and

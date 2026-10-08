@@ -46,8 +46,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/sync"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/sync"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 func cmdImport(args []string, stdout, stderr io.Writer, env Environment) int {

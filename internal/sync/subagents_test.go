@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mr-miles/aikito-rs/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/registry"
 )
 
 func writeFileT(t *testing.T, path, content string) {

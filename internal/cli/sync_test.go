@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mr-miles/aikito-rs/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/registry"
 )
 
 // writeFile writes content to path, creating parent directories.

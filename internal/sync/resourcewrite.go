@@ -17,7 +17,7 @@ import (
 	"path/filepath"
 	"sort"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // ResourceWrite is one logical write or deletion, keyed by (Kind, Name).

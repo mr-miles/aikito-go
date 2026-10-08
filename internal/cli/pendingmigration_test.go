@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mr-miles/aikito-rs/internal/sync"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/sync"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // pmLegacyWorkspace writes a pre-v2 workspace (monolithic agents.toml and

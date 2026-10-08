@@ -9,10 +9,10 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/mr-miles/aikito-rs/internal/mcp"
-	"github.com/mr-miles/aikito-rs/internal/project"
-	"github.com/mr-miles/aikito-rs/internal/registry"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/mcp"
+	"github.com/mr-miles/aikito-go/internal/project"
+	"github.com/mr-miles/aikito-go/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // cmdStatus is a deliberately reduced port of status.py/render.py's

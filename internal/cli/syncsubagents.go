@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/sync"
+	"github.com/mr-miles/aikito-go/internal/sync"
 )
 
 // cmdSyncSubagents mirrors subagent.py's cmd_subagent_sync/

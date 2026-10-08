@@ -7,7 +7,7 @@ package main
 import (
 	"os"
 
-	"github.com/mr-miles/aikito-rs/internal/cli"
+	"github.com/mr-miles/aikito-go/internal/cli"
 )
 
 func main() {

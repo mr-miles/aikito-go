@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/registry"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 func targetName(nameStyle, serverName string) string {

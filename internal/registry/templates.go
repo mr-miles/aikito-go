@@ -4,7 +4,7 @@ import (
 	"embed"
 	"fmt"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 //go:embed templates/agents/*.toml

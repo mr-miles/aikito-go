@@ -13,7 +13,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/compat"
+	"github.com/mr-miles/aikito-go/internal/compat"
 )
 
 // WorkspaceResourceError mirrors Python's WorkspaceResourceError: the path

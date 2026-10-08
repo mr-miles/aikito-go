@@ -10,12 +10,12 @@ import (
 
 // Version is this Go port's own version string, independent of the Python
 // package's __version__. Release builds stamp it with
-// -ldflags "-X github.com/mr-miles/aikito-rs/internal/cli.Version=..."
+// -ldflags "-X github.com/mr-miles/aikito-go/internal/cli.Version=..."
 // (see .goreleaser.yaml); a plain `go build` keeps the default.
 var Version = "0.1.0-dev"
 
 func init() {
-	// `go install github.com/mr-miles/aikito-rs/cmd/aikito@v0.1.0` doesn't
+	// `go install github.com/mr-miles/aikito-go/cmd/aikito@v0.1.0` doesn't
 	// apply ldflags, but Go records the module version in the binary.
 	if Version != "0.1.0-dev" {
 		return

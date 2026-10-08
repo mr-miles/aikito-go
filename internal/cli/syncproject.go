@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/project"
-	"github.com/mr-miles/aikito-rs/internal/registry"
-	"github.com/mr-miles/aikito-rs/internal/sync"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/project"
+	"github.com/mr-miles/aikito-go/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/sync"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // cmdSyncProject implements `aikito sync project [name] [--dry-run]

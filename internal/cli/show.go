@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/project"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/project"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // cmdShow dispatches `aikito show <kind> [target] [flags]`.

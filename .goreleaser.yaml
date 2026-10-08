@@ -21,7 +21,7 @@ builds:
     flags:
       - -trimpath
     ldflags:
-      - -s -w -X github.com/mr-miles/aikito-rs/internal/cli.Version={{ .Env.AIKITO_VERSION }}
+      - -s -w -X github.com/mr-miles/aikito-go/internal/cli.Version={{ .Env.AIKITO_VERSION }}
 
 archives:
   - id: aikito

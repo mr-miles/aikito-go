@@ -3,7 +3,7 @@ package sync
 import (
 	"path/filepath"
 
-	"github.com/mr-miles/aikito-rs/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/registry"
 )
 
 // GlobalInstructionPlanItem is one planned (agent) symlink for global

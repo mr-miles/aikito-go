@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/mcp"
+	"github.com/mr-miles/aikito-go/internal/mcp"
 )
 
 // SanitizeMCPURL mirrors add.py's _sanitize_mcp_url: strips userinfo

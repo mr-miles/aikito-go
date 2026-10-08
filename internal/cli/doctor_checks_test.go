@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mr-miles/aikito-rs/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/registry"
 )
 
 // doctorWorkspace initializes a workspace under a fresh testEnv and returns

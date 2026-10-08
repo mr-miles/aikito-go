@@ -17,7 +17,7 @@ Antigravity CLI (`agy`), OpenCode, GitHub Copilot CLI, DeepSeek Harness
 ## Install
 
 Download the archive for your platform from the
-[Releases page](https://github.com/mr-miles/aikito-rs/releases), unpack it,
+[Releases page](https://github.com/mr-miles/aikito-go/releases), unpack it,
 and put the `aikito` binary (`aikito.exe` on Windows) somewhere on your
 `PATH`. Builds are available for Linux, macOS and Windows on amd64 and arm64,
 with a `checksums.txt` to verify the download.
@@ -25,7 +25,7 @@ with a `checksums.txt` to verify the download.
 Or, with Go 1.26 or later:
 
 ```bash
-go install github.com/mr-miles/aikito-rs/cmd/aikito@latest
+go install github.com/mr-miles/aikito-go/cmd/aikito@latest
 ```
 
 Or build from a checkout:

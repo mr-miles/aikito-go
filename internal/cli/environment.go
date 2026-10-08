@@ -13,7 +13,7 @@ package cli
 import (
 	"os"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // Environment is the process state every command handler needs, threaded

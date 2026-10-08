@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/mcp"
+	"github.com/mr-miles/aikito-go/internal/mcp"
 )
 
 // cmdSync dispatches `aikito sync <target> ...`. "mcp", "global",

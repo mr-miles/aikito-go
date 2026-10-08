@@ -22,7 +22,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/project"
+	"github.com/mr-miles/aikito-go/internal/project"
 )
 
 // --- Schema: the command tree this Go build actually implements ---

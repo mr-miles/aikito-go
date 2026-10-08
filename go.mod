@@ -1,4 +1,4 @@
-module github.com/mr-miles/aikito-rs
+module github.com/mr-miles/aikito-go
 
 go 1.26.0
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/mr-miles/aikito-rs/internal/mcp"
+	"github.com/mr-miles/aikito-go/internal/mcp"
 )
 
 // cmdAuthMCP implements `aikito auth mcp <agent> <server>`. This is a thin

@@ -3,7 +3,7 @@ package sync
 import (
 	"testing"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // Cross-validated against the real Python _adopt_field

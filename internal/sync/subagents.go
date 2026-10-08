@@ -23,9 +23,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/registry"
-	"github.com/mr-miles/aikito-rs/internal/subagent"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/subagent"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // SubagentConfigError mirrors subagent.py's SubagentConfigError.

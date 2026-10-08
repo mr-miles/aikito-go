@@ -27,7 +27,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mr-miles/aikito-rs/internal/compat"
+	"github.com/mr-miles/aikito-go/internal/compat"
 )
 
 type LinkAction string

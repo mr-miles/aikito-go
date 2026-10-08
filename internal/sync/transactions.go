@@ -22,7 +22,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // WorkspaceCoreError mirrors Python's WorkspaceCoreError: a resource or

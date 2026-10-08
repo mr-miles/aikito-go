@@ -5,9 +5,9 @@ import (
 	"io"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/registry"
-	"github.com/mr-miles/aikito-rs/internal/sync"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/sync"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // cmdSyncGlobal implements `aikito sync global [--dry-run] [--verbose]

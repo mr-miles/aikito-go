@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // cmdRename dispatches `aikito rename <kind> ...`. Only "memory" is ported

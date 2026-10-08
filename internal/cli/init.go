@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mr-miles/aikito-rs/internal/compat"
-	"github.com/mr-miles/aikito-rs/internal/project"
-	"github.com/mr-miles/aikito-rs/internal/registry"
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/compat"
+	"github.com/mr-miles/aikito-go/internal/project"
+	"github.com/mr-miles/aikito-go/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // bundledSkillOrder mirrors templating.py's BUNDLED_SKILL_NAMES tuple order

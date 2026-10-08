@@ -5,7 +5,7 @@ import (
 	"os"
 	"sort"
 
-	"github.com/mr-miles/aikito-rs/internal/sync"
+	"github.com/mr-miles/aikito-go/internal/sync"
 )
 
 // MCPOperation is a planned logical mutation for an MCP server in an agent

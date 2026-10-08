@@ -9,7 +9,7 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
-	"github.com/mr-miles/aikito-rs/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // jsonValue renders v the way every subagent render function's
