@@ -3,6 +3,8 @@ package workspace
 import (
 	"os"
 	"path/filepath"
+	"sort"
+	"strings"
 	"testing"
 )
 
@@ -106,5 +108,102 @@ func TestMigrationPlanBlockedOnPartialLegacy(t *testing.T) {
 	}
 	if !plan.Blocked() {
 		t.Fatal("expected a blocked plan when only one legacy file is present")
+	}
+}
+
+// Each case's expected findings come from running the real Python
+// build_migration_plan on an identical fixture. Two Python findings are
+// deliberately not asserted: the TOML parser's own error wording (library-
+// specific), and Python's secondary "subagents.toml: 'agents' must be a
+// table" finding, produced by platform-option validation this port
+// documents as not performed during migration (see buildSubagentUpdates).
+// Every case is blocked on both sides either way.
+func TestBuildMigrationPlanEdgeCasesMatchPython(t *testing.T) {
+	const agents = "[agents.codex]\ndisplay_name = \"Codex\"\n"
+	const subagents = "[subagents.reviewer]\ndescription = \"R\"\nagents = [\"codex\"]\n"
+	cases := []struct {
+		name        string
+		agents      string
+		subagents   string
+		bodies      map[string]string
+		layout      string // written as layout.toml (and legacy files removed) when non-empty
+		wantFinding string
+		wantCreates []string
+		wantUpdates []string
+	}{
+		{"subagent registry with only a comment", agents, "# just a note\n", nil, "",
+			"subagents.toml: Invalid legacy subagent registry", []string{"agents/codex.toml"}, nil},
+		{"subagent name not a valid header", agents, "[subagents.\"Bad_Name\"]\ndescription = \"R\"\nagents = [\"codex\"]\n", nil, "",
+			"subagents.toml: Unsupported subagent table header", []string{"agents/codex.toml"}, nil},
+		{"subagent entry not a table", agents, "subagents = { reviewer = 3 }\n", nil, "",
+			"subagents.toml: Unsupported subagent table header", []string{"agents/codex.toml"}, nil},
+		{"missing subagent body", agents, subagents, nil, "",
+			"Missing or unsafe subagent instructions: <ROOT>/subagents/reviewer.md", []string{"agents/codex.toml"}, nil},
+		{"invalid subagents.toml", agents, "[subagents.reviewer\n", nil, "",
+			"subagents.toml: ", []string{"agents/codex.toml"}, nil},
+		{"agent name not a valid header", "[agents.\"Bad Name\"]\ndisplay_name = \"X\"\n", subagents, map[string]string{"reviewer.md": "Body.\n"}, "",
+			"agents.toml: Unsupported Agent name in agents.toml", nil, []string{"subagents/reviewer.md"}},
+		{"empty agents.toml with a comment", "# nothing here\n", subagents, map[string]string{"reviewer.md": "Body.\n"}, "",
+			"agents.toml: Invalid legacy Agent registry", nil, []string{"subagents/reviewer.md"}},
+		{"agents.toml not a registry", "foo = 1\n", subagents, map[string]string{"reviewer.md": "Body.\n"}, "",
+			"agents.toml: Invalid legacy Agent registry", nil, []string{"subagents/reviewer.md"}},
+		{"unsupported layout version", agents, subagents, nil, "version = 3\n",
+			"Unsupported or incomplete layout marker: 3", nil, nil},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			root := t.TempDir()
+			for _, d := range []string{"global", "memory", "projects", "skills", "subagents", "mcps"} {
+				if err := os.MkdirAll(filepath.Join(root, d), 0o755); err != nil {
+					t.Fatal(err)
+				}
+			}
+			mustWrite := func(rel, content string) {
+				if err := os.WriteFile(filepath.Join(root, rel), []byte(content), 0o644); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if tc.layout != "" {
+				mustWrite("layout.toml", tc.layout)
+			} else {
+				mustWrite("agents.toml", tc.agents)
+				mustWrite("subagents.toml", tc.subagents)
+			}
+			for name, body := range tc.bodies {
+				mustWrite(filepath.Join("subagents", name), body)
+			}
+
+			plan, err := BuildMigrationPlan(root, "")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !plan.Blocked() {
+				t.Fatalf("expected a blocked plan, got none: %+v", plan)
+			}
+			want := strings.ReplaceAll(tc.wantFinding, "<ROOT>", root)
+			found := false
+			for _, f := range plan.Findings {
+				if strings.HasPrefix(f, want) {
+					found = true
+				}
+			}
+			if !found {
+				t.Errorf("findings %q missing %q", plan.Findings, want)
+			}
+			var creates, updates []string
+			for _, c := range plan.Creates {
+				creates = append(creates, c.Path)
+			}
+			for _, u := range plan.Updates {
+				updates = append(updates, u.Path)
+			}
+			sort.Strings(creates)
+			if strings.Join(creates, ",") != strings.Join(tc.wantCreates, ",") {
+				t.Errorf("creates = %v, want %v", creates, tc.wantCreates)
+			}
+			if strings.Join(updates, ",") != strings.Join(tc.wantUpdates, ",") {
+				t.Errorf("updates = %v, want %v", updates, tc.wantUpdates)
+			}
+		})
 	}
 }

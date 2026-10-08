@@ -141,6 +141,17 @@ func cmdImport(args []string, stdout, stderr io.Writer, env Environment) int {
 		return 1
 	}
 
+	// importing.py: every --keep-target/--take-source ID must name a resource
+	// in the source workspace (its _SUPPORTED set is every resource kind).
+	for _, ids := range [][]string{keepTarget, takeSource} {
+		for _, id := range ids {
+			if _, ok := sourceSnapshot.Resources[id]; !ok {
+				fmt.Fprintf(stderr, "[ERROR] Unknown import resource ID: %s\n", id)
+				return 1
+			}
+		}
+	}
+
 	type planItem struct {
 		id, kind, name, relPath, reason, action string
 		before                                  *string
@@ -225,24 +236,33 @@ func cmdImport(args []string, stdout, stderr io.Writer, env Environment) int {
 	fmt.Fprintf(stdout, "\nSummary: %d create, %d update, %d conflict, %d unchanged\n",
 		counts["CREATE"], counts["UPDATE"], counts["CONFLICT"], counts["NOOP"])
 
-	if counts["CONFLICT"] > 0 {
-		fmt.Fprintln(stderr, "[ERROR] Import has unresolved conflicts; re-run with --keep-target/--take-source to resolve, or --dry-run to only preview.")
-		return 1
-	}
-	if dryRun {
+	// Like cmd_import_workspace: conflicts never block the non-conflicting
+	// resources — those are still imported (or previewed), conflicting ones
+	// are left unchanged, and the command exits 2 so the caller knows
+	// resolution is still needed.
+	conflicts := counts["CONFLICT"] > 0
+	switch {
+	case dryRun:
 		fmt.Fprintln(stdout, "\n[DRY RUN] No changes written.")
-		return 0
-	}
-	if len(writes) == 0 {
+	case len(writes) > 0:
+		policy := sync.PathPolicy{CreateParents: true}
+		if err := sync.ApplyResourceWrites(sourceSnapshot, targetSnapshot, writes, policy, nil, env.Home, nil); err != nil {
+			fmt.Fprintf(stderr, "[ERROR] %v\n", err)
+			return 1
+		}
+		if conflicts {
+			fmt.Fprintf(stdout, "\n[PARTIAL] Imported %d non-conflicting resource(s) from %s; conflicts kept unchanged.\n", len(writes), sourceRoot)
+		} else {
+			fmt.Fprintf(stdout, "\n[SUCCESS] Imported %d resource(s) from %s.\n", len(writes), sourceRoot)
+		}
+	case conflicts:
+		fmt.Fprintln(stdout, "\n[PARTIAL] No resources changed; conflicts kept unchanged.")
+	default:
 		fmt.Fprintln(stdout, "\n[SUCCESS] Nothing to import; target already has everything.")
-		return 0
 	}
-
-	policy := sync.PathPolicy{CreateParents: true}
-	if err := sync.ApplyResourceWrites(sourceSnapshot, targetSnapshot, writes, policy, nil, env.Home, nil); err != nil {
-		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
-		return 1
+	if conflicts {
+		fmt.Fprintln(stderr, "[NEXT] Resolve conflicts with --keep-target RESOURCE_ID or --take-source RESOURCE_ID, or edit the resources and retry.")
+		return 2
 	}
-	fmt.Fprintf(stdout, "\n[SUCCESS] Imported %d resource(s) from %s.\n", len(writes), sourceRoot)
 	return 0
 }
