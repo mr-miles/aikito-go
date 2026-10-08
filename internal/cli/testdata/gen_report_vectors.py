@@ -99,13 +99,13 @@ SCENARIOS = {
         ["write", "aikito/memory/notes/old-thing.md", NOTE.format(title="Old thing", desc="Ancient", body="Old.")],
     ],
     "mcp_synced": SYNCED + [
-        ["cli", "add", "mcp", "fetcher", "--command", "npx"],
+        ["cli", "add", "mcp", "fetcher", "--transport", "remote", "--url", "https://example.com/mcp", "--agents", "claude-code,codex"],
         ["cli", "sync", "mcp"],
     ],
     "mcp_drifted": SYNCED + [
-        ["cli", "add", "mcp", "fetcher", "--command", "npx"],
+        ["cli", "add", "mcp", "fetcher", "--transport", "remote", "--url", "https://example.com/mcp", "--agents", "claude-code,codex"],
         ["cli", "sync", "mcp"],
-        ["edit_json", ".claude.json", "mcpServers.fetcher.command", "uvx"],
+        ["edit_json", ".claude.json", "mcpServers.fetcher.url", "https://example.com/other"],
     ],
     "subagent": SYNCED + [
         ["cli", "add", "subagent", "verifier", "--description", "Verifies work"],

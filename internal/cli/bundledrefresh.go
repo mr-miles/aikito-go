@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -249,4 +250,17 @@ func executeBundledRefresh(ops []bundledRefreshOp, aikitoDir, home string, dryRu
 		names = append(names, op.name)
 	}
 	return names, nil
+}
+
+// printBundledSkillNotice ports print_bundled_skill_notice (to stderr).
+func printBundledSkillNotice(aikitoDir string, stderr io.Writer) {
+	ops := planBundledRefresh(aikitoDir)
+	if len(ops) == 0 {
+		return
+	}
+	names := make([]string, len(ops))
+	for i, op := range ops {
+		names[i] = op.name
+	}
+	fmt.Fprintf(stderr, "\n[NOTICE] Bundled skill snapshot differs from the installed Aikito package: %s. Run 'aikito sync global' to refresh it.\n", strings.Join(names, ", "))
 }

@@ -13,10 +13,10 @@ import (
 
 // agentStatusRow ports render.py's AgentStatusRow.
 type agentStatusRow struct {
-	AgentName, DisplayName, ConsumerName              string
-	InstructionsStatus, SkillsStatus                  string
-	SkillsLinkDepth                                   int // 0 = None
-	MCPStatus, SubagentStatus                         string
+	AgentName, DisplayName, ConsumerName string
+	InstructionsStatus, SkillsStatus     string
+	SkillsLinkDepth                      int // 0 = None
+	MCPStatus, SubagentStatus            string
 }
 
 // globalSkillsList ports status.py _get_skills_list. A warning goes to
