@@ -1,0 +1,90 @@
+name: Release
+
+# Pushing a tag such as v0.1.0 starts this workflow, which builds every
+# platform and creates the GitHub Release itself.
+#
+# - Tag on a commit that is on main: a full release; binaries report the tag
+#   (v0.1.0 -> 0.1.0).
+# - Anything else (a tag on a commit not on main, or a manual run from a
+#   branch): a dev build versioned <base>-dev-<branch>, uploaded as workflow
+#   artifacts rather than published as a release.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+          cache: true
+
+      - name: Work out version
+        id: version
+        shell: bash
+        run: |
+          git fetch --quiet origin main
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]] && git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "mode=release" >> "$GITHUB_OUTPUT"
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [[ "$GITHUB_REF_TYPE" == "branch" ]]; then
+            branch="$GITHUB_REF_NAME"
+          else
+            # A tag has no branch of its own; use a branch containing the commit.
+            branch=$(git branch -r --contains "$GITHUB_SHA" --format='%(refname:lstrip=3)' | grep -vx HEAD | head -n1)
+            branch=${branch:-$GITHUB_REF_NAME}
+          fi
+          branch=$(printf '%s' "$branch" | tr -c 'A-Za-z0-9-' '-' | sed -e 's/--*/-/g' -e 's/^-//' -e 's/-$//')
+          # Base on the latest release tag on main (0.1.0 if there isn't one).
+          base=$(git describe --tags --abbrev=0 --match 'v[0-9]*' origin/main 2>/dev/null || echo v0.1.0)
+          echo "mode=snapshot" >> "$GITHUB_OUTPUT"
+          echo "version=${base#v}-dev-${branch}" >> "$GITHUB_OUTPUT"
+
+      - name: Show version
+        run: echo "Building ${{ steps.version.outputs.mode }} ${{ steps.version.outputs.version }}"
+
+      - name: Test
+        run: |
+          go test ./...
+          go test -tags e2e ./e2e/...
+
+      - name: Release
+        if: steps.version.outputs.mode == 'release'
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AIKITO_VERSION: ${{ steps.version.outputs.version }}
+
+      - name: Dev build
+        if: steps.version.outputs.mode == 'snapshot'
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: "~> v2"
+          args: release --snapshot --clean
+        env:
+          AIKITO_VERSION: ${{ steps.version.outputs.version }}
+
+      - name: Upload dev build
+        if: steps.version.outputs.mode == 'snapshot'
+        uses: actions/upload-artifact@v4
+        with:
+          name: aikito_${{ steps.version.outputs.version }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/checksums.txt

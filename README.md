@@ -16,7 +16,13 @@ Antigravity CLI (`agy`), OpenCode, GitHub Copilot CLI, DeepSeek Harness
 
 ## Install
 
-Requires Go 1.26 or later.
+Download the archive for your platform from the
+[Releases page](https://github.com/mr-miles/aikito-rs/releases), unpack it,
+and put the `aikito` binary (`aikito.exe` on Windows) somewhere on your
+`PATH`. Builds are available for Linux, macOS and Windows on amd64 and arm64,
+with a `checksums.txt` to verify the download.
+
+Or, with Go 1.26 or later:
 
 ```bash
 go install github.com/mr-miles/aikito-rs/cmd/aikito@latest
@@ -130,6 +136,25 @@ CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) builds, vets and
 tests on Linux, including the end-to-end suite, on every push and pull request.
 macOS, Windows and a race-detector run are started by hand from the Actions tab
 (CI > Run workflow), with a checkbox for each.
+
+### Releasing
+
+Push a version tag on a commit that's on `main`:
+
+```bash
+git tag v0.1.0 && git push origin v0.1.0
+```
+
+The Release workflow ([.github/workflows/release.yml](.github/workflows/release.yml))
+runs the tests, then uses [GoReleaser](https://goreleaser.com)
+([.goreleaser.yaml](.goreleaser.yaml)) to build every platform and create the
+GitHub Release, with binaries reporting the tag's version. Tags with a
+pre-release suffix such as `v0.2.0-rc.1` are published as pre-releases.
+
+A tag on a commit that isn't on `main`, or running the Release workflow by hand
+from a branch, produces a dev build versioned `<latest release>-dev-<branch>`
+(for example `0.1.0-dev-my-feature`). It's uploaded as a workflow artifact, not
+published as a release. A plain `go build` reports `0.1.0-dev`.
 
 ### Layout
 

@@ -3,13 +3,38 @@ package cli
 import (
 	"fmt"
 	"io"
+	"regexp"
+	"runtime/debug"
+	"strings"
 )
 
-// Version is this Go port's own version string. It is intentionally
-// independent of the Python package's __version__ (currently "1.57.7") —
-// this is a from-scratch reimplementation, not a build of the same
-// release train.
-const Version = "0.1.0-dev"
+// Version is this Go port's own version string, independent of the Python
+// package's __version__. Release builds stamp it with
+// -ldflags "-X github.com/mr-miles/aikito-rs/internal/cli.Version=..."
+// (see .goreleaser.yaml); a plain `go build` keeps the default.
+var Version = "0.1.0-dev"
+
+func init() {
+	// `go install github.com/mr-miles/aikito-rs/cmd/aikito@v0.1.0` doesn't
+	// apply ldflags, but Go records the module version in the binary.
+	if Version != "0.1.0-dev" {
+		return
+	}
+	// Local builds in a git checkout also record a version, but it's a
+	// pseudo-version (v0.0.0-20261008143133-938c71b01fb6+dirty); only a
+	// real tagged version replaces the default.
+	if info, ok := debug.ReadBuildInfo(); ok {
+		if v := info.Main.Version; isReleaseVersion(v) {
+			Version = strings.TrimPrefix(v, "v")
+		}
+	}
+}
+
+var pseudoVersionSuffix = regexp.MustCompile(`\d{14}-[0-9a-f]{12}$`)
+
+func isReleaseVersion(v string) bool {
+	return strings.HasPrefix(v, "v") && !strings.Contains(v, "+") && !pseudoVersionSuffix.MatchString(v)
+}
 
 // cmdVersion mirrors update_notifier.py's cmd_version, minus the PyPI
 // update-check network call: that's an out-of-scope phase-1 feature (no

@@ -1,0 +1,48 @@
+# Release builds for aikito. Run by .github/workflows/release.yml, which sets
+# AIKITO_VERSION: the tag (without the "v") for a tag on main, otherwise
+# <base>-dev-<branch>. Local dry run:
+#   AIKITO_VERSION=0.1.0-dev-local goreleaser release --snapshot --clean
+version: 2
+
+project_name: aikito
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: aikito
+    main: ./cmd/aikito
+    binary: aikito
+    env:
+      - CGO_ENABLED=0
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X github.com/mr-miles/aikito-rs/internal/cli.Version={{ .Env.AIKITO_VERSION }}
+
+archives:
+  - id: aikito
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    name_template: "{{ .ProjectName }}_{{ .Env.AIKITO_VERSION }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+      - LICENSE
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  version_template: "{{ .Env.AIKITO_VERSION }}"
+
+changelog:
+  sort: asc
+
+release:
+  # Tags like v0.2.0-rc.1 are published as pre-releases.
+  prerelease: auto
