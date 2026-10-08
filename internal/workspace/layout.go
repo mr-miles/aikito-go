@@ -84,6 +84,69 @@ func RequireCurrentLayout(root string) error {
 	return nil
 }
 
+// ReadAgentDocuments mirrors layout.py's _read_agent_files: reads every
+// <root>/agents/<name>.toml file (one file per agent, no exceptions) and
+// returns name -> raw agent spec table (the parsed [agents.<name>] value,
+// not yet validated/typed — that's the registry package's job). Each file
+// must contain exactly one top-level key "agents" whose value is a table
+// with exactly one key equal to the file's stem, whose value is itself a
+// table.
+func ReadAgentDocuments(root string) (map[string]map[string]any, error) {
+	dir := filepath.Join(root, "agents")
+	info, err := os.Lstat(dir)
+	if err != nil || info.Mode()&os.ModeSymlink != 0 || !info.IsDir() {
+		return nil, layoutErrorf("Agents directory missing or unsafe: %s", dir)
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+	names := make([]string, 0, len(entries))
+	for _, e := range entries {
+		names = append(names, e.Name())
+	}
+	sort.Strings(names)
+
+	agents := map[string]map[string]any{}
+	for _, name := range names {
+		if name == ".DS_Store" || name == "Thumbs.db" || name == "desktop.ini" {
+			continue
+		}
+		path := filepath.Join(dir, name)
+		stem := strings.TrimSuffix(name, filepath.Ext(name))
+		if filepath.Ext(name) != ".toml" || ValidateResourceName(stem, "agent") != "" {
+			return nil, layoutErrorf("Unsupported Agent entry: %s", path)
+		}
+		fi, err := os.Lstat(path)
+		if err != nil || fi.Mode()&os.ModeSymlink != 0 || !fi.Mode().IsRegular() {
+			return nil, layoutErrorf("Unsafe Agent entry: %s", path)
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return nil, layoutErrorf("Invalid Agent file: %s", path)
+		}
+		document, err := DecodeTOML(data)
+		if err != nil {
+			return nil, layoutErrorf("Invalid Agent file: %s: %v", path, err)
+		}
+		if len(document) != 1 {
+			return nil, layoutErrorf("Agent file must contain only [agents.%s]: %s", stem, path)
+		}
+		tableAny, ok := document["agents"]
+		table, tableOK := tableAny.(map[string]any)
+		if !ok || !tableOK || len(table) != 1 {
+			return nil, layoutErrorf("Agent file must contain only [agents.%s]: %s", stem, path)
+		}
+		specAny, ok := table[stem]
+		spec, specOK := specAny.(map[string]any)
+		if !ok || !specOK {
+			return nil, layoutErrorf("Agent file must contain only [agents.%s]: %s", stem, path)
+		}
+		agents[stem] = spec
+	}
+	return agents, nil
+}
+
 // --- Subagent strict-JSON-frontmatter Markdown (layout.py:146-299) ---
 
 var frontmatterKeyPattern = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
