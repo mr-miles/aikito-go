@@ -36,3 +36,4 @@ Thumbs.db
 # Local aikito state if a workspace is ever created inside the repo
 /.local/
 /.agents/
+.claude/worktrees/

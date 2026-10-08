@@ -1,0 +1,14 @@
+{
+  "aikito": {
+    "kind": "symlink",
+    "target": "aikito/skills/aikito"
+  },
+  "demo": {
+    "kind": "symlink",
+    "target": "aikito/skills/demo"
+  },
+  "durable-memory": {
+    "kind": "symlink",
+    "target": "aikito/skills/durable-memory"
+  }
+}

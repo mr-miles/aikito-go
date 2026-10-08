@@ -4,7 +4,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mr-miles/aikito-go/internal/registry"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
@@ -34,33 +33,4 @@ func LoadSelectedGlobalSkills(aikitoDir string) []string {
 		}
 	}
 	return names
-}
-
-// GlobalSkillPlanItem is one planned (agent, skill) symlink.
-type GlobalSkillPlanItem struct {
-	Skill string
-	Op    LinkOperation
-}
-
-// BuildGlobalSkillsPlan plans a LinkOperation for every (selected skill,
-// agent with a configured SkillsPath) pair. See link.go's package doc for
-// the deliberate simplification versus Python's shared-container model.
-func BuildGlobalSkillsPlan(aikitoDir, home string, reg *registry.AgentRegistry, force bool) ([]GlobalSkillPlanItem, error) {
-	skills := LoadSelectedGlobalSkills(aikitoDir)
-	var items []GlobalSkillPlanItem
-	for _, agent := range reg.Values() {
-		if agent.SkillsPath == nil {
-			continue
-		}
-		for _, skill := range skills {
-			target := filepath.Join(*agent.SkillsPath, skill)
-			canonical := filepath.Join(aikitoDir, "skills", skill)
-			op, err := PlanSymlink(target, canonical, agent.Name, skill, force)
-			if err != nil {
-				return nil, err
-			}
-			items = append(items, GlobalSkillPlanItem{Skill: skill, Op: op})
-		}
-	}
-	return items, nil
 }

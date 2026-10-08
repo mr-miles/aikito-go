@@ -9,10 +9,7 @@
 package e2e
 
 import (
-	"encoding/json"
 	"os"
-	"path/filepath"
-	"sort"
 	"testing"
 )
 
@@ -138,18 +135,25 @@ func TestGenerateGoldens(t *testing.T) {
 		if r := runPython(t, pythonSrc, home, "add", "skill", "demo", "--description", "Demo skill"); r.ExitCode != 0 {
 			t.Fatalf("python add skill: %s", r.Stderr)
 		}
-		if r := runPython(t, pythonSrc, home, "sync", "global"); r.ExitCode != 0 {
+		r := runPython(t, pythonSrc, home, "sync", "global")
+		if r.ExitCode != 0 {
 			t.Fatalf("python sync global: %s\n%s", r.Stdout, r.Stderr)
 		}
 		saveGolden(t, "sync_global_claude_md", treeManifest(t, home+"/.claude/CLAUDE.md", home))
+		saveGolden(t, "sync_global_claude_skills", treeManifest(t, home+"/.claude/skills", home))
+		saveGolden(t, "sync_global_agents_skills", treeManifest(t, home+"/.agents/skills", home))
+		saveGolden(t, "sync_global_output", outputGolden(r, home))
+	})
 
-		names := resolvedSkillNames(t, filepath.Join(home, ".claude", "skills"))
-		sort.Strings(names)
-		data, err := json.Marshal(names)
-		if err != nil {
-			t.Fatal(err)
+	t.Run("sync_global_prepopulated", func(t *testing.T) {
+		home := pyInitWorkspace(t, pythonSrc)
+		writePrepopulatedClaudeSkills(t, home)
+		r := runPython(t, pythonSrc, home, "sync", "global")
+		if r.ExitCode != 1 {
+			t.Fatalf("python sync global: want exit 1, got %d\n%s\n%s", r.ExitCode, r.Stdout, r.Stderr)
 		}
-		saveGolden(t, "sync_global_skills", map[string]treeEntry{"resolved_skills.json": {content: data}})
+		saveGolden(t, "sync_global_prepopulated_output", outputGolden(r, home))
+		saveGolden(t, "sync_global_prepopulated_claude", treeManifest(t, home+"/.claude", home))
 	})
 
 	t.Run("sync_mcp_lifecycle", func(t *testing.T) {

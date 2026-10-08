@@ -105,30 +105,6 @@ func withMarkerDir(t *testing.T, home, dir string) {
 	}
 }
 
-// resolvedSkillNames fully dereferences path (which may itself be a
-// symlink, or contain entries that are symlinks, or both) and returns the
-// names of whatever skill entries are ultimately visible. Used by both the
-// e2e-tagged sync test (live Go output) and the generator (live Python
-// output), so the two sides can be compared on a FUNCTIONAL basis even
-// where the raw directory layout they produce differs (see
-// TestE2ESyncGlobal's doc comment in sync_test.go).
-func resolvedSkillNames(t *testing.T, path string) []string {
-	t.Helper()
-	real, err := filepath.EvalSymlinks(path)
-	if err != nil {
-		t.Fatalf("resolving %s: %v", path, err)
-	}
-	entries, err := os.ReadDir(real)
-	if err != nil {
-		t.Fatalf("reading %s: %v", real, err)
-	}
-	var names []string
-	for _, e := range entries {
-		names = append(names, e.Name())
-	}
-	return names
-}
-
 // --- directory tree snapshot ---
 
 type treeEntry struct {
@@ -431,4 +407,26 @@ func resolvedTempDir(t *testing.T) string {
 		t.Fatal(err)
 	}
 	return dir
+}
+
+// outputGolden captures a command's exit code, stdout and stderr as a
+// single-file golden ("output.txt"), with home replaced by "H" so captures
+// from different temp homes compare equal.
+func outputGolden(r runResult, home string) map[string]treeEntry {
+	text := fmt.Sprintf("exit %d\n--- stdout\n%s--- stderr\n%s", r.ExitCode,
+		strings.ReplaceAll(r.Stdout, home, "H"), strings.ReplaceAll(r.Stderr, home, "H"))
+	return map[string]treeEntry{"output.txt": {content: []byte(text)}}
+}
+
+// writePrepopulatedClaudeSkills leaves a hand-made skill in a real
+// ~/.claude/skills directory, which `sync global` must refuse to replace.
+func writePrepopulatedClaudeSkills(t *testing.T, home string) {
+	t.Helper()
+	dir := filepath.Join(home, ".claude", "skills", "mine")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "SKILL.md"), []byte("hi\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
 }
