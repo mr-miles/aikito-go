@@ -25,6 +25,10 @@ func Run(args []string, stdin io.Reader, stdout, stderr io.Writer, env Environme
 		return cmdGit(args[1:], stdin, stdout, stderr, env)
 	case "init":
 		return cmdInit(args[1:], stdout, stderr, env)
+	case "add":
+		return cmdAdd(args[1:], stdout, stderr, env)
+	case "adopt":
+		return cmdAdopt(args[1:], stdout, stderr, env)
 	default:
 		fmt.Fprintf(stderr, "[ERROR] Unknown command: %s\n", args[0])
 		return 2
