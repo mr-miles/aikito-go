@@ -5,13 +5,10 @@
 // argparse ArgumentParser at runtime. This Go build has no such
 // introspectable parser (commands are a hand-written switch in run.go and
 // friends), so the schema below is a hand-maintained table covering only
-// the commands THIS build actually implements. It deliberately omits
-// `migrate`/`import workspace` (not ported) and, as of this writing,
-// `rename`/`maintain`/`doctor` (dispatched in run.go but not yet landed in
-// this working tree at the time this file was written — a parallel fork's
-// in-progress work). Advertising completions for a command that doesn't
-// exist yet would be actively misleading; a follow-up can extend this
-// table once those land. Static per-shell script text otherwise mirrors
+// the commands THIS build actually implements. completion_test.go derives
+// the dispatched command list from run.go's switch and fails if any command
+// is missing here, so a newly-added command can't silently go uncompleted.
+// Static per-shell script text otherwise mirrors
 // Python's generation mechanism closely: completions call back into the
 // hidden `aikito completion candidates <category>` subcommand for anything
 // that depends on live workspace content.
@@ -82,7 +79,17 @@ var cliSchema = map[string]schemaCommand{
 	"completion": {subcommands: map[string][]string{
 		"zsh": nil, "bash": nil, "fish": nil, "powershell": nil, "candidates": nil,
 	}},
+	"doctor": {flags: []string{"--json", "--fix", "--stale-days", "--color", "--no-color"}},
+	"import": {subcommands: map[string][]string{
+		"workspace": {"--dry-run", "--verbose", "--keep-target", "--take-source"},
+	}},
+	"migrate":  {subcommands: map[string][]string{"workspace-resources": {"--dry-run"}}},
+	"maintain": {subcommands: map[string][]string{"memory": {"--agent"}}},
+	"rename":   {subcommands: map[string][]string{"memory": nil}},
 }
+
+// "remove" is run.go's alias for "rm"; Python's completion lists both.
+func init() { cliSchema["remove"] = cliSchema["rm"] }
 
 func sortedSchemaNames() []string {
 	names := make([]string, 0, len(cliSchema))
@@ -277,9 +284,13 @@ func listMemories(aikitoDir string) []string {
 			out = append(out, s)
 		}
 	}
+	// Mirrors list_memories: stem, short_identifier (scope/stem) and
+	// full_identifier (scope/<path under memory/> without extension, which
+	// for find_memory_files' notes/*.md scan is always scope/notes/stem).
 	for _, n := range memoryNotes(aikitoDir) {
 		add(n.stem)
 		add(n.scope + "/" + n.stem)
+		add(n.scope + "/notes/" + n.stem)
 	}
 	sort.Strings(out)
 	return out

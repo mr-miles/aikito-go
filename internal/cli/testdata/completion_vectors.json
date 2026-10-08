@@ -1,0 +1,63 @@
+{
+ "expected": {
+  "inbox-completions": [
+   "idea",
+   "sub/nested"
+  ],
+  "mcps": [
+   "files",
+   "weather"
+  ],
+  "memories": [
+   "arch",
+   "decision-1",
+   "global/arch",
+   "global/decision-1",
+   "global/notes/arch",
+   "global/notes/decision-1",
+   "proj-only",
+   "proj1/decision-1",
+   "proj1/notes/decision-1",
+   "proj1/notes/proj-only",
+   "proj1/proj-only"
+  ],
+  "memory-completions": [
+   "global/arch",
+   "global/decision-1",
+   "proj1/decision-1",
+   "proj1/proj-only"
+  ],
+  "projects": [
+   "proj1"
+  ],
+  "skills": [
+   "aikito",
+   "durable-memory",
+   "my-skill",
+   "other-skill"
+  ],
+  "subagents": [
+   "planner",
+   "reviewer"
+  ]
+ },
+ "extra_files": {
+  "inbox/idea.md": "idea\n",
+  "inbox/readme.txt": "not a note\n",
+  "inbox/sub/nested.md": "nested\n",
+  "mcps/files.toml": "command = \"npx\"\nargs = []\nagents = [\"claude-code\"]\n",
+  "mcps/weather.toml": "transport = \"remote\"\nurl = \"https://weather.example.com/mcp\"\nagents = [\"claude-code\"]\n",
+  "memory/notes/arch.md": "# Arch\n",
+  "memory/notes/decision-1.md": "# Decision\n",
+  "memory/top-level.md": "# Not under notes/\n",
+  "projects/proj1/AGENTS.md": "# proj1\n",
+  "projects/proj1/agent.toml": "skills = [\"my-skill\"]\n",
+  "projects/proj1/memory/notes/decision-1.md": "# Project decision\n",
+  "projects/proj1/memory/notes/proj-only.md": "# Project only\n",
+  "skills/my-skill/SKILL.md": "---\nname: my-skill\ndescription: Mine\n---\nBody\n",
+  "skills/other-skill/SKILL.md": "---\nname: other-skill\ndescription: Other\n---\nBody\n",
+  "subagents/notes.txt": "not a subagent\n",
+  "subagents/planner.md": "---\ndescription: \"Plans\"\nagents: [\"claude-code\"]\n---\nPlan.\n",
+  "subagents/reviewer.md": "---\ndescription: \"Reviews\"\nagents: [\"claude-code\"]\n---\nReview.\n"
+ }
+}

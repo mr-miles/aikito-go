@@ -333,7 +333,11 @@ func collectSubagentDriftDiffs(aikitoDir, home string) []driftDiff {
 			}
 			platformOpts, _ := metadata[platform].(map[string]any)
 
-			rendered, rerr := adapter.Render(name, description, platformOpts, body)
+			// Python's subagent loader stores instructions=body.strip(), and
+			// sync renders from that (internal/sync/subagents.go does the
+			// same); rendering the raw body here made every freshly-synced
+			// subagent show a phantom trailing-newline drift.
+			rendered, rerr := adapter.Render(name, description, platformOpts, strings.TrimSpace(body))
 			if rerr != nil {
 				continue
 			}
