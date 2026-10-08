@@ -1702,4 +1702,3 @@ func hasUserFiles(dir string) bool {
 	})
 	return found || err != nil
 }
-

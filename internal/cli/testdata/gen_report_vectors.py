@@ -13,6 +13,7 @@ path; the HOME path is written as "H" in captured output.
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -51,15 +52,24 @@ BASE = [
 ]
 SYNCED = BASE + [["cli", "sync", "global"]]
 
-PROJECT_TOML = 'name = "{name}"\npath = "{path}"\nsync_mode = "link"\nskills = {skills}\n'
+PROJECT_TOML = 'name = "{name}"\npath = "{path}"\nsync_mode = "{mode}"\nskills = {skills}\n'
 
 
-def project(name, path, skills="[]"):
+def project(name, path, skills="[]", mode="link"):
     return [
         ["mkdir", f"aikito/projects/{name}/memory/notes"],
-        ["write", f"aikito/projects/{name}/agent.toml", PROJECT_TOML.format(name=name, path=path, skills=skills)],
+        ["write", f"aikito/projects/{name}/agent.toml", PROJECT_TOML.format(name=name, path=path, skills=skills, mode=mode)],
         ["write", f"aikito/projects/{name}/AGENTS.md", f"# {name}\n\nProject rules.\n"],
     ]
+
+
+# Fixed modification times keep dates in the output stable.
+STAMP = 1577880000  # 2020-01-01 12:00 UTC
+
+
+def note(path, title, body, stamp=STAMP):
+    text = (f"# {title}\n\n" if title else "") + body + "\n"
+    return [["write", path, text], ["mtime", path, str(stamp)]]
 
 
 SCENARIOS = {
@@ -95,8 +105,37 @@ SCENARIOS = {
         *project("ghost", "~/code/ghost"),
     ],
     "memory_notes": SYNCED + [
-        ["write", "aikito/memory/notes/simplified-clean.md", NOTE.format(title="Simplified clean", desc="Keep it simple", body="Prefer small functions.")],
-        ["write", "aikito/memory/notes/old-thing.md", NOTE.format(title="Old thing", desc="Ancient", body="Old.")],
+        *note("aikito/memory/notes/simplified-clean.md", "Simplified clean", "Prefer small functions."),
+        *note("aikito/memory/notes/old-thing.md", "", "Old."),
+    ],
+    "project_synced": SYNCED + [
+        ["mkdir", "code/alpha"],
+        ["write", "aikito/skills/writer/SKILL.md", SKILL.format(name="writer", desc="Writes things")],
+        *project("alpha", "~/code/alpha", '["writer"]'),
+        *note("aikito/projects/alpha/memory/notes/alpha-fact.md", "Alpha fact", "Fact."),
+        ["cli", "sync", "project", "alpha"],
+    ],
+    "project_copy_drift": SYNCED + [
+        ["mkdir", "code/alpha"],
+        ["write", "aikito/skills/writer/SKILL.md", SKILL.format(name="writer", desc="Writes things")],
+        *project("alpha", "~/code/alpha", '["writer"]', mode="copy"),
+        ["cli", "sync", "project", "alpha"],
+        ["write", "code/alpha/.agents/skills/writer/SKILL.md", "edited by hand\n"],
+    ],
+    "prefixes": SYNCED + [
+        ["mkdir", "code/alpha"],
+        *project("alpha", "~/code/alpha"),
+        *project("alpine", "~/code/alpine"),
+        ["write", "aikito/skills/alpha-one/SKILL.md", SKILL.format(name="alpha-one", desc="One")],
+        ["write", "aikito/skills/alpha-two/SKILL.md", SKILL.format(name="alpha-two", desc="Two")],
+        ["write", "aikito/skills.toml", 'skills = ["aikito", "durable-memory", "alpha-one"]\n'],
+        *note("aikito/memory/notes/dup.md", "Global dup", "G."),
+        *note("aikito/projects/alpha/memory/notes/dup.md", "Alpha dup", "A."),
+    ],
+    "inbox": BASE + [
+        *note("aikito/inbox/a-note.md", "A note", "Hello."),
+        *note("aikito/inbox/sub/b-note.md", "B note", "Nested.", stamp=1600000000),
+        *note("aikito/inbox/.hidden.md", "Hidden", "No."),
     ],
     "mcp_synced": SYNCED + [
         ["cli", "add", "mcp", "fetcher", "--transport", "remote", "--url", "https://example.com/mcp", "--agents", "claude-code,codex"],
@@ -125,13 +164,39 @@ COMMON = [
     ["show", "inbox"],
     ["show", "instructions"],
 ]
+# A command whose first element is "@cwd=<dir>" runs from HOME/<dir>.
 EXTRA = {
-    "fresh": [["status", "--color", "always"], ["show", "skill", "dur"], ["show", "skill", "nosuch"], ["show", "instructions", "global"]],
-    "custom_skill": [["show", "skill", "writer"], ["show", "skills", "--no-color"]],
-    "projects": [["show", "project", "alpha"], ["show", "project", "ghost"], ["show", "instructions", "alpha"]],
-    "memory_notes": [["show", "memory", "simplified"], ["show", "memory", "--all"]],
-    "mcp_synced": [["show", "mcp", "fetcher"], ["show", "mcps"]],
-    "mcp_drifted": [["show", "mcp", "fetcher"]],
+    "fresh": [
+        ["status", "--color", "always"], ["doctor", "--color", "always"],
+        ["show", "skill", "dur"], ["show", "skill", "nosuch"], ["show", "instructions", "global"],
+        ["show", "instructions", "nosuch"], ["show", "mcp", "x"], ["show", "subagent", "x"],
+        ["show", "project", "x"], ["status", "--bogus"],
+    ],
+    "custom_skill": [["show", "skill", "writer"], ["show", "skills", "--no-color"], ["show", "skills", "--color", "always"]],
+    "projects": [
+        ["show", "project", "alpha"], ["show", "project", "ghost"], ["show", "instructions", "alpha"],
+        ["@cwd=code/alpha", "show", "project"], ["@cwd=code/alpha", "show", "project", "."],
+        ["@cwd=code/alpha", "show", "instructions", "."], ["@cwd=code/alpha", "show", "memory"],
+        ["@cwd=code", "show", "project", "."],
+    ],
+    "memory_notes": [["show", "memory", "simplified"], ["show", "memory", "--all"], ["show", "memory", "nosuch"]],
+    "project_synced": [
+        ["show", "project", "alpha"], ["show", "memory", "--all"], ["show", "memory", "--project", "alpha"],
+        ["show", "memory", "alpha-fact"], ["show", "skills", "--color", "always"],
+    ],
+    "project_copy_drift": [["show", "project", "alpha"]],
+    "prefixes": [
+        ["show", "project", "al"], ["show", "project", "zz"], ["show", "skill", "alpha"],
+        ["show", "memory", "--all"], ["show", "memory", "dup"], ["show", "memory", "global/dup"],
+        ["show", "memory", "--project", "al", "dup"], ["show", "memory", "--project", "alph", "dup"],
+        ["show", "memory", "--all", "--project", "alpha"],
+    ],
+    "inbox": [
+        ["show", "inbox", "a"], ["show", "inbox", "sub/b-note"], ["show", "inbox", "b-note.md"],
+        ["show", "inbox", "zz"], ["show", "inbox", "--color", "always"],
+    ],
+    "mcp_synced": [["show", "mcp", "fetcher"], ["show", "mcps"], ["show", "mcp", "--color", "always"]],
+    "mcp_drifted": [["show", "mcp", "fetcher"], ["show", "mcp", "--color", "always"]],
     "subagent": [["show", "subagent", "verifier"]],
 }
 
@@ -153,6 +218,8 @@ def apply_setup(home: Path, steps, cli):
                 shutil.rmtree(p)
             else:
                 p.unlink()
+        elif op == "mtime":
+            os.utime(home / args[0], (int(args[1]), int(args[1])))
         elif op == "edit_json":
             p = home / args[0]
             doc = json.loads(p.read_text())
@@ -174,11 +241,15 @@ def env_for(home: Path):
         "COLUMNS": "80",
         "PYTHONPATH": str(PY_SRC),
         "GIT_CONFIG_NOSYSTEM": "1",
+        "TZ": "UTC",
     }
 
 
 def run(cli, home: Path, args):
-    p = subprocess.run(cli + args, cwd=home, env=env_for(home), capture_output=True, text=True)
+    cwd = home
+    if args and args[0].startswith("@cwd="):
+        cwd, args = home / args[0][len("@cwd="):], args[1:]
+    p = subprocess.run(cli + args, cwd=cwd, env=env_for(home), capture_output=True, text=True)
     norm = lambda s: s.replace(str(home), "H")
     return {"stdout": norm(p.stdout), "stderr": norm(p.stderr), "exit": p.returncode}
 
@@ -198,9 +269,10 @@ def drop_python_only(result):
             ]
         out = json.dumps(doc, ensure_ascii=False, indent=2) + "\n"
     else:
+        ansi = re.compile(r"\x1b\[[0-9;]*m")
         out = "".join(
             line for line in out.splitlines(keepends=True)
-            if not line.startswith("  ✓ Interpreter")
+            if not ansi.sub("", line).startswith("  ✓ Interpreter")
         )
     return {**result, "stdout": out}
 

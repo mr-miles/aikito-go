@@ -126,6 +126,10 @@ func getTerminalWidth() *int {
 	return nil
 }
 
+// tableSeparator, as a one-cell row, draws a separator line (render.py's
+// "---SEPARATOR---" row marker).
+const tableSeparator = "---SEPARATOR---"
+
 // buildGenericTable is a direct port of render.py's _build_generic_table.
 func buildGenericTable(headers []string, rows [][]string, useUnicode, useColor bool, truncatableCols []int) string {
 	colWidths := make([]int, len(headers))
@@ -133,6 +137,9 @@ func buildGenericTable(headers []string, rows [][]string, useUnicode, useColor b
 		colWidths[i] = displayWidth(h)
 	}
 	for _, row := range rows {
+		if len(row) == 1 && row[0] == tableSeparator {
+			continue
+		}
 		for i, val := range row {
 			if i < len(colWidths) && displayWidth(val) > colWidths[i] {
 				colWidths[i] = displayWidth(val)
@@ -227,7 +234,7 @@ func buildGenericTable(headers []string, rows [][]string, useUnicode, useColor b
 	lines = append(lines, midSepLine)
 
 	for _, row := range rows {
-		if len(row) == 1 && row[0] == "---SEPARATOR---" {
+		if len(row) == 1 && row[0] == tableSeparator {
 			lines = append(lines, midSepLine)
 			continue
 		}
