@@ -60,6 +60,16 @@ func applyReportSetup(t *testing.T, env Environment, steps [][]string) {
 			if err := os.RemoveAll(filepath.Join(home, args[0])); err != nil {
 				t.Fatal(err)
 			}
+		case "append":
+			f, err := os.OpenFile(filepath.Join(home, args[0]), os.O_APPEND|os.O_WRONLY, 0)
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = f.WriteString(args[1])
+			f.Close()
+			if err != nil {
+				t.Fatal(err)
+			}
 		case "mtime":
 			sec, _ := strconv.ParseInt(args[1], 10, 64)
 			ts := time.Unix(sec, 0)
