@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -100,23 +101,32 @@ func normalizeForceTargets(forceTargets []string) (map[string]bool, error) {
 	return authorized, nil
 }
 
-// loadSubagentDefinitions scans subagents/*.md into canonical Definitions.
+// subagentNamePattern is subagent.py's SUBAGENT_NAME_PATTERN.
+var subagentNamePattern = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
+
+// loadSubagentDefinitions ports subagent.py's load_subagent_definitions:
+// every entry under subagents/ must be a <name>.md with a valid name, apart
+// from OS clutter files.
 func loadSubagentDefinitions(aikitoDir string) (map[string]subagent.Definition, error) {
 	dir := filepath.Join(aikitoDir, "subagents")
+	if fi, err := os.Lstat(dir); err != nil || !fi.IsDir() {
+		return nil, subagentErrorf("Subagents directory missing or unsafe: %s", dir)
+	}
 	entries, err := os.ReadDir(dir)
 	if err != nil {
-		if os.IsNotExist(err) {
-			return map[string]subagent.Definition{}, nil
-		}
 		return nil, err
 	}
 	defs := map[string]subagent.Definition{}
 	for _, e := range entries {
 		name := e.Name()
-		if workspace.IsIgnoredName(name) || !strings.HasSuffix(name, ".md") {
+		switch name {
+		case ".DS_Store", "Thumbs.db", "desktop.ini":
 			continue
 		}
 		subName := strings.TrimSuffix(name, ".md")
+		if !strings.HasSuffix(name, ".md") || !subagentNamePattern.MatchString(subName) {
+			return nil, subagentErrorf("Unsupported subagent entry: %s", filepath.Join(dir, name))
+		}
 		metadata, body, err := workspace.ParseSubagentFile(filepath.Join(dir, name))
 		if err != nil {
 			return nil, err

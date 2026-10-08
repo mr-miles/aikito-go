@@ -1,6 +1,7 @@
 package workspace
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -142,9 +143,15 @@ var frontmatterKeyPattern = regexp.MustCompile(`^[a-z][a-z0-9-]*$`)
 // string, "agents" is a []any of strings, every other key is a
 // map[string]any platform-override table) and the instructions body.
 func ParseSubagentText(content string) (map[string]any, string, error) {
+	return parseSubagentTextAt("<subagent payload>", content)
+}
+
+// parseSubagentTextAt is layout.py's _parse_subagent_text: every error names
+// path (a file path, or "<subagent payload>" for in-memory content).
+func parseSubagentTextAt(path, content string) (map[string]any, string, error) {
 	lines := pythonSplitLines(content)
 	if len(lines) == 0 || strings.TrimSpace(lines[0]) != "---" {
-		return nil, "", layoutErrorf("Subagent frontmatter missing")
+		return nil, "", layoutErrorf("Subagent frontmatter missing: %s", path)
 	}
 	closing := -1
 	for idx := 1; idx < len(lines); idx++ {
@@ -154,7 +161,7 @@ func ParseSubagentText(content string) (map[string]any, string, error) {
 		}
 	}
 	if closing == -1 {
-		return nil, "", layoutErrorf("Subagent frontmatter is incomplete")
+		return nil, "", layoutErrorf("Subagent frontmatter is incomplete: %s", path)
 	}
 
 	metadata := map[string]any{}
@@ -165,40 +172,47 @@ func ParseSubagentText(content string) (map[string]any, string, error) {
 		}
 		idx := strings.Index(line, ":")
 		if idx < 0 {
-			return nil, "", layoutErrorf("Invalid subagent metadata")
+			return nil, "", layoutErrorf("Invalid subagent metadata: %s", path)
 		}
 		key := strings.TrimSpace(line[:idx])
 		rawVal := strings.TrimSpace(line[idx+1:])
 		if !frontmatterKeyPattern.MatchString(key) {
-			return nil, "", layoutErrorf("Invalid or duplicate subagent key")
+			return nil, "", layoutErrorf("Invalid or duplicate subagent key: %s", path)
 		}
 		if _, exists := metadata[key]; exists {
-			return nil, "", layoutErrorf("Invalid or duplicate subagent key")
+			return nil, "", layoutErrorf("Invalid or duplicate subagent key: %s", path)
 		}
 		val, err := DecodeStrictJSON(rawVal)
-		if err != nil {
-			return nil, "", layoutErrorf("Invalid subagent value for %s", key)
+		var dupErr *DuplicateKeyError
+		var constErr *ConstantError
+		switch {
+		case errors.As(err, &dupErr):
+			return nil, "", layoutErrorf("Duplicate subagent object key: %s", path)
+		case errors.As(err, &constErr):
+			return nil, "", layoutErrorf("Unsupported subagent value %s: %s", constErr.Constant, path)
+		case err != nil:
+			return nil, "", layoutErrorf("Invalid subagent value for %s: %s", key, path)
 		}
 		metadata[key] = val
 	}
 
 	desc, ok := metadata["description"].(string)
 	if !ok || strings.TrimSpace(desc) == "" {
-		return nil, "", layoutErrorf("Subagent description missing")
+		return nil, "", layoutErrorf("Subagent description missing: %s", path)
 	}
 
 	agentsRaw, ok := metadata["agents"].([]any)
 	if !ok || len(agentsRaw) == 0 {
-		return nil, "", layoutErrorf("Subagent agents list invalid")
+		return nil, "", layoutErrorf("Subagent agents list invalid: %s", path)
 	}
 	seen := map[string]bool{}
 	for _, a := range agentsRaw {
 		name, ok := a.(string)
 		if !ok || ValidateResourceName(name, "agent") != "" {
-			return nil, "", layoutErrorf("Subagent agents list invalid")
+			return nil, "", layoutErrorf("Subagent agents list invalid: %s", path)
 		}
 		if seen[name] {
-			return nil, "", layoutErrorf("Subagent agents list invalid")
+			return nil, "", layoutErrorf("Subagent agents list invalid: %s", path)
 		}
 		seen[name] = true
 	}
@@ -208,16 +222,16 @@ func ParseSubagentText(content string) (map[string]any, string, error) {
 			continue
 		}
 		if ValidateResourceName(key, "agent") != "" {
-			return nil, "", layoutErrorf("Subagent platform config invalid")
+			return nil, "", layoutErrorf("Subagent platform config invalid: %s", path)
 		}
 		if _, ok := value.(map[string]any); !ok {
-			return nil, "", layoutErrorf("Subagent platform config invalid")
+			return nil, "", layoutErrorf("Subagent platform config invalid: %s", path)
 		}
 	}
 
 	body := strings.Join(lines[closing+1:], "")
 	if strings.TrimSpace(body) == "" {
-		return nil, "", layoutErrorf("Subagent instructions missing")
+		return nil, "", layoutErrorf("Subagent instructions missing: %s", path)
 	}
 	return metadata, body, nil
 }
@@ -236,7 +250,7 @@ func ParseSubagentFile(path string) (map[string]any, string, error) {
 	if err != nil {
 		return nil, "", err
 	}
-	return ParseSubagentText(string(data))
+	return parseSubagentTextAt(path, string(data))
 }
 
 // RenderSubagentText mirrors render_subagent_text: frontmatter keys are

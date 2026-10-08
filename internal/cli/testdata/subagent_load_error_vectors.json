@@ -1,0 +1,482 @@
+{
+ "not_markdown": {
+  "entry": "notes.txt",
+  "content": "x\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Unsupported subagent entry: {H}/aikito/subagents/notes.txt\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Unsupported subagent entry: {H}/aikito/subagents/notes.txt\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "bad_name": {
+  "entry": "Bad_Name.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Unsupported subagent entry: {H}/aikito/subagents/Bad_Name.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Unsupported subagent entry: {H}/aikito/subagents/Bad_Name.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "directory_entry": {
+  "entry": "sub/",
+  "content": null,
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Unsupported subagent entry: {H}/aikito/subagents/sub\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Unsupported subagent entry: {H}/aikito/subagents/sub\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "ignored_clutter": {
+  "entry": ".DS_Store",
+  "content": "x",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Subagent 'good' targets agent 'codex', but 'codex' has no [agents.codex.subagents] configuration in agents/<name>.toml\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Subagent 'good' targets agent 'codex', but 'codex' has no [agents.codex.subagents] configuration in agents/<name>.toml\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "frontmatter_missing": {
+  "entry": "fm-missing.md",
+  "content": "Body only\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Subagent frontmatter missing: {H}/aikito/subagents/fm-missing.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Subagent frontmatter missing: {H}/aikito/subagents/fm-missing.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "frontmatter_incomplete": {
+  "entry": "fm-open.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Subagent frontmatter is incomplete: {H}/aikito/subagents/fm-open.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Subagent frontmatter is incomplete: {H}/aikito/subagents/fm-open.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "metadata_no_colon": {
+  "entry": "no-colon.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\noops\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Invalid subagent metadata: {H}/aikito/subagents/no-colon.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Invalid subagent metadata: {H}/aikito/subagents/no-colon.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "invalid_key": {
+  "entry": "bad-key.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\nBad_Key: {}\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Invalid or duplicate subagent key: {H}/aikito/subagents/bad-key.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Invalid or duplicate subagent key: {H}/aikito/subagents/bad-key.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "duplicate_key": {
+  "entry": "dup-key.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\ndescription: \"again\"\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Invalid or duplicate subagent key: {H}/aikito/subagents/dup-key.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Invalid or duplicate subagent key: {H}/aikito/subagents/dup-key.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "invalid_value": {
+  "entry": "bad-value.md",
+  "content": "---\ndescription: d\nagents: [\"claude-code\"]\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Invalid subagent value for description: {H}/aikito/subagents/bad-value.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Invalid subagent value for description: {H}/aikito/subagents/bad-value.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "duplicate_object_key": {
+  "entry": "dup-obj.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\nclaude-code: {\"model\": \"a\", \"model\": \"b\"}\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Duplicate subagent object key: {H}/aikito/subagents/dup-obj.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Duplicate subagent object key: {H}/aikito/subagents/dup-obj.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "nan_constant": {
+  "entry": "nan.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\nclaude-code: {\"x\": NaN}\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Unsupported subagent value NaN: {H}/aikito/subagents/nan.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Unsupported subagent value NaN: {H}/aikito/subagents/nan.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "neg_infinity": {
+  "entry": "ninf.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\nclaude-code: {\"x\": [1, -Infinity]}\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Unsupported subagent value -Infinity: {H}/aikito/subagents/ninf.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Unsupported subagent value -Infinity: {H}/aikito/subagents/ninf.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "dup_then_nan": {
+  "entry": "dupnan.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\nclaude-code: {\"a\": {\"b\": 1, \"b\": 2}, \"c\": NaN}\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Duplicate subagent object key: {H}/aikito/subagents/dupnan.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Duplicate subagent object key: {H}/aikito/subagents/dupnan.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "nan_then_dup": {
+  "entry": "nandup.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\nclaude-code: {\"a\": 1, \"a\": NaN}\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Unsupported subagent value NaN: {H}/aikito/subagents/nandup.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Unsupported subagent value NaN: {H}/aikito/subagents/nandup.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "trailing_data": {
+  "entry": "trailing.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\nclaude-code: {\"a\": 1}}\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Invalid subagent value for claude-code: {H}/aikito/subagents/trailing.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Invalid subagent value for claude-code: {H}/aikito/subagents/trailing.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "description_missing": {
+  "entry": "no-desc.md",
+  "content": "---\nagents: [\"claude-code\"]\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Subagent description missing: {H}/aikito/subagents/no-desc.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Subagent description missing: {H}/aikito/subagents/no-desc.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "agents_invalid": {
+  "entry": "bad-agents.md",
+  "content": "---\ndescription: \"d\"\nagents: []\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Subagent agents list invalid: {H}/aikito/subagents/bad-agents.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Subagent agents list invalid: {H}/aikito/subagents/bad-agents.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "platform_config_invalid": {
+  "entry": "bad-platform.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\nclaude-code: \"x\"\n---\nBody\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Subagent platform config invalid: {H}/aikito/subagents/bad-platform.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Subagent platform config invalid: {H}/aikito/subagents/bad-platform.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ },
+ "instructions_missing": {
+  "entry": "no-body.md",
+  "content": "---\ndescription: \"d\"\nagents: [\"claude-code\"]\n---\n\n",
+  "steps": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "stdout": "",
+    "stderr": "[ERROR] Subagent instructions missing: {H}/aikito/subagents/no-body.md\n",
+    "exit": 1
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Subagent instructions missing: {H}/aikito/subagents/no-body.md\n\nBlocked; no changes were made\n",
+    "stderr": "",
+    "exit": 1
+   }
+  ]
+ }
+}
