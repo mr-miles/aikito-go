@@ -419,3 +419,16 @@ func compareAgainstGoldenRedacting(t *testing.T, label, liveRoot, liveHome, gold
 	goldenTree := loadGolden(t, goldenName)
 	compareManifests(t, label, liveTree, goldenTree)
 }
+
+// resolvedTempDir is t.TempDir() with symlinks resolved, so expected paths
+// match what aikito writes on macOS, where temp dirs live under
+// /var -> /private/var and the binary resolves paths as Python's
+// Path.resolve() does.
+func resolvedTempDir(t *testing.T) string {
+	t.Helper()
+	dir, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	return dir
+}

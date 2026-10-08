@@ -151,7 +151,7 @@ url = "https://b.example.com/mcp"
 agents = ["claude-code"]
 `), 0o644)
 	os.MkdirAll(filepath.Join(home, ".codex"), 0o755)
-	os.MkdirAll(filepath.Join(home, ".claude-code-marker"), 0o755)
+	os.MkdirAll(filepath.Join(home, ".claude"), 0o755) // claude-code's detect.paths marker
 
 	plan, err := BuildMCPPlan(aikitoDir, home, BuildMCPPlanOptions{})
 	if err != nil {

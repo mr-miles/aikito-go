@@ -8,13 +8,13 @@ import (
 
 // Cross-validated against the real Python resolve_project_path.
 func TestResolveProjectPath(t *testing.T) {
-	home := "/home/example"
+	home := resolvedTempDir(t)
 	cases := []struct {
 		raw  string
 		want string
 	}{
-		{"~", "/home/example"},
-		{"~/sub/dir", "/home/example/sub/dir"},
+		{"~", home},
+		{"~/sub/dir", filepath.Join(home, "sub", "dir")},
 		{"/abs/path", "/abs/path"},
 	}
 	for _, tc := range cases {
@@ -45,7 +45,7 @@ func TestResolveProjectPathRelativeUsesCWD(t *testing.T) {
 	if err := os.Chdir(dir); err != nil {
 		t.Fatal(err)
 	}
-	got, ok := ResolveProjectPath("relative/path", "/home/example")
+	got, ok := ResolveProjectPath("relative/path", resolvedTempDir(t))
 	if !ok {
 		t.Fatalf("expected ok=true")
 	}

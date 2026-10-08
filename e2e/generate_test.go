@@ -20,7 +20,7 @@ import (
 // and returns that home.
 func pyInitWorkspace(t *testing.T, pythonSrc string) string {
 	t.Helper()
-	home := t.TempDir()
+	home := resolvedTempDir(t)
 	withMarkerDir(t, home, ".claude")
 	if r := runPython(t, pythonSrc, home, "init", "workspace"); r.ExitCode != 0 {
 		t.Fatalf("python init workspace: %s", r.Stderr)
@@ -32,7 +32,7 @@ func TestGenerateGoldens(t *testing.T) {
 	pythonSrc := requirePython(t)
 
 	t.Run("init_workspace", func(t *testing.T) {
-		home := t.TempDir()
+		home := resolvedTempDir(t)
 		withMarkerDir(t, home, ".claude")
 		if r := runPython(t, pythonSrc, home, "init", "workspace"); r.ExitCode != 0 {
 			t.Fatalf("python init workspace: %s", r.Stderr)
@@ -42,7 +42,7 @@ func TestGenerateGoldens(t *testing.T) {
 
 	t.Run("init_project", func(t *testing.T) {
 		home := pyInitWorkspace(t, pythonSrc)
-		proj := t.TempDir()
+		proj := resolvedTempDir(t)
 		if r := runPython(t, pythonSrc, home, "init", "project", "myproj", proj); r.ExitCode != 0 {
 			t.Fatalf("python init project: %s", r.Stderr)
 		}

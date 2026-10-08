@@ -16,8 +16,7 @@ func testEnv(t *testing.T) Environment {
 	// with no agent CLIs (claude/codex/...) and no marker dirs under this
 	// fake home.
 	t.Setenv("PATH", "/usr/bin:/bin")
-	home := t.TempDir()
-	return Environment{Home: home, Env: workspace.MapEnv{}, Cwd: t.TempDir()}
+	return Environment{Home: resolvedTempDir(t), Env: workspace.MapEnv{}, Cwd: resolvedTempDir(t)}
 }
 
 func TestCmdVersion(t *testing.T) {

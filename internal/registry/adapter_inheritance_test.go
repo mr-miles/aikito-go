@@ -5,7 +5,7 @@ import "testing"
 // Cross-validated against real Python _build_agent_definition for the three
 // trickiest mcp.adapter inheritance edge cases.
 func TestMCPAdapterInheritance(t *testing.T) {
-	const home = "/home/testuser"
+	home := resolvedTempDir(t)
 
 	t.Run("mismatched_format_no_inherit", func(t *testing.T) {
 		// codex's bundled config_format is "toml"; overriding to "jsonc" with

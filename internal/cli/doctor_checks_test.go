@@ -396,7 +396,7 @@ func TestCheckEnvironmentAikitoDir(t *testing.T) {
 	t.Setenv("AIKITO_DIR", dir)
 	assertContains(t, findingsText(checkEnvironment(dir, env.Home)), "OK|$AIKITO_DIR → aikito|")
 
-	other := t.TempDir()
+	other := resolvedTempDir(t)
 	t.Setenv("AIKITO_DIR", other)
 	assertContains(t, findingsText(checkEnvironment(dir, env.Home)),
 		"WARN|$AIKITO_DIR ("+other+") resolved to "+other+", but aikito_dir="+dir+"|")

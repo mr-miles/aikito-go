@@ -15,7 +15,7 @@ import (
 // layout.toml containing exactly "version = 2\n"), and idempotent on re-run.
 func buildLegacyFixture(t *testing.T) string {
 	t.Helper()
-	root := t.TempDir()
+	root := resolvedTempDir(t)
 	if err := os.MkdirAll(filepath.Join(root, "subagents"), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -76,7 +76,7 @@ func TestBuildMigrationPlan(t *testing.T) {
 }
 
 func TestMigrationPlanAlreadyV2IsCleanNoOp(t *testing.T) {
-	root := t.TempDir()
+	root := resolvedTempDir(t)
 	for _, dir := range []string{"agents", "subagents"} {
 		if err := os.MkdirAll(filepath.Join(root, dir), 0o755); err != nil {
 			t.Fatal(err)
@@ -98,7 +98,7 @@ func TestMigrationPlanAlreadyV2IsCleanNoOp(t *testing.T) {
 }
 
 func TestMigrationPlanBlockedOnPartialLegacy(t *testing.T) {
-	root := t.TempDir()
+	root := resolvedTempDir(t)
 	if err := os.WriteFile(filepath.Join(root, "agents.toml"), []byte("[agents]\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -152,7 +152,7 @@ func TestBuildMigrationPlanEdgeCasesMatchPython(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			root := t.TempDir()
+			root := resolvedTempDir(t)
 			for _, d := range []string{"global", "memory", "projects", "skills", "subagents", "mcps"} {
 				if err := os.MkdirAll(filepath.Join(root, d), 0o755); err != nil {
 					t.Fatal(err)

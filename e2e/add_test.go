@@ -8,7 +8,7 @@ import "testing"
 // PATH/marker-dir setup (see common_test.go's testPATH/withMarkerDir).
 func initWorkspace(t *testing.T) string {
 	t.Helper()
-	home := t.TempDir()
+	home := resolvedTempDir(t)
 	withMarkerDir(t, home, ".claude")
 	if r := runGo(t, home, "init", "workspace"); r.ExitCode != 0 {
 		t.Fatalf("go init workspace: %s", r.Stderr)

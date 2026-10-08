@@ -5,7 +5,7 @@ package e2e
 import "testing"
 
 func TestE2EInitWorkspace(t *testing.T) {
-	home := t.TempDir()
+	home := resolvedTempDir(t)
 	withMarkerDir(t, home, ".claude")
 
 	res := runGo(t, home, "init", "workspace")
@@ -17,9 +17,9 @@ func TestE2EInitWorkspace(t *testing.T) {
 }
 
 func TestE2EInitProject(t *testing.T) {
-	home := t.TempDir()
+	home := resolvedTempDir(t)
 	withMarkerDir(t, home, ".claude")
-	proj := t.TempDir()
+	proj := resolvedTempDir(t)
 
 	if r := runGo(t, home, "init", "workspace"); r.ExitCode != 0 {
 		t.Fatalf("go init workspace: %s", r.Stderr)

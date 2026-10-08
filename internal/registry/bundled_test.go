@@ -3,10 +3,10 @@ package registry
 import "testing"
 
 // Cross-validated against the real Python bundled_agent_definition for all
-// 8 built-in agents with home="/home/testuser" (see the generation script
+// 8 built-in agents with home="/home/testuser", re-rooted here at a temp dir (see the generation script
 // run against /home/miles/aikito-rs/aikito during development).
 func TestBundledAgentDefinitionsMatchPython(t *testing.T) {
-	const home = "/home/testuser"
+	home := resolvedTempDir(t)
 
 	type want struct {
 		displayName            string
@@ -30,76 +30,76 @@ func TestBundledAgentDefinitionsMatchPython(t *testing.T) {
 
 	cases := map[string]want{
 		"codex": {
-			displayName: "Codex", instructionPath: s("/home/testuser/.codex/AGENTS.md"),
-			projectInstructionPath: s("AGENTS.md"), skillsPath: s("/home/testuser/.agents/skills"),
+			displayName: "Codex", instructionPath: s(home + "/.codex/AGENTS.md"),
+			projectInstructionPath: s("AGENTS.md"), skillsPath: s(home + "/.agents/skills"),
 			detectCommands: []string{"codex"}, detectPaths: []string{".codex"},
-			hasMCP: true, mcpConfigPath: "/home/testuser/.codex/config.toml", mcpConfigFormat: "toml",
+			hasMCP: true, mcpConfigPath: home + "/.codex/config.toml", mcpConfigFormat: "toml",
 			mcpAdapter: "toml", mcpNameStyle: "underscore", mcpBuiltinServers: []string{"openaiDeveloperDocs"},
-			subagentsConfigPath: "/home/testuser/.codex/agents", subagentsConfigFormat: "codex_toml",
+			subagentsConfigPath: home + "/.codex/agents", subagentsConfigFormat: "codex_toml",
 			runnerCommand: []string{"codex", "-C", "{workdir}", "{prompt}"},
 		},
 		"claude-code": {
-			displayName: "Claude Code", instructionPath: s("/home/testuser/.claude/CLAUDE.md"),
-			projectInstructionPath: s(".claude/CLAUDE.md"), skillsPath: s("/home/testuser/.claude/skills"),
+			displayName: "Claude Code", instructionPath: s(home + "/.claude/CLAUDE.md"),
+			projectInstructionPath: s(".claude/CLAUDE.md"), skillsPath: s(home + "/.claude/skills"),
 			detectCommands: []string{"claude"}, detectPaths: []string{".claude"},
-			hasMCP: true, mcpConfigPath: "/home/testuser/.claude.json", mcpConfigFormat: "claude_json",
+			hasMCP: true, mcpConfigPath: home + "/.claude.json", mcpConfigFormat: "claude_json",
 			mcpAdapter: "claude_json", mcpNameStyle: "verbatim", mcpBuiltinServers: []string{},
-			subagentsConfigPath: "/home/testuser/.claude/agents", subagentsConfigFormat: "claude_markdown",
+			subagentsConfigPath: home + "/.claude/agents", subagentsConfigFormat: "claude_markdown",
 			runnerCommand: []string{"claude", "{prompt}"},
 		},
 		"agy": {
-			displayName: "Antigravity CLI", instructionPath: s("/home/testuser/.gemini/GEMINI.md"),
-			projectInstructionPath: s("AGENTS.md"), skillsPath: s("/home/testuser/.gemini/antigravity-cli/skills"),
+			displayName: "Antigravity CLI", instructionPath: s(home + "/.gemini/GEMINI.md"),
+			projectInstructionPath: s("AGENTS.md"), skillsPath: s(home + "/.gemini/antigravity-cli/skills"),
 			detectCommands: []string{"agy"}, detectPaths: []string{".gemini/config"},
-			hasMCP: true, mcpConfigPath: "/home/testuser/.gemini/config/mcp_config.json", mcpConfigFormat: "agy_json",
+			hasMCP: true, mcpConfigPath: home + "/.gemini/config/mcp_config.json", mcpConfigFormat: "agy_json",
 			mcpAdapter: "agy_json", mcpNameStyle: "verbatim", mcpBuiltinServers: []string{},
-			subagentsConfigPath: "/home/testuser/.gemini/config/agents", subagentsConfigFormat: "agy_markdown",
+			subagentsConfigPath: home + "/.gemini/config/agents", subagentsConfigFormat: "agy_markdown",
 			runnerCommand: []string{"agy", "--prompt-interactive", "{prompt}"},
 		},
 		"opencode": {
-			displayName: "OpenCode", instructionPath: s("/home/testuser/.config/opencode/AGENTS.md"),
-			projectInstructionPath: s("AGENTS.md"), skillsPath: s("/home/testuser/.agents/skills"),
+			displayName: "OpenCode", instructionPath: s(home + "/.config/opencode/AGENTS.md"),
+			projectInstructionPath: s("AGENTS.md"), skillsPath: s(home + "/.agents/skills"),
 			detectCommands: []string{"opencode"}, detectPaths: []string{".config/opencode"},
-			hasMCP: true, mcpConfigPath: "/home/testuser/.config/opencode/opencode.jsonc", mcpConfigFormat: "jsonc",
+			hasMCP: true, mcpConfigPath: home + "/.config/opencode/opencode.jsonc", mcpConfigFormat: "jsonc",
 			mcpAdapter: "jsonc", mcpNameStyle: "verbatim", mcpBuiltinServers: []string{},
-			subagentsConfigPath: "/home/testuser/.config/opencode/agents", subagentsConfigFormat: "opencode_markdown",
+			subagentsConfigPath: home + "/.config/opencode/agents", subagentsConfigFormat: "opencode_markdown",
 			runnerCommand: []string{"opencode", "{workdir}", "--prompt", "{prompt}"},
 		},
 		"github-copilot": {
-			displayName: "GitHub Copilot CLI", instructionPath: s("/home/testuser/.copilot/copilot-instructions.md"),
-			projectInstructionPath: s("AGENTS.md"), skillsPath: s("/home/testuser/.agents/skills"),
+			displayName: "GitHub Copilot CLI", instructionPath: s(home + "/.copilot/copilot-instructions.md"),
+			projectInstructionPath: s("AGENTS.md"), skillsPath: s(home + "/.agents/skills"),
 			detectCommands: []string{"copilot"}, detectPaths: []string{".copilot"},
-			hasMCP: true, mcpConfigPath: "/home/testuser/.copilot/mcp-config.json", mcpConfigFormat: "copilot_json",
+			hasMCP: true, mcpConfigPath: home + "/.copilot/mcp-config.json", mcpConfigFormat: "copilot_json",
 			mcpAdapter: "copilot_json", mcpNameStyle: "verbatim", mcpBuiltinServers: []string{},
-			subagentsConfigPath: "/home/testuser/.copilot/agents", subagentsConfigFormat: "copilot_markdown",
+			subagentsConfigPath: home + "/.copilot/agents", subagentsConfigFormat: "copilot_markdown",
 			runnerCommand: []string{"copilot", "-C", "{workdir}", "-i", "{prompt}"},
 		},
 		"dsh": {
-			displayName: "DeepSeek Harness", instructionPath: s("/home/testuser/.dsh/AGENTS.md"),
-			projectInstructionPath: s("AGENTS.md"), skillsPath: s("/home/testuser/.agents/skills"),
+			displayName: "DeepSeek Harness", instructionPath: s(home + "/.dsh/AGENTS.md"),
+			projectInstructionPath: s("AGENTS.md"), skillsPath: s(home + "/.agents/skills"),
 			detectCommands: []string{"dsh"}, detectPaths: []string{".dsh"},
-			hasMCP: true, mcpConfigPath: "/home/testuser/.dsh/cordis.patch.yml", mcpConfigFormat: "dsh_cordis",
+			hasMCP: true, mcpConfigPath: home + "/.dsh/cordis.patch.yml", mcpConfigFormat: "dsh_cordis",
 			mcpAdapter: "dsh_cordis", mcpNameStyle: "verbatim", mcpBuiltinServers: []string{},
-			subagentsConfigPath: "/home/testuser/.dsh/cordis.patch.yml", subagentsConfigFormat: "dsh_cordis_subagent",
+			subagentsConfigPath: home + "/.dsh/cordis.patch.yml", subagentsConfigFormat: "dsh_cordis_subagent",
 			runnerCommand: []string{"dsh", "--profile", "headless", "{prompt}"},
 		},
 		"grok": {
-			displayName: "Grok Build", instructionPath: s("/home/testuser/.grok/rules/aikito.md"),
-			projectInstructionPath: s("AGENTS.md"), skillsPath: s("/home/testuser/.agents/skills"),
+			displayName: "Grok Build", instructionPath: s(home + "/.grok/rules/aikito.md"),
+			projectInstructionPath: s("AGENTS.md"), skillsPath: s(home + "/.agents/skills"),
 			detectCommands: []string{"grok"}, detectPaths: []string{".grok"},
-			hasMCP: true, mcpConfigPath: "/home/testuser/.grok/config.toml", mcpConfigFormat: "toml",
+			hasMCP: true, mcpConfigPath: home + "/.grok/config.toml", mcpConfigFormat: "toml",
 			mcpAdapter: "grok_toml", mcpNameStyle: "verbatim", mcpBuiltinServers: []string{},
-			subagentsConfigPath: "/home/testuser/.grok/agents", subagentsConfigFormat: "grok_markdown",
+			subagentsConfigPath: home + "/.grok/agents", subagentsConfigFormat: "grok_markdown",
 			runnerCommand: []string{"grok", "--cwd", "{workdir}", "-p", "{prompt}"},
 		},
 		"pi": {
-			displayName: "Pi", instructionPath: s("/home/testuser/.pi/agent/AGENTS.md"),
-			projectInstructionPath: s("AGENTS.md"), skillsPath: s("/home/testuser/.agents/skills"),
+			displayName: "Pi", instructionPath: s(home + "/.pi/agent/AGENTS.md"),
+			projectInstructionPath: s("AGENTS.md"), skillsPath: s(home + "/.agents/skills"),
 			detectCommands: []string{"pi"}, detectPaths: []string{".pi"},
 			hasMCP:                false,
-			subagentsConfigPath:   "/home/testuser/.pi/agent/agents",
+			subagentsConfigPath:   home + "/.pi/agent/agents",
 			subagentsConfigFormat: "pi_markdown",
-			subagentsRequiresPath: s("/home/testuser/.pi/agent/extensions/subagent/index.ts"),
+			subagentsRequiresPath: s(home + "/.pi/agent/extensions/subagent/index.ts"),
 			runnerCommand:         []string{"pi", "-p", "{prompt}"},
 		},
 	}
