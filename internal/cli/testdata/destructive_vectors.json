@@ -1,0 +1,2554 @@
+{
+ "doctor_fix_live_state_kept": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p1' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p1/.agents/skills/pskill\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[SUCCESS] Project 'p1' synced successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p2' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p2/.agents/skills/pskill\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n[SUCCESS] Project 'p2' synced successfully.\n"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ✓ Interpreter consistent: /usr/bin/python3\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (2 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: 1 active path(s)\n\nFound 5 issues, 1 warning.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/.aikito-tx",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p1/.agents/skills/pskill",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .local/state/aikito/project-skills/28fdd6df7ad4ffd22dcb4ffa94ca2ec7405abbbb6985e6c4425427b27c11748e.json 600",
+     "F .local/state/aikito/project-skills/7bba90d2cc7aff30247a51d5f91a868fda2a7636a1ca106bf3518d9af540bc64.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p1/.agents/skills/pskill/SKILL.md",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "doctor_fix_stale_state": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p1' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p1/.agents/skills/pskill\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[SUCCESS] Project 'p1' synced successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p2' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p2/.agents/skills/pskill\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n[SUCCESS] Project 'p2' synced successfully.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/.aikito-tx",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p1/.agents/skills/pskill",
+     "F .local/state/aikito/project-skills/8b125fc46817d90c34b4c8be1abdc3faf15304465a330cf3ecb72d8cf55d0dbf.json 600",
+     "F .local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p1/.agents/skills/pskill/SKILL.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes"
+    ]
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ⚠ H/.local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json: workspace or checkout is unavailable; state retained\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json\n      Reason: workspace or checkout is unavailable; state retained\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ✓ Interpreter consistent: /usr/bin/python3\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project 'p2': offline on this host (~/p2)\n  ✓ Project runtimes OK (1 active project(s))\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: offline on this host (~/p2)\n\nFound 5 issues, 2 warnings.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/.aikito-tx",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p1/.agents/skills/pskill",
+     "F .local/state/aikito/project-skills/8b125fc46817d90c34b4c8be1abdc3faf15304465a330cf3ecb72d8cf55d0dbf.json 600",
+     "F .local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p1/.agents/skills/pskill/SKILL.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes"
+    ]
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ⚠ H/.local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json: workspace or checkout is unavailable; state retained\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json\n      Reason: workspace or checkout is unavailable; state retained\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ✓ Interpreter consistent: /usr/bin/python3\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project 'p2': offline on this host (~/p2)\n  ✓ Project runtimes OK (1 active project(s))\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: offline on this host (~/p2)\n\nFound 5 issues, 2 warnings.\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "p2"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "doctor_fix_unregistered_project_state": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p1' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p1/.agents/skills/pskill\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[SUCCESS] Project 'p1' synced successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p2' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p2/.agents/skills/pskill\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n[SUCCESS] Project 'p2' synced successfully.\n"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ✓ Interpreter consistent: /usr/bin/python3\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (5 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (1 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n\nFound 5 issues, 1 warning.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/.aikito-tx",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p1/.agents/skills/pskill",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .local/state/aikito/project-skills/2ecd5ca0c5bbf5b5fe303692888a675938d5d9bb9f6be7a4074b762de22e208c.json 600",
+     "F .local/state/aikito/project-skills/9079f6656e13aeadd321d6b3e8118e8ad2554cbc84b7751a1f8efe12aaf58ee8.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p1/.agents/skills/pskill/SKILL.md",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/projects/p2"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "rename_memory_ambiguous": {
+  "expect": [
+   {
+    "args": [
+     "rename",
+     "memory",
+     "beta",
+     "x"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Multiple memory notes match 'beta':\n\n  - global/notes/beta\n  - p1/notes/beta\n\nPlease specify the full identifier, e.g.:\n  aikito rename memory global/notes/beta\n  aikito rename memory p1/notes/beta\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "remove",
+     "memory",
+     "beta"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Multiple memory notes match 'beta':\n\n  - global/notes/beta\n  - p1/notes/beta\n\nPlease specify the full identifier, e.g.:\n  aikito rm memory global/notes/beta\n  aikito rm memory p1/notes/beta\n",
+    "stdout": ""
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/memory/notes/sub",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/memory/notes/alpha.md \"---\\nname: alpha\\ndescription: Note alpha\\n---\\n\\n# alpha\\n\\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\\n\"",
+     "F aikito/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\\n\"",
+     "F aikito/memory/notes/betamax.md \"---\\nname: betamax\\ndescription: Note betamax\\n---\\n\\n# betamax\\n\\nMentions [[beta]] twice: [[beta]].\\n\"",
+     "F aikito/memory/notes/sub/gamma.md \"---\\nname: gamma\\ndescription: Note gamma\\n---\\n\\n# gamma\\n\\nNested, links [[alpha]].\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p1/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nProject beta links [[alpha]] and [[beta]].\\n\"",
+     "F aikito/projects/p1/memory/notes/delta.md \"---\\nname: delta\\ndescription: Note delta\\n---\\n\\n# delta\\n\\nLinks [[beta]].\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "content": "---\nname: alpha\ndescription: Note alpha\n---\n\n# alpha\n\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/alpha.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\n",
+    "op": "write",
+    "path": "aikito/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: betamax\ndescription: Note betamax\n---\n\n# betamax\n\nMentions [[beta]] twice: [[beta]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/betamax.md"
+   },
+   {
+    "content": "---\nname: gamma\ndescription: Note gamma\n---\n\n# gamma\n\nNested, links [[alpha]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/sub/gamma.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nProject beta links [[alpha]] and [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: delta\ndescription: Note delta\n---\n\n# delta\n\nLinks [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/delta.md"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "beta",
+     "x"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "remove",
+     "memory",
+     "beta"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "rename_memory_errors": {
+  "expect": [
+   {
+    "args": [
+     "rename",
+     "memory",
+     "nosuch",
+     "fine"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Memory note 'nosuch' not found.\nRun 'aikito show memory' to view available memory files.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha",
+     "Bad Name"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Invalid memory note name 'Bad Name'. Must be kebab-case (lowercase alphanumeric characters separated by hyphens, e.g. 'payment-idempotency').\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha",
+     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Invalid memory note name 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'. Length must be at most 50 characters (got 51).\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha",
+     "betamax"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Target memory note 'betamax.md' already exists.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha",
+     "alpha"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Note 'alpha' is already named 'alpha'.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha.md",
+     "alpha-two"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Renamed memory note 'alpha' → 'alpha-two'\n  - File: memory/notes/alpha-two.md\n  - Updated inbound wikilinks in 1 file(s):\n    * memory/notes/beta.md\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/memory/notes/sub",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/memory/notes/alpha-two.md \"---\\nname: alpha\\ndescription: Note alpha\\n---\\n\\n# alpha\\n\\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\\n\"",
+     "F aikito/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nBack to [[alpha-two]]. Not a link: [[betamax]] or beta.\\n\"",
+     "F aikito/memory/notes/betamax.md \"---\\nname: betamax\\ndescription: Note betamax\\n---\\n\\n# betamax\\n\\nMentions [[beta]] twice: [[beta]].\\n\"",
+     "F aikito/memory/notes/sub/gamma.md \"---\\nname: gamma\\ndescription: Note gamma\\n---\\n\\n# gamma\\n\\nNested, links [[alpha]].\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p1/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nProject beta links [[alpha]] and [[beta]].\\n\"",
+     "F aikito/projects/p1/memory/notes/delta.md \"---\\nname: delta\\ndescription: Note delta\\n---\\n\\n# delta\\n\\nLinks [[beta]].\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "content": "---\nname: alpha\ndescription: Note alpha\n---\n\n# alpha\n\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/alpha.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\n",
+    "op": "write",
+    "path": "aikito/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: betamax\ndescription: Note betamax\n---\n\n# betamax\n\nMentions [[beta]] twice: [[beta]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/betamax.md"
+   },
+   {
+    "content": "---\nname: gamma\ndescription: Note gamma\n---\n\n# gamma\n\nNested, links [[alpha]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/sub/gamma.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nProject beta links [[alpha]] and [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: delta\ndescription: Note delta\n---\n\n# delta\n\nLinks [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/delta.md"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "nosuch",
+     "fine"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha",
+     "Bad Name"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha",
+     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha",
+     "betamax"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha",
+     "alpha"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/alpha.md",
+     "alpha-two"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "rename_memory_no_workspace": {
+  "expect": [
+   {
+    "args": [
+     "rename",
+     "memory",
+     "a",
+     "b"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Memory note 'a' not found.\nRun 'aikito show memory' to view available memory files.\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "a",
+     "b"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "rename_memory_prefix": {
+  "expect": [
+   {
+    "args": [
+     "rename",
+     "memory",
+     "gam",
+     "gamma-renamed"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Memory note 'gam' not found.\nRun 'aikito show memory' to view available memory files.\n",
+    "stdout": ""
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/memory/notes/sub",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/memory/notes/alpha.md \"---\\nname: alpha\\ndescription: Note alpha\\n---\\n\\n# alpha\\n\\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\\n\"",
+     "F aikito/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\\n\"",
+     "F aikito/memory/notes/betamax.md \"---\\nname: betamax\\ndescription: Note betamax\\n---\\n\\n# betamax\\n\\nMentions [[beta]] twice: [[beta]].\\n\"",
+     "F aikito/memory/notes/sub/gamma.md \"---\\nname: gamma\\ndescription: Note gamma\\n---\\n\\n# gamma\\n\\nNested, links [[alpha]].\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p1/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nProject beta links [[alpha]] and [[beta]].\\n\"",
+     "F aikito/projects/p1/memory/notes/delta.md \"---\\nname: delta\\ndescription: Note delta\\n---\\n\\n# delta\\n\\nLinks [[beta]].\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "content": "---\nname: alpha\ndescription: Note alpha\n---\n\n# alpha\n\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/alpha.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\n",
+    "op": "write",
+    "path": "aikito/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: betamax\ndescription: Note betamax\n---\n\n# betamax\n\nMentions [[beta]] twice: [[beta]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/betamax.md"
+   },
+   {
+    "content": "---\nname: gamma\ndescription: Note gamma\n---\n\n# gamma\n\nNested, links [[alpha]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/sub/gamma.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nProject beta links [[alpha]] and [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: delta\ndescription: Note delta\n---\n\n# delta\n\nLinks [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/delta.md"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "gam",
+     "gamma-renamed"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "rename_memory_project_note": {
+  "expect": [
+   {
+    "args": [
+     "rename",
+     "memory",
+     "p1/delta",
+     "delta-two"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Renamed memory note 'delta' → 'delta-two'\n  - File: projects/p1/memory/notes/delta-two.md\n  - No inbound wikilinks found in other notes.\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/memory/notes/sub",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/memory/notes/alpha.md \"---\\nname: alpha\\ndescription: Note alpha\\n---\\n\\n# alpha\\n\\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\\n\"",
+     "F aikito/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\\n\"",
+     "F aikito/memory/notes/betamax.md \"---\\nname: betamax\\ndescription: Note betamax\\n---\\n\\n# betamax\\n\\nMentions [[beta]] twice: [[beta]].\\n\"",
+     "F aikito/memory/notes/sub/gamma.md \"---\\nname: gamma\\ndescription: Note gamma\\n---\\n\\n# gamma\\n\\nNested, links [[alpha]].\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p1/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nProject beta links [[alpha]] and [[beta]].\\n\"",
+     "F aikito/projects/p1/memory/notes/delta-two.md \"---\\nname: delta\\ndescription: Note delta\\n---\\n\\n# delta\\n\\nLinks [[beta]].\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "content": "---\nname: alpha\ndescription: Note alpha\n---\n\n# alpha\n\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/alpha.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\n",
+    "op": "write",
+    "path": "aikito/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: betamax\ndescription: Note betamax\n---\n\n# betamax\n\nMentions [[beta]] twice: [[beta]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/betamax.md"
+   },
+   {
+    "content": "---\nname: gamma\ndescription: Note gamma\n---\n\n# gamma\n\nNested, links [[alpha]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/sub/gamma.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nProject beta links [[alpha]] and [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: delta\ndescription: Note delta\n---\n\n# delta\n\nLinks [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/delta.md"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "p1/delta",
+     "delta-two"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "rename_memory_refactors_links": {
+  "expect": [
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/beta",
+     "beta-two"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Renamed memory note 'beta' → 'beta-two'\n  - File: memory/notes/beta-two.md\n  - Updated inbound wikilinks in 2 file(s):\n    * memory/notes/alpha.md\n    * memory/notes/betamax.md\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/memory/notes/sub",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/memory/notes/alpha.md \"---\\nname: alpha\\ndescription: Note alpha\\n---\\n\\n# alpha\\n\\nSee [[beta-two]] and [[beta-two|the beta note]] and [[beta-two#Section]].\\n\"",
+     "F aikito/memory/notes/beta-two.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\\n\"",
+     "F aikito/memory/notes/betamax.md \"---\\nname: betamax\\ndescription: Note betamax\\n---\\n\\n# betamax\\n\\nMentions [[beta-two]] twice: [[beta-two]].\\n\"",
+     "F aikito/memory/notes/sub/gamma.md \"---\\nname: gamma\\ndescription: Note gamma\\n---\\n\\n# gamma\\n\\nNested, links [[alpha]].\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p1/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nProject beta links [[alpha]] and [[beta]].\\n\"",
+     "F aikito/projects/p1/memory/notes/delta.md \"---\\nname: delta\\ndescription: Note delta\\n---\\n\\n# delta\\n\\nLinks [[beta]].\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "content": "---\nname: alpha\ndescription: Note alpha\n---\n\n# alpha\n\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/alpha.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\n",
+    "op": "write",
+    "path": "aikito/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: betamax\ndescription: Note betamax\n---\n\n# betamax\n\nMentions [[beta]] twice: [[beta]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/betamax.md"
+   },
+   {
+    "content": "---\nname: gamma\ndescription: Note gamma\n---\n\n# gamma\n\nNested, links [[alpha]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/sub/gamma.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nProject beta links [[alpha]] and [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: delta\ndescription: Note delta\n---\n\n# delta\n\nLinks [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/delta.md"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "global/beta",
+     "beta-two"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "rename_usage_errors": {
+  "expect": [
+   {
+    "args": [
+     "rename"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito rename [-h] {memory} ...\naikito rename: error: the following arguments are required: rename_target\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "bogus"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito rename [-h] {memory} ...\naikito rename: error: argument rename_target: invalid choice: 'bogus' (choose from memory)\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "memory"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito rename memory [-h] target new_name\naikito rename memory: error: the following arguments are required: target, new_name\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "alpha"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito rename memory [-h] target new_name\naikito rename memory: error: the following arguments are required: new_name\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "a",
+     "b",
+     "c"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: c\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "--bogus",
+     "a",
+     "b"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --bogus\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "content": "---\nname: alpha\ndescription: Note alpha\n---\n\n# alpha\n\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/alpha.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\n",
+    "op": "write",
+    "path": "aikito/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: betamax\ndescription: Note betamax\n---\n\n# betamax\n\nMentions [[beta]] twice: [[beta]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/betamax.md"
+   },
+   {
+    "content": "---\nname: gamma\ndescription: Note gamma\n---\n\n# gamma\n\nNested, links [[alpha]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/sub/gamma.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nProject beta links [[alpha]] and [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: delta\ndescription: Note delta\n---\n\n# delta\n\nLinks [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/delta.md"
+   },
+   {
+    "args": [
+     "rename"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "bogus"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "memory"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "alpha"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "a",
+     "b",
+     "c"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rename",
+     "memory",
+     "--bogus",
+     "a",
+     "b"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "rm_inbox_configured_path": {
+  "expect": [
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "note-a"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Removed inbox note 'note-a' (note-a.md)\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D elsewhere"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "# a\n",
+    "op": "write",
+    "path": "elsewhere/note-a.md"
+   },
+   {
+    "new": "path = \"~/elsewhere\"",
+    "old": "path = \"inbox\"",
+    "op": "replace",
+    "path": "aikito/config.toml"
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "note-a"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "rm_inbox_forms": {
+  "expect": [
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "solo"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Removed inbox note 'solo' (solo.md)\n"
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "idea"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Multiple inbox notes match 'idea':\n\n  - idea-one\n  - idea-two\n\nPlease specify the exact name, e.g.:\n  aikito rm inbox idea-one\n  aikito rm inbox idea-two\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "remove",
+     "inbox",
+     "idea"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Multiple inbox notes match 'idea':\n\n  - idea-one\n  - idea-two\n\nPlease specify the exact name, e.g.:\n  aikito remove inbox idea-one\n  aikito remove inbox idea-two\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "idea-one.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Removed inbox note 'idea-one' (idea-one.md)\n"
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "sub/deep"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Removed inbox note 'sub/deep' (deep.md)\n"
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "nosuch"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Inbox note 'nosuch' not found.\nRun 'aikito show inbox' to view available inbox files.\n",
+    "stdout": ""
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/inbox",
+     "D aikito/inbox/sub",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/inbox/idea-two.md \"# two\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "# one\n",
+    "op": "write",
+    "path": "aikito/inbox/idea-one.md"
+   },
+   {
+    "content": "# two\n",
+    "op": "write",
+    "path": "aikito/inbox/idea-two.md"
+   },
+   {
+    "content": "# deep\n",
+    "op": "write",
+    "path": "aikito/inbox/sub/deep.md"
+   },
+   {
+    "content": "# solo\n",
+    "op": "write",
+    "path": "aikito/inbox/solo.md"
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "solo"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "idea"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "remove",
+     "inbox",
+     "idea"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "idea-one.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "sub/deep"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "inbox",
+     "nosuch"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "rm_mcp_force": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[SYNC] claude-code/other-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code other-s\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/other-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex other-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "remote-s",
+     "--sync",
+     "--force"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[SYNC] claude-code/remote-s: removed from H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: removed from H/.codex/config.toml\n[BACKUP] H/.local/state/aikito/backups/codex/20261008T213428074927Z-config.toml\n[AUTH] aikito auth mcp codex remote-s\n[DELETE FILE] ~/aikito/mcps/remote-s.toml\n\n[SUCCESS] Removed MCP server 'remote-s'.\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/agents/codex.toml \"# =============================================================================\\n# Codex CLI\\n# =============================================================================\\n[agents.codex]\\ndisplay_name = \\\"Codex\\\"\\ninstruction_path = \\\".codex/AGENTS.md\\\"\\nproject_instruction_path = \\\"AGENTS.md\\\"\\nskills_path = \\\".agents/skills\\\"\\n\\n[agents.codex.detect]\\ncommands = [\\\"codex\\\"]\\npaths = [\\\".codex\\\"]\\n\\n[agents.codex.runner]\\ncommand = [\\\"codex\\\", \\\"-C\\\", \\\"{workdir}\\\", \\\"{prompt}\\\"]\\n\\n# Local runner environment overrides are omitted from open-source exports.\\n# [agents.codex.runner.env]\\n# EXAMPLE_VARIABLE = \\\"local-value\\\"\\n[agents.codex.subagents]\\nconfig_path = \\\".codex/agents\\\"\\nconfig_format = \\\"codex_toml\\\"\\n\\n[agents.codex.mcp]\\nconfig_path = \\\".codex/config.toml\\\"\\nconfig_format = \\\"toml\\\"\\nname_style = \\\"underscore\\\"                       # server-name -> server_name\\nbuiltin_mcps = [\\\"openaiDeveloperDocs\\\"]\\nlive_command = [\\\"codex\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"codex\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/mcps/other-s.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://example.com/mcp\\\"\\nagents = [\\\"claude-code\\\", \\\"codex\\\"]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   },
+   {
+    "content": "{\n  \"mcpServers\": {\n    \"other-s\": {\n      \"type\": \"http\",\n      \"url\": \"https://edited.example.com/mcp\"\n    }\n  }\n}\n",
+    "read": ".claude.json"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/other-s.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "op": "run"
+   },
+   {
+    "new": "https://edited.example.com/mcp",
+    "old": "https://example.com/mcp",
+    "op": "replace",
+    "path": ".claude.json"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "remote-s",
+     "--sync",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   },
+   {
+    "op": "read",
+    "path": ".claude.json"
+   }
+  ]
+ },
+ "rm_mcp_missing": {
+  "expect": [
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "nosuch"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] MCP server 'nosuch' does not exist in workspace (~/aikito).\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "nosuch",
+     "--sync"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] MCP server 'nosuch' does not exist in workspace (~/aikito).\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/other-s.toml"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "nosuch"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "nosuch",
+     "--sync"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "rm_mcp_sync_blocked_by_drift": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[SYNC] claude-code/other-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code other-s\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/other-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex other-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "remote-s",
+     "--sync"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "[CONFLICT] claude-code/remote-s: existing config was not last written by aikito; review it or rerun with --force\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/agents/codex.toml \"# =============================================================================\\n# Codex CLI\\n# =============================================================================\\n[agents.codex]\\ndisplay_name = \\\"Codex\\\"\\ninstruction_path = \\\".codex/AGENTS.md\\\"\\nproject_instruction_path = \\\"AGENTS.md\\\"\\nskills_path = \\\".agents/skills\\\"\\n\\n[agents.codex.detect]\\ncommands = [\\\"codex\\\"]\\npaths = [\\\".codex\\\"]\\n\\n[agents.codex.runner]\\ncommand = [\\\"codex\\\", \\\"-C\\\", \\\"{workdir}\\\", \\\"{prompt}\\\"]\\n\\n# Local runner environment overrides are omitted from open-source exports.\\n# [agents.codex.runner.env]\\n# EXAMPLE_VARIABLE = \\\"local-value\\\"\\n[agents.codex.subagents]\\nconfig_path = \\\".codex/agents\\\"\\nconfig_format = \\\"codex_toml\\\"\\n\\n[agents.codex.mcp]\\nconfig_path = \\\".codex/config.toml\\\"\\nconfig_format = \\\"toml\\\"\\nname_style = \\\"underscore\\\"                       # server-name -> server_name\\nbuiltin_mcps = [\\\"openaiDeveloperDocs\\\"]\\nlive_command = [\\\"codex\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"codex\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/mcps/other-s.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://example.com/mcp\\\"\\nagents = [\\\"claude-code\\\", \\\"codex\\\"]\\n\"",
+     "F aikito/mcps/remote-s.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://example.com/mcp\\\"\\nagents = [\\\"claude-code\\\", \\\"codex\\\"]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   },
+   {
+    "content": "{\n  \"mcpServers\": {\n    \"other-s\": {\n      \"type\": \"http\",\n      \"url\": \"https://edited.example.com/mcp\"\n    },\n    \"remote-s\": {\n      \"type\": \"http\",\n      \"url\": \"https://edited.example.com/mcp\"\n    }\n  }\n}\n",
+    "read": ".claude.json"
+   },
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "[CONFLICT] claude-code/other-s: existing config was not last written by aikito; review it or rerun with --force\n[CONFLICT] claude-code/remote-s: existing config was not last written by aikito; review it or rerun with --force\n[OK] codex/other-s: already synchronized\n[OK] codex/remote-s: already synchronized\n"
+   },
+   {
+    "args": [
+     "sync",
+     "mcp",
+     "--force"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] codex/other-s: already synchronized\n[OK] codex/remote-s: already synchronized\n[SYNC] claude-code/other-s: updated H/.claude.json\n[AUTH] aikito auth mcp claude-code other-s\n[SYNC] claude-code/remote-s: updated H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n"
+   },
+   {
+    "content": "{\n  \"mcpServers\": {\n    \"other-s\": {\n      \"type\": \"http\",\n      \"url\": \"https://example.com/mcp\"\n    },\n    \"remote-s\": {\n      \"type\": \"http\",\n      \"url\": \"https://example.com/mcp\"\n    }\n  }\n}\n",
+    "read": ".claude.json"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/other-s.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "op": "run"
+   },
+   {
+    "new": "https://edited.example.com/mcp",
+    "old": "https://example.com/mcp",
+    "op": "replace",
+    "path": ".claude.json"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "remote-s",
+     "--sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   },
+   {
+    "op": "read",
+    "path": ".claude.json"
+   },
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "mcp",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "read",
+    "path": ".claude.json"
+   }
+  ]
+ },
+ "rm_mcp_with_sync": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[SYNC] claude-code/other-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code other-s\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/other-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex other-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "remote-s",
+     "--sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[SYNC] claude-code/remote-s: removed from H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: removed from H/.codex/config.toml\n[BACKUP] H/.local/state/aikito/backups/codex/20261008T213426100713Z-config.toml\n[AUTH] aikito auth mcp codex remote-s\n[DELETE FILE] ~/aikito/mcps/remote-s.toml\n\n[SUCCESS] Removed MCP server 'remote-s'.\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/agents/codex.toml \"# =============================================================================\\n# Codex CLI\\n# =============================================================================\\n[agents.codex]\\ndisplay_name = \\\"Codex\\\"\\ninstruction_path = \\\".codex/AGENTS.md\\\"\\nproject_instruction_path = \\\"AGENTS.md\\\"\\nskills_path = \\\".agents/skills\\\"\\n\\n[agents.codex.detect]\\ncommands = [\\\"codex\\\"]\\npaths = [\\\".codex\\\"]\\n\\n[agents.codex.runner]\\ncommand = [\\\"codex\\\", \\\"-C\\\", \\\"{workdir}\\\", \\\"{prompt}\\\"]\\n\\n# Local runner environment overrides are omitted from open-source exports.\\n# [agents.codex.runner.env]\\n# EXAMPLE_VARIABLE = \\\"local-value\\\"\\n[agents.codex.subagents]\\nconfig_path = \\\".codex/agents\\\"\\nconfig_format = \\\"codex_toml\\\"\\n\\n[agents.codex.mcp]\\nconfig_path = \\\".codex/config.toml\\\"\\nconfig_format = \\\"toml\\\"\\nname_style = \\\"underscore\\\"                       # server-name -> server_name\\nbuiltin_mcps = [\\\"openaiDeveloperDocs\\\"]\\nlive_command = [\\\"codex\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"codex\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/mcps/other-s.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://example.com/mcp\\\"\\nagents = [\\\"claude-code\\\", \\\"codex\\\"]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   },
+   {
+    "content": "{\n  \"mcpServers\": {\n    \"other-s\": {\n      \"type\": \"http\",\n      \"url\": \"https://example.com/mcp\"\n    }\n  }\n}\n",
+    "read": ".claude.json"
+   },
+   {
+    "content": "[mcp_servers.other_s]\nurl = \"https://example.com/mcp\"\n\n",
+    "read": ".codex/config.toml"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/other-s.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "remote-s",
+     "--sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   },
+   {
+    "op": "read",
+    "path": ".claude.json"
+   },
+   {
+    "op": "read",
+    "path": ".codex/config.toml"
+   }
+  ]
+ },
+ "rm_mcp_workspace_only": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[SYNC] claude-code/other-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code other-s\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/other-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex other-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "other-s"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DELETE FILE] ~/aikito/mcps/other-s.toml\n\n[SUCCESS] Removed MCP server 'other-s'.\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/agents/codex.toml \"# =============================================================================\\n# Codex CLI\\n# =============================================================================\\n[agents.codex]\\ndisplay_name = \\\"Codex\\\"\\ninstruction_path = \\\".codex/AGENTS.md\\\"\\nproject_instruction_path = \\\"AGENTS.md\\\"\\nskills_path = \\\".agents/skills\\\"\\n\\n[agents.codex.detect]\\ncommands = [\\\"codex\\\"]\\npaths = [\\\".codex\\\"]\\n\\n[agents.codex.runner]\\ncommand = [\\\"codex\\\", \\\"-C\\\", \\\"{workdir}\\\", \\\"{prompt}\\\"]\\n\\n# Local runner environment overrides are omitted from open-source exports.\\n# [agents.codex.runner.env]\\n# EXAMPLE_VARIABLE = \\\"local-value\\\"\\n[agents.codex.subagents]\\nconfig_path = \\\".codex/agents\\\"\\nconfig_format = \\\"codex_toml\\\"\\n\\n[agents.codex.mcp]\\nconfig_path = \\\".codex/config.toml\\\"\\nconfig_format = \\\"toml\\\"\\nname_style = \\\"underscore\\\"                       # server-name -> server_name\\nbuiltin_mcps = [\\\"openaiDeveloperDocs\\\"]\\nlive_command = [\\\"codex\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"codex\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/mcps/remote-s.toml \"transport = \\\"remote\\\"\\nurl = \\\"https://example.com/mcp\\\"\\nagents = [\\\"claude-code\\\", \\\"codex\\\"]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   },
+   {
+    "content": "{\n  \"mcpServers\": {\n    \"other-s\": {\n      \"type\": \"http\",\n      \"url\": \"https://example.com/mcp\"\n    },\n    \"remote-s\": {\n      \"type\": \"http\",\n      \"url\": \"https://example.com/mcp\"\n    }\n  }\n}\n",
+    "read": ".claude.json"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/other-s.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "mcp"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "mcp",
+     "other-s"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   },
+   {
+    "op": "read",
+    "path": ".claude.json"
+   }
+  ]
+ },
+ "rm_memory_forms": {
+  "expect": [
+   {
+    "args": [
+     "remove",
+     "memory",
+     "p1/delta.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Removed memory note 'delta' (delta.md)\n  - No inbound references found.\n"
+   },
+   {
+    "args": [
+     "rm",
+     "memory",
+     "nosuch"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Memory note 'nosuch' not found.\nRun 'aikito show memory' to view available memory files.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rm",
+     "memory",
+     "alp"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Removed memory note 'alpha' (alpha.md)\n  - [WARN] 1 inbound reference(s) still exist:\n    * memory/notes/beta.md:8: Back to [[alpha]]. Not a link: [[betamax]] or beta.\n    Please review and update the referencing notes if necessary.\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/memory/notes/sub",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\\n\"",
+     "F aikito/memory/notes/betamax.md \"---\\nname: betamax\\ndescription: Note betamax\\n---\\n\\n# betamax\\n\\nMentions [[beta]] twice: [[beta]].\\n\"",
+     "F aikito/memory/notes/sub/gamma.md \"---\\nname: gamma\\ndescription: Note gamma\\n---\\n\\n# gamma\\n\\nNested, links [[alpha]].\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p1/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nProject beta links [[alpha]] and [[beta]].\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "content": "---\nname: alpha\ndescription: Note alpha\n---\n\n# alpha\n\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/alpha.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\n",
+    "op": "write",
+    "path": "aikito/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: betamax\ndescription: Note betamax\n---\n\n# betamax\n\nMentions [[beta]] twice: [[beta]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/betamax.md"
+   },
+   {
+    "content": "---\nname: gamma\ndescription: Note gamma\n---\n\n# gamma\n\nNested, links [[alpha]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/sub/gamma.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nProject beta links [[alpha]] and [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: delta\ndescription: Note delta\n---\n\n# delta\n\nLinks [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/delta.md"
+   },
+   {
+    "args": [
+     "remove",
+     "memory",
+     "p1/delta.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "memory",
+     "nosuch"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "memory",
+     "alp"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "rm_memory_no_refs": {
+  "expect": [
+   {
+    "args": [
+     "rm",
+     "memory",
+     "sub/gamma"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Memory note 'sub/gamma' not found.\nRun 'aikito show memory' to view available memory files.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "rm",
+     "memory",
+     "global/sub/gamma"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Memory note 'global/sub/gamma' not found.\nRun 'aikito show memory' to view available memory files.\n",
+    "stdout": ""
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/memory/notes/sub",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/memory/notes/alpha.md \"---\\nname: alpha\\ndescription: Note alpha\\n---\\n\\n# alpha\\n\\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\\n\"",
+     "F aikito/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\\n\"",
+     "F aikito/memory/notes/betamax.md \"---\\nname: betamax\\ndescription: Note betamax\\n---\\n\\n# betamax\\n\\nMentions [[beta]] twice: [[beta]].\\n\"",
+     "F aikito/memory/notes/sub/gamma.md \"---\\nname: gamma\\ndescription: Note gamma\\n---\\n\\n# gamma\\n\\nNested, links [[alpha]].\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p1/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nProject beta links [[alpha]] and [[beta]].\\n\"",
+     "F aikito/projects/p1/memory/notes/delta.md \"---\\nname: delta\\ndescription: Note delta\\n---\\n\\n# delta\\n\\nLinks [[beta]].\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "content": "---\nname: alpha\ndescription: Note alpha\n---\n\n# alpha\n\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/alpha.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\n",
+    "op": "write",
+    "path": "aikito/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: betamax\ndescription: Note betamax\n---\n\n# betamax\n\nMentions [[beta]] twice: [[beta]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/betamax.md"
+   },
+   {
+    "content": "---\nname: gamma\ndescription: Note gamma\n---\n\n# gamma\n\nNested, links [[alpha]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/sub/gamma.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nProject beta links [[alpha]] and [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: delta\ndescription: Note delta\n---\n\n# delta\n\nLinks [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/delta.md"
+   },
+   {
+    "args": [
+     "rm",
+     "memory",
+     "sub/gamma"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "rm",
+     "memory",
+     "global/sub/gamma"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "rm_memory_with_inbound_refs": {
+  "expect": [
+   {
+    "args": [
+     "rm",
+     "memory",
+     "global/beta"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[OK] Removed memory note 'beta' (beta.md)\n  - [WARN] 2 inbound reference(s) still exist:\n    * memory/notes/alpha.md:8: See [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n    * memory/notes/betamax.md:8: Mentions [[beta]] twice: [[beta]].\n    Please review and update the referencing notes if necessary.\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/memory/notes/sub",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/memory/notes/alpha.md \"---\\nname: alpha\\ndescription: Note alpha\\n---\\n\\n# alpha\\n\\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\\n\"",
+     "F aikito/memory/notes/betamax.md \"---\\nname: betamax\\ndescription: Note betamax\\n---\\n\\n# betamax\\n\\nMentions [[beta]] twice: [[beta]].\\n\"",
+     "F aikito/memory/notes/sub/gamma.md \"---\\nname: gamma\\ndescription: Note gamma\\n---\\n\\n# gamma\\n\\nNested, links [[alpha]].\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p1/memory/notes/beta.md \"---\\nname: beta\\ndescription: Note beta\\n---\\n\\n# beta\\n\\nProject beta links [[alpha]] and [[beta]].\\n\"",
+     "F aikito/projects/p1/memory/notes/delta.md \"---\\nname: delta\\ndescription: Note delta\\n---\\n\\n# delta\\n\\nLinks [[beta]].\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "content": "---\nname: alpha\ndescription: Note alpha\n---\n\n# alpha\n\nSee [[beta]] and [[beta|the beta note]] and [[beta#Section]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/alpha.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nBack to [[alpha]]. Not a link: [[betamax]] or beta.\n",
+    "op": "write",
+    "path": "aikito/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: betamax\ndescription: Note betamax\n---\n\n# betamax\n\nMentions [[beta]] twice: [[beta]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/betamax.md"
+   },
+   {
+    "content": "---\nname: gamma\ndescription: Note gamma\n---\n\n# gamma\n\nNested, links [[alpha]].\n",
+    "op": "write",
+    "path": "aikito/memory/notes/sub/gamma.md"
+   },
+   {
+    "content": "---\nname: beta\ndescription: Note beta\n---\n\n# beta\n\nProject beta links [[alpha]] and [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/beta.md"
+   },
+   {
+    "content": "---\nname: delta\ndescription: Note delta\n---\n\n# delta\n\nLinks [[beta]].\n",
+    "op": "write",
+    "path": "aikito/projects/p1/memory/notes/delta.md"
+   },
+   {
+    "args": [
+     "rm",
+     "memory",
+     "global/beta"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ }
+}

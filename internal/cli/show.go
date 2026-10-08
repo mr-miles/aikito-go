@@ -999,12 +999,24 @@ func cmdShowInbox(sa showArgs, aikitoDir string, env Environment, stdout, stderr
 		return 0
 	}
 
-	notFound := func() int {
-		fmt.Fprintf(stderr, "[ERROR] Inbox note '%s' not found.\n", sa.target)
-		fmt.Fprintln(stderr, "Run 'aikito show inbox' to view available inbox files.")
+	target, ok := resolveInboxTarget(dir, sa.target, "show", stderr)
+	if !ok {
 		return 1
 	}
-	raw := strings.ReplaceAll(strings.TrimSpace(sa.target), `\`, "/")
+	return printResourceFile(target, "inbox note", stdout, stderr)
+}
+
+// resolveInboxTarget ports inbox.py resolve_inbox_target_for_command: exact
+// match on stem, relative path or file name, else a unique prefix of any of
+// them. On failure it prints Python's not-found or conflict text.
+func resolveInboxTarget(dir, target, operation string, stderr io.Writer) (string, bool) {
+	files := findInboxFiles(dir)
+	notFound := func() (string, bool) {
+		fmt.Fprintf(stderr, "[ERROR] Inbox note '%s' not found.\n", target)
+		fmt.Fprintln(stderr, "Run 'aikito show inbox' to view available inbox files.")
+		return "", false
+	}
+	raw := strings.ReplaceAll(strings.TrimSpace(target), `\`, "/")
 	raw = strings.TrimSuffix(raw, "…")
 	norm := strings.TrimSuffix(raw, ".md")
 	if len(files) == 0 {
@@ -1037,17 +1049,17 @@ func cmdShowInbox(sa showArgs, aikitoDir string, env Environment, stdout, stderr
 	case 0:
 		return notFound()
 	case 1:
-		return printResourceFile(candidates[0], "inbox note", stdout, stderr)
+		return candidates[0], true
 	}
-	fmt.Fprintf(stderr, "[CONFLICT] Multiple inbox notes match '%s':\n\n", sa.target)
+	fmt.Fprintf(stderr, "[CONFLICT] Multiple inbox notes match '%s':\n\n", target)
 	for _, f := range candidates {
 		fmt.Fprintf(stderr, "  - %s\n", keys(f)[1])
 	}
 	fmt.Fprintln(stderr, "\nPlease specify the exact name, e.g.:")
 	for _, f := range candidates {
-		fmt.Fprintf(stderr, "  aikito show inbox %s\n", keys(f)[1])
+		fmt.Fprintf(stderr, "  aikito %s inbox %s\n", operation, keys(f)[1])
 	}
-	return 1
+	return "", false
 }
 
 // --- memory ---
