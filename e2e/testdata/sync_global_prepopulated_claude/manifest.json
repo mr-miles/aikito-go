@@ -1,0 +1,11 @@
+{
+  "skills": {
+    "kind": "dir"
+  },
+  "skills/mine": {
+    "kind": "dir"
+  },
+  "skills/mine/SKILL.md": {
+    "kind": "file"
+  }
+}

@@ -1,0 +1,5 @@
+exit 1
+--- stdout
+--- stderr
+[CONFLICT] Target preserved: H/.claude/skills. Target is a regular directory (expected symlink to H/.agents/skills). Unmanaged or matching directory will not be overwritten automatically; move or merge it manually, then run 'aikito sync global' again.
+[ERROR] Global synchronization aborted.

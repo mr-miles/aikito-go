@@ -148,12 +148,8 @@ func TestCmdSyncUnknownTarget(t *testing.T) {
 	}
 }
 
-// sync global became real functionality (internal/sync/globalskills.go,
-// globalinstructions.go, link.go) after this test was first written as a
-// stub-detection check; it now locks in the actual end-to-end behavior
-// instead; the unit-level CREATE/NOOP/CONFLICT/--force matrix for the
-// underlying plan builders already lives in internal/sync's own tests, so
-// this just exercises the CLI wiring on a realistic fixture.
+// TestCmdSyncGlobal exercises the CLI wiring on a realistic fixture; the
+// full behaviour matrix is TestSyncGlobalMatchesPython.
 func TestCmdSyncGlobal(t *testing.T) {
 	env := testEnv(t)
 	var out, errOut bytes.Buffer
@@ -185,8 +181,8 @@ func TestCmdSyncGlobal(t *testing.T) {
 	if code != 0 {
 		t.Fatalf("dry-run exit = %d, stderr = %s", code, errOut.String())
 	}
-	if !strings.Contains(out.String(), "[CREATE]") {
-		t.Errorf("dry-run output missing a CREATE line: %s", out.String())
+	if !strings.Contains(out.String(), "[DRY RUN LINK]") {
+		t.Errorf("dry-run output missing a DRY RUN LINK line: %s", out.String())
 	}
 	skillLink := filepath.Join(env.Home, ".claude", "skills", "my-skill")
 	if _, err := os.Lstat(skillLink); err == nil {
@@ -206,6 +202,9 @@ func TestCmdSyncGlobal(t *testing.T) {
 	if !strings.HasSuffix(target, filepath.Join("skills", "my-skill")) {
 		t.Errorf("symlink target = %q, want it to end with skills/my-skill", target)
 	}
+	if hub, err := os.Readlink(filepath.Join(env.Home, ".claude", "skills")); err != nil || hub != filepath.Join(env.Home, ".agents", "skills") {
+		t.Errorf(".claude/skills should link to the shared hub, got %q, %v", hub, err)
+	}
 	instrLink := filepath.Join(env.Home, ".claude", "CLAUDE.md")
 	if _, err := os.Lstat(instrLink); err != nil {
 		t.Fatalf("expected global instructions symlink at %s: %v", instrLink, err)
@@ -218,24 +217,7 @@ func TestCmdSyncGlobal(t *testing.T) {
 	if code != 0 {
 		t.Fatalf("re-run exit = %d, stderr = %s", code, errOut.String())
 	}
-	if strings.Contains(out.String(), "[CREATE]") {
+	if strings.Contains(out.String(), "[LINK]") {
 		t.Errorf("re-run should be a no-op, got: %s", out.String())
-	}
-}
-
-func TestCmdSyncGlobalPruneNotYetImplementedNotice(t *testing.T) {
-	env := testEnv(t)
-	var out, errOut bytes.Buffer
-	if code := Run([]string{"init", "workspace"}, nil, &out, &errOut, env); code != 0 {
-		t.Fatalf("init workspace failed: %s", errOut.String())
-	}
-	out.Reset()
-	errOut.Reset()
-	code := Run([]string{"sync", "global", "--prune", "--dry-run"}, nil, &out, &errOut, env)
-	if code != 0 {
-		t.Fatalf("exit = %d, stderr = %s", code, errOut.String())
-	}
-	if !strings.Contains(out.String(), "--prune is not yet implemented") {
-		t.Errorf("expected a --prune notice, got: %s", out.String())
 	}
 }

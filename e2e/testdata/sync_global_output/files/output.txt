@@ -1,0 +1,9 @@
+exit 0
+--- stdout
+[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito
+[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory
+[LINK] H/.agents/skills/demo -> H/aikito/skills/demo
+[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills
+[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md
+[SUCCESS] Global resources synced successfully (3 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).
+--- stderr
