@@ -198,8 +198,6 @@ debugged locally; expect path-separator and `PATH` issues there first.
   depend on how Aikito was installed, so vectors don't compare modes there.
 - `add.go` still has its own simplified frontmatter parser;
   `workspace.ParseMarkdownFrontmatter` is the faithful port.
-- `doctor --fix` cleans stale local state only; the registry backfill
-  (`registry.py` add_missing_agent_fields) is not ported.
 - `atomicUnlink` and `PendingKinds` have no callers in the write path yet. A
   few `compat` helpers are unused.
 - status/doctor/show read plans through `internal/cli/inspection.go`

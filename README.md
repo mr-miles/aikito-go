@@ -100,12 +100,10 @@ Each of these says so when used, rather than being silently ignored:
   and `--sync` on `add skill` and `add mcp` (run the matching `sync` command
   instead).
 - `rm skill --project`.
-- `show mcp --live`, and `--agent` detail views on `show mcp`/`show subagents`.
 - `diff project`.
 - `maintain memory .` (current-directory project detection); pass a project
   name or `global`.
-- `doctor --fix` removes stale local skill state but does not backfill
-  missing agent-registry fields.
+- `version --check`/`--force` (the update check).
 
 `--help` on any command prints the same text as the Python version, with
 "(not implemented in this build)" after each of the options above.
@@ -119,6 +117,8 @@ Each of these says so when used, rather than being silently ignored:
   depend on how it was installed.
 - **`diff subagent`** reports drift for an agent-native subagent file that
   was written by hand and never synced. Python only compares files it synced.
+- **`show mcp --live`** doesn't draw Python's animated "loading" line on a
+  terminal's stderr while probes run. Output is otherwise identical.
 
 ## Development
 
