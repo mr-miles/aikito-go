@@ -1,0 +1,25 @@
+{
+  "physical_checkout": "<HOME>/p2",
+  "project_name": "p2",
+  "records": {
+    "alpha": {
+      "baseline_fingerprint": "v1:080d48892f0cbfd6b793a319e0f41b5d075bef285ff697f92a40395068f2a40c",
+      "baseline_origin": "write",
+      "last_observed_selected": true,
+      "lifecycle": "active",
+      "representation": "copy",
+      "skill_name": "alpha"
+    },
+    "beta": {
+      "baseline_fingerprint": "v1:4aedabeb49e2551d1d0bc6cad390ed51e7450c762c373acf67bce471239a0081",
+      "baseline_origin": "write",
+      "last_observed_selected": true,
+      "lifecycle": "active",
+      "representation": "copy",
+      "skill_name": "beta"
+    }
+  },
+  "revision": 2,
+  "version": 1,
+  "workspace_root": "<HOME>/aikito"
+}

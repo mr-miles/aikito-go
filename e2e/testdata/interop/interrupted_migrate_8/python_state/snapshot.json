@@ -1,0 +1,164 @@
+{
+ "entries": {
+  ".claude": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".codex": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".local": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".local/state": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".local/state/aikito": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".local/state/aikito/project-skills": {
+   "kind": "dir",
+   "mode": "700"
+  },
+  ".local/state/aikito/project-skills/writer.lock": {
+   "kind": "file",
+   "mode": "600"
+  },
+  "aikito": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/.local": {
+   "kind": "dir",
+   "mode": "700"
+  },
+  "aikito/.local/state": {
+   "kind": "dir",
+   "mode": "700"
+  },
+  "aikito/.local/state/aikito": {
+   "kind": "dir",
+   "mode": "700"
+  },
+  "aikito/.local/state/aikito/workspace-transactions": {
+   "kind": "dir",
+   "mode": "700"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/pending.json": {
+   "kind": "file",
+   "mode": "600"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx": {
+   "kind": "dir",
+   "mode": "700"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001": {
+   "kind": "dir",
+   "mode": "700"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/backup": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/backup/agents.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/backup/subagents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/backup/subagents.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/backup/subagents/reviewer.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/moved": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/moved/agents.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/moved/subagents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/moved/subagents.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/moved/subagents/reviewer.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/stage": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/stage/agents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/.local/state/aikito/workspace-transactions/tx/00000000000000000000000000000001/stage/subagents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/agents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/agents/claude-code.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/agents/codex.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/global": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/global/AGENTS.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/layout.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/mcps": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/memory": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/skills": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/subagents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/subagents/reviewer.md": {
+   "kind": "file",
+   "mode": "644"
+  }
+ }
+}

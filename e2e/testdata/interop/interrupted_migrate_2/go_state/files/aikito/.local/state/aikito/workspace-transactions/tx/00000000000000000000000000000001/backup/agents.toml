@@ -1,0 +1,10 @@
+# Codex agent
+# second line
+[agents.codex]
+display_name = "Codex"
+instruction_path = ".codex/AGENTS.md"
+
+# Claude
+[agents.claude-code]
+display_name = "Claude Code"
+instruction_path = ".claude/CLAUDE.md"

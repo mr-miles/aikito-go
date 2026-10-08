@@ -61,7 +61,7 @@ func TestMigrateDryRunWritesNothing(t *testing.T) {
 	out, _ := mgRun(t, env, 0, "workspace-resources", "--dry-run")
 	for _, want := range []string{
 		"[CREATE] agents/claude-code.toml", "[CREATE] agents/codex.toml", "[UPDATE] subagents/reviewer.md",
-		"[REMOVE] agents.toml", "[REMOVE] subagents.toml", "[CREATE] layout.toml", "[DRY RUN]",
+		"[REMOVE] agents.toml", "[REMOVE] subagents.toml", "[DRY RUN] No files changed",
 	} {
 		if !strings.Contains(out, want) {
 			t.Errorf("missing %q in:\n%s", want, out)
@@ -99,8 +99,9 @@ func TestMigrateAppliesAndIsIdempotent(t *testing.T) {
 	mgAssertNoTransactionState(t, root)
 
 	before := iwTree(t, root)
+	// As in Python, a migrated workspace plans nothing and reports success.
 	out, _ := mgRun(t, env, 0, "workspace-resources")
-	if !strings.Contains(out, "already on the current layout") {
+	if out != "[SUCCESS] Workspace resource layout migrated\n" {
 		t.Errorf("re-run should be a no-op, got:\n%s", out)
 	}
 	iwAssertTreesEqual(t, "re-run", before, iwTree(t, root))
@@ -178,7 +179,7 @@ func TestApplyMigrationRefusesStalePlan(t *testing.T) {
 	before := iwTree(t, root)
 
 	err = applyMigration(plan, root)
-	if err == nil || !strings.Contains(err.Error(), "workspace changed after migration planning") {
+	if err == nil || err.Error() != "Workspace changed after migration planning" {
 		t.Fatalf("expected a stale-plan refusal, got %v", err)
 	}
 	iwAssertTreesEqual(t, "stale plan", before, iwTree(t, root))

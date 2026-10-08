@@ -35,16 +35,32 @@ func TestGenerateInteropGoldens(t *testing.T) {
 		t.Helper()
 		return runBinaryIn(t, goBin, home, dir, ioEnv, args...)
 	}
+	faultScript, _ := filepath.Abs(filepath.Join("testdata", "interop", "python_fault.py"))
+	goFaultBin := filepath.Join(t.TempDir(), "aikito-fault")
+	build = exec.Command("go", "build", "-tags", "aikito_faultinject", "-o", goFaultBin, "./cmd/aikito")
+	build.Dir = ".."
+	if out, err := build.CombinedOutput(); err != nil {
+		t.Fatalf("go build: %v\n%s", err, out)
+	}
 	for _, sc := range ioScenarios {
 		t.Run(sc.name, func(t *testing.T) {
-			pyState, pyBuild := ioRunScenarioBuild(t, sc, py)
+			pyFault := func(t *testing.T, home, dir string, args ...string) runResult {
+				t.Helper()
+				return runBinaryIn(t, "python3", home, dir, append([]string{"PYTHONPATH=" + pythonSrc}, ioFaultEnv(sc)...),
+					append([]string{faultScript}, args...)...)
+			}
+			goFault := func(t *testing.T, home, dir string, args ...string) runResult {
+				t.Helper()
+				return runBinaryIn(t, goFaultBin, home, dir, ioFaultEnv(sc), args...)
+			}
+			pyState, pyBuild := ioRunScenarioBuild(t, sc, py, pyFault)
 			ioSave(t, pyState, sc.name, "python_state")
 			ioSaveText(t, sc.name, "python_build.txt", pyBuild)
 			text, after := ioRunCommands(t, sc, pyState, py)
 			ioSaveText(t, sc.name, "python_on_python.txt", text)
 			ioSave(t, after, sc.name, "python_on_python_after")
 
-			goState, goBuild := ioRunScenarioBuild(t, sc, goCLI)
+			goState, goBuild := ioRunScenarioBuild(t, sc, goCLI, goFault)
 			ioSave(t, goState, sc.name, "go_state")
 			ioSaveText(t, sc.name, "go_build.txt", goBuild)
 			text, after = ioRunCommands(t, sc, goState, py)

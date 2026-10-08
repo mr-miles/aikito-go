@@ -3,7 +3,11 @@
 package e2e
 
 import (
+	"fmt"
+	"os/exec"
+	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
 )
 
@@ -37,7 +41,7 @@ func TestInteropGoOnPythonState(t *testing.T) {
 func TestInteropGoWritesPythonState(t *testing.T) {
 	for _, sc := range ioScenarios {
 		t.Run(sc.name, func(t *testing.T) {
-			state, build := ioRunScenarioBuild(t, sc, goCLIIn)
+			state, build := ioRunScenarioBuild(t, sc, goCLIIn, goFaultCLI(sc))
 			ioCompareText(t, "Go build transcript vs Python's", build, ioLoadText(t, sc.name, "python_build.txt"))
 			ioCompareSnapshots(t, "Go-built home vs Python-built home", state, ioLoad(t, sc.name, "python_state"))
 			// The recorded Python-on-Go run is only meaningful while it was
@@ -46,6 +50,32 @@ func TestInteropGoWritesPythonState(t *testing.T) {
 			ioCompareText(t, "Python on Go-built state vs Python on its own", ioLoadText(t, sc.name, "python_on_go.txt"), ioLoadText(t, sc.name, "python_on_python.txt"))
 			ioCompareSnapshots(t, "home after Python on Go state vs on its own", ioLoad(t, sc.name, "python_on_go_after"), ioLoad(t, sc.name, "python_on_python_after"))
 		})
+	}
+}
+
+var (
+	faultBinOnce sync.Once
+	faultBin     string
+	faultBinErr  error
+)
+
+// goFaultCLI runs a binary built with the aikito_faultinject tag, which
+// exits at sc.fault (see internal/faultinject).
+func goFaultCLI(sc ioScenario) psCLI {
+	return func(t *testing.T, home, dir string, args ...string) runResult {
+		t.Helper()
+		faultBinOnce.Do(func() {
+			faultBin = filepath.Join(filepath.Dir(binPath), "aikito-fault")
+			cmd := exec.Command("go", "build", "-tags", "aikito_faultinject", "-o", faultBin, "./cmd/aikito")
+			cmd.Dir = ".."
+			if out, err := cmd.CombinedOutput(); err != nil {
+				faultBinErr = fmt.Errorf("%v\n%s", err, out)
+			}
+		})
+		if faultBinErr != nil {
+			t.Fatalf("building fault-injection binary: %v", faultBinErr)
+		}
+		return runBinaryIn(t, faultBin, home, dir, ioFaultEnv(sc), args...)
 	}
 }
 

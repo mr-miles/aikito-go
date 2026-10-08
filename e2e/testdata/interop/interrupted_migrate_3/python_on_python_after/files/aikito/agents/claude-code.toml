@@ -1,0 +1,4 @@
+# Claude
+[agents.claude-code]
+display_name = "Claude Code"
+instruction_path = ".claude/CLAUDE.md"

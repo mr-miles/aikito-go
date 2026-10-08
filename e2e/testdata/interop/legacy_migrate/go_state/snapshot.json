@@ -1,0 +1,56 @@
+{
+ "entries": {
+  ".claude": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".codex": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/agents.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/global": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/global/AGENTS.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/mcps": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/memory": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/skills": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/subagents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/subagents.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/subagents/reviewer.md": {
+   "kind": "file",
+   "mode": "644"
+  }
+ }
+}

@@ -17,6 +17,7 @@ import (
 
 	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/projectsync"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // Interoperability: the Go port and the reference Python CLI must read and
@@ -84,6 +85,35 @@ func ioBindings(t *testing.T, home string) map[string]string {
 
 var ioBindingRe = regexp.MustCompile(`<BINDING:([^:>]+):([^>]+)>`)
 
+// ioTxIDRe matches a transaction id (uuid4().hex in both implementations)
+// as a path component under a transaction directory.
+var ioTxIDRe = regexp.MustCompile(`(?:/transactions/|/workspace-transactions/tx/|/\.aikito-tx/)([0-9a-f]{32})(?:/|$)`)
+
+// ioTxIDs maps each transaction id found under home to a fixed id, in
+// sorted order, so interrupted-transaction snapshots compare equal.
+func ioTxIDs(t *testing.T, home string) map[string]string {
+	t.Helper()
+	found := map[string]bool{}
+	_ = filepath.WalkDir(home, func(path string, d fs.DirEntry, err error) error {
+		if err == nil {
+			if m := ioTxIDRe.FindStringSubmatch(filepath.ToSlash(path)); m != nil {
+				found[m[1]] = true
+			}
+		}
+		return nil
+	})
+	ids := make([]string, 0, len(found))
+	for id := range found {
+		ids = append(ids, id)
+	}
+	sort.Strings(ids)
+	out := map[string]string{}
+	for i, id := range ids {
+		out[id] = fmt.Sprintf("%032x", i+1)
+	}
+	return out
+}
+
 func ioSymbolic(s, home string, bindings map[string]string) string {
 	for hash, sym := range bindings {
 		s = strings.ReplaceAll(s, hash, sym)
@@ -105,6 +135,9 @@ func ioConcrete(s, home string) string {
 func ioCapture(t *testing.T, home string) ioSnapshot {
 	t.Helper()
 	bindings := ioBindings(t, home)
+	for id, sym := range ioTxIDs(t, home) {
+		bindings[id] = sym
+	}
 	snap := ioSnapshot{Entries: map[string]ioEntry{}}
 	err := filepath.WalkDir(home, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -144,6 +177,9 @@ func ioCapture(t *testing.T, home string) ioSnapshot {
 			data, err := os.ReadFile(path)
 			if err != nil {
 				return err
+			}
+			if ioSkillJournalRe.MatchString(rel) {
+				data = ioSortAffectedSkills(t, data)
 			}
 			snap.Entries[key] = ioEntry{Kind: "file", Mode: mode,
 				Content: ioSymbolic(string(data), home, bindings)}
@@ -330,6 +366,11 @@ type ioScenario struct {
 	// clean scenarios must leave the restored tree untouched: nothing to
 	// sync, no drift.
 	clean bool
+	// fault, if set ("<point>:<n>", see internal/faultinject), is the last
+	// build step: faultStep (cwd + args) run so that it dies at that point,
+	// leaving a half-done transaction for the commands to recover.
+	fault     string
+	faultStep []string
 }
 
 // ioRead is the read-only command set; ioWrite adds the syncs.
@@ -414,15 +455,106 @@ var ioScenarios = []ioScenario{
 	},
 }
 
-// ioRunScenarioBuild builds sc with cli in a fresh home and snapshots it.
-func ioRunScenarioBuild(t *testing.T, sc ioScenario, cli psCLI) (ioSnapshot, string) {
+// ioCopyProject is a copy-mode project whose next sync updates two copied
+// skills and creates a third: several journal checkpoints to stop at.
+func ioCopyProject(e *psEnv) {
+	e.run("", "init", "workspace")
+	e.mkdir("p2")
+	e.run("", "init", "project", "p2", "{H}/p2")
+	e.skill("alpha")
+	e.skill("beta")
+	e.skill("gamma")
+	e.setSkills("p2", "copy", "alpha", "beta")
+	e.run("", "sync", "project", "p2")
+	e.appendTo("aikito/skills/alpha/SKILL.md", "alpha v2\n")
+	e.appendTo("aikito/skills/beta/SKILL.md", "beta v2\n")
+	e.setSkills("p2", "copy", "alpha", "beta", "gamma")
+}
+
+// ioRecoverCommands look at, then recover and finish, an interrupted
+// project sync.
+var ioRecoverCommands = [][]string{
+	{"", "status"},
+	{"", "diff", "--all"},
+	{"", "sync", "project", "p2", "--dry-run"},
+	{"", "sync", "project", "p2"},
+	{"", "status"},
+	{"", "diff", "--all"},
+}
+
+func init() {
+	for _, n := range []string{"1", "2", "3"} {
+		ioScenarios = append(ioScenarios, ioScenario{
+			name:      "interrupted_project_sync_" + n,
+			build:     ioCopyProject,
+			fault:     "skill-journal:" + n,
+			faultStep: []string{"", "sync", "project", "p2"},
+			commands:  ioRecoverCommands,
+		})
+	}
+	ioScenarios = append(ioScenarios, ioScenario{
+		name:     "legacy_migrate",
+		build:    ioLegacyWorkspace,
+		commands: ioMigrateCommands,
+	})
+	// Migration writes through the workspace transaction engine: stop after
+	// the pending journal (1), after moving and staging the first changes,
+	// and late in the commit.
+	for _, n := range []string{"1", "2", "3", "5", "8"} {
+		ioScenarios = append(ioScenarios, ioScenario{
+			name:      "interrupted_migrate_" + n,
+			build:     ioLegacyWorkspace,
+			fault:     "workspace-rename:" + n,
+			faultStep: []string{"", "migrate", "workspace-resources"},
+			commands:  ioMigrateCommands,
+		})
+	}
+}
+
+// ioLegacyWorkspace is a pre-v2 workspace (monolithic agents.toml and
+// subagents.toml, a legacy subagent body), as in
+// internal/cli/migrate_cli_test.go.
+func ioLegacyWorkspace(e *psEnv) {
+	for _, d := range []string{"global", "memory", "projects", "skills", "subagents", "mcps"} {
+		e.mkdir("aikito/" + d)
+	}
+	e.write("aikito/global/AGENTS.md", "# Global\n")
+	e.write("aikito/agents.toml",
+		"# Codex agent\n# second line\n[agents.codex]\ndisplay_name = \"Codex\"\ninstruction_path = \".codex/AGENTS.md\"\n\n"+
+			"# Claude\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\n")
+	e.write("aikito/subagents.toml",
+		"# reviewer comment\n[subagents.reviewer]\ndescription = \"Reviews code\"\nagents = [\"codex\"]\n")
+	e.write("aikito/subagents/reviewer.md", "Review the code carefully.\n")
+}
+
+var ioMigrateCommands = [][]string{
+	{"", "status"},
+	{"", "migrate", "workspace-resources", "--dry-run"},
+	{"", "migrate", "workspace-resources"},
+	{"", "migrate", "workspace-resources"},
+	{"", "show", "subagents"},
+	{"", "sync", "subagents", "--dry-run"},
+}
+
+// ioRunScenarioBuild builds sc with cli (and faultCLI for its interrupted
+// step) in a fresh home and snapshots it.
+func ioRunScenarioBuild(t *testing.T, sc ioScenario, cli, faultCLI psCLI) (ioSnapshot, string) {
 	t.Helper()
 	home := resolvedTempDir(t)
 	withMarkerDir(t, home, ".claude")
 	withMarkerDir(t, home, ".codex")
 	e := &psEnv{t: t, home: home, cli: cli}
 	sc.build(e)
+	if sc.fault != "" {
+		e.cli = faultCLI
+		e.run(sc.faultStep[0], sc.faultStep[1:]...)
+	}
 	return ioCapture(t, home), ioNormalizeTranscript(e.transcript.String(), home)
+}
+
+// ioFaultEnv is the environment for an interrupted step.
+func ioFaultEnv(sc ioScenario) []string {
+	return append([]string{"AIKITO_FAULT=" + sc.fault, "PYTHONUNBUFFERED=1"}, ioEnv...)
 }
 
 // ioRunCommands restores snap into a fresh home, runs sc's commands with
@@ -438,6 +570,49 @@ func ioRunCommands(t *testing.T, sc ioScenario, snap ioSnapshot, cli psCLI) (str
 	return ioNormalizeTranscript(e.transcript.String(), home), ioCapture(t, home)
 }
 
+var ioSkillJournalRe = regexp.MustCompile(`^\.local/state/aikito/project-skills/transactions/[^/]+/journal\.json$`)
+
+// ioSortAffectedSkills sorts a project-skill journal's affected_skills.
+// Python builds that list from a set, so its order changes with string
+// hash randomisation from run to run; both implementations treat it as a
+// set.
+func ioSortAffectedSkills(t *testing.T, data []byte) []byte {
+	t.Helper()
+	doc, err := workspace.DecodeJSONPreservingNumbers(data)
+	if err != nil {
+		t.Fatalf("journal: %v", err)
+	}
+	m, ok := doc.(map[string]any)
+	if !ok {
+		return data
+	}
+	skills, ok := m["affected_skills"].([]any)
+	if !ok {
+		return data
+	}
+	sort.Slice(skills, func(i, j int) bool { return fmt.Sprint(skills[i]) < fmt.Sprint(skills[j]) })
+	return []byte(workspace.PyDumps(m, 2))
+}
+
+// ioUnorderedLineRe matches lines whose relative order is the order a
+// directory listing returned them: Python's migration planner lists
+// agents/ with Path.iterdir() (filesystem order), Go sorts.
+var ioUnorderedLineRe = regexp.MustCompile(`^\[BLOCKED\] Target already exists: `)
+
 func ioNormalizeTranscript(s, home string) string {
-	return ioStampRe.ReplaceAllString(strings.ReplaceAll(s, home, "<HOME>"), ioStamp)
+	s = ioStampRe.ReplaceAllString(strings.ReplaceAll(s, home, "<HOME>"), ioStamp)
+	lines := strings.Split(s, "\n")
+	for i := 0; i < len(lines); {
+		j := i
+		for j < len(lines) && ioUnorderedLineRe.MatchString(lines[j]) {
+			j++
+		}
+		if j > i {
+			sort.Strings(lines[i:j])
+			i = j
+		} else {
+			i++
+		}
+	}
+	return strings.Join(lines, "\n")
 }

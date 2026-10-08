@@ -1,0 +1,9 @@
+$ () aikito migrate workspace-resources
+--- stdout
+[CREATE] agents/codex.toml
+[CREATE] agents/claude-code.toml
+[UPDATE] subagents/reviewer.md
+[REMOVE] agents.toml
+[REMOVE] subagents.toml
+--- stderr
+--- exit 137

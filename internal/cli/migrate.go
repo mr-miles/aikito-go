@@ -9,28 +9,27 @@ import (
 
 	"github.com/mr-miles/aikito-go/internal/sync"
 	"github.com/mr-miles/aikito-go/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/writerlock"
 )
 
-// cmdMigrate implements `aikito migrate workspace-resources [--dry-run]`,
-// the one-time, one-way conversion from a legacy pre-v2 workspace layout
-// (monolithic agents.toml/subagents.toml) to the current v2 layout
-// (agents/<name>.toml one-file-per-agent). See
-// internal/workspace/migrate.go for the plan-building logic this wraps.
+// cmdMigrate implements `aikito migrate workspace-resources [--dry-run]`
+// (cli.py cmd_migrate_workspace_resources), the one-time, one-way
+// conversion from a legacy pre-v2 workspace layout (monolithic
+// agents.toml/subagents.toml) to the current layout (agents/<name>.toml).
+// See internal/workspace/migrate.go for the plan-building logic.
 func cmdMigrate(args []string, stdout, stderr io.Writer, env Environment) int {
-	if len(args) == 0 || args[0] != "workspace-resources" {
-		fmt.Fprintln(stderr, "usage: aikito migrate workspace-resources [--dry-run]")
+	if len(args) == 0 {
+		return argparseRequired(stderr, "migrate", "migrate_target")
+	}
+	if args[0] != "workspace-resources" {
+		return argparseSubError(stderr, "migrate", fmt.Sprintf(
+			"argument migrate_target: invalid choice: '%s' (choose from workspace-resources)", args[0]))
+	}
+	parsed, ok := parseArgparseOpts("migrate workspace-resources", args[1:], []string{"--dry-run"}, nil, nil, 0, stderr)
+	if !ok {
 		return 2
 	}
-	dryRun := false
-	for _, a := range args[1:] {
-		switch {
-		case a == "--dry-run":
-			dryRun = true
-		default:
-			fmt.Fprintf(stderr, "[ERROR] Unknown argument: %s\n", a)
-			return 2
-		}
-	}
+	dryRun := parsed.flags["--dry-run"]
 
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {
@@ -38,12 +37,18 @@ func cmdMigrate(args []string, stdout, stderr io.Writer, env Environment) int {
 		return 1
 	}
 
-	// cli.py cmd_migrate_workspace_resources: on a real run, finish or roll
-	// back an interrupted migration before planning. A pending "layout"
-	// journal makes every other command refuse to run (see
+	// On a real run, finish or roll back an interrupted migration before
+	// planning, under the writer lock. A pending "layout" journal makes
+	// every other command refuse to run (see
 	// workspace.RequireCurrentLayout), so this is the way out of that state.
 	if !dryRun {
+		lock, err := writerlock.Acquire(env.Home)
+		if err != nil {
+			fmt.Fprintf(stderr, "[ERROR] %v\n", err)
+			return 1
+		}
 		recovered, err := sync.Recover([]string{aikitoDir}, migrationPathPolicy(), nil)
+		lock.Release()
 		if err != nil {
 			fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 			return 1
@@ -58,44 +63,33 @@ func cmdMigrate(args []string, stdout, stderr io.Writer, env Environment) int {
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
 	}
-	if plan.Blocked() {
-		fmt.Fprintln(stderr, "[ERROR] Migration cannot proceed:")
-		for _, f := range plan.Findings {
-			fmt.Fprintf(stderr, "  - %s\n", f)
-		}
-		return 1
+	for _, c := range plan.Creates {
+		fmt.Fprintf(stdout, "[CREATE] %s\n", c.Path)
+	}
+	for _, u := range plan.Updates {
+		fmt.Fprintf(stdout, "[UPDATE] %s\n", u.Path)
+	}
+	for _, r := range plan.Removes {
+		fmt.Fprintf(stdout, "[REMOVE] %s\n", r)
+	}
+	for _, f := range plan.Findings {
+		fmt.Fprintf(stderr, "[BLOCKED] %s\n", f)
 	}
 	for _, n := range plan.Notes {
 		fmt.Fprintf(stdout, "[NOTE] %s\n", n)
 	}
-
-	if len(plan.Removes) == 0 {
-		fmt.Fprintln(stdout, "[OK] Workspace is already on the current layout; nothing to migrate.")
-		return 0
+	if plan.Blocked() {
+		return 1
 	}
-
-	fmt.Fprintln(stdout, "[INFO] Migration plan:")
-	for _, c := range plan.Creates {
-		fmt.Fprintf(stdout, "  [CREATE] %s\n", c.Path)
-	}
-	for _, u := range plan.Updates {
-		fmt.Fprintf(stdout, "  [UPDATE] %s\n", u.Path)
-	}
-	for _, r := range plan.Removes {
-		fmt.Fprintf(stdout, "  [REMOVE] %s\n", r)
-	}
-	fmt.Fprintln(stdout, "  [CREATE] layout.toml")
-
 	if dryRun {
-		fmt.Fprintln(stdout, "\n[DRY RUN] No changes written.")
+		fmt.Fprintln(stdout, "[DRY RUN] No files changed")
 		return 0
 	}
-
-	if err := applyMigration(plan, aikitoDir); err != nil {
+	if err := applyMigration(plan, env.Home); err != nil {
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
 	}
-	fmt.Fprintln(stdout, "\n[SUCCESS] Workspace migrated to the current layout.")
+	fmt.Fprintln(stdout, "[SUCCESS] Workspace resource layout migrated")
 	return 0
 }
 
@@ -106,6 +100,11 @@ func cmdMigrate(args []string, stdout, stderr io.Writer, env Environment) int {
 // transaction engine in one atomic batch.
 func applyMigration(plan workspace.MigrationPlan, home string) error {
 	policy := migrationPathPolicy()
+	lock, err := writerlock.Acquire(home)
+	if err != nil {
+		return err
+	}
+	defer lock.Release()
 	recovered, err := sync.Recover([]string{plan.Root}, policy, nil)
 	if err != nil {
 		return err
@@ -118,7 +117,22 @@ func applyMigration(plan workspace.MigrationPlan, home string) error {
 		return err
 	}
 	if !migrationPlansEqual(fresh, plan) {
-		return fmt.Errorf("workspace changed after migration planning; run migrate again")
+		return fmt.Errorf("Workspace changed after migration planning")
+	}
+	if plan.Blocked() {
+		return fmt.Errorf("Migration has blockers; no files changed")
+	}
+	if len(plan.Removes) == 0 {
+		return nil
+	}
+	// Python creates agents/ itself (default mode), outside the
+	// transaction: its migration policy doesn't create parents.
+	agentsDir := filepath.Join(plan.Root, "agents")
+	if fi, err := os.Lstat(agentsDir); err == nil && (!fi.IsDir() || fi.Mode()&os.ModeSymlink != 0) {
+		return fmt.Errorf("Unsafe Agent directory: %s", agentsDir)
+	}
+	if err := os.Mkdir(agentsDir, 0o777); err != nil && !os.IsExist(err) {
+		return err
 	}
 
 	staging, err := os.MkdirTemp("", "aikito-migrate-")
@@ -222,7 +236,6 @@ func migrationPathPolicy() sync.PathPolicy {
 			{"legacy", "subagents.toml"},
 			{"layout", "layout.toml"},
 		},
-		CreateParents: true,
 	}
 }
 
