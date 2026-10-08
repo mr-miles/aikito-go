@@ -57,7 +57,7 @@ gaps; see the Go file's doc comment), **not ported**.
 | `registry.py` (agent schema migration), `doctor.py` `run_doctor_fixes` | `internal/cli/agentfix.go`, `agentfields.go`, `doctor.go` | ported |
 | `config.py`, `config_runtime.py` | `internal/workspace/resources.go`, `internal/mcp/configtarget.go` | partial: physical-identity resolution simplified |
 | `project_config.py`, `project_runtime.py`, `project.py` | `internal/project/` | ported (config layer); `project.py`'s status layer is in `internal/cli/status.go` |
-| `project_sync.py`, `skill_plan.py`, `skill_runtime.py`, `skill_state.py` (state, journal, recovery) | `internal/projectsync/` | ported; state documents and journals are interchangeable with Python's |
+| `project_sync.py`, `skill_plan.py`, `skill_runtime.py` (incl. `execute_selection_transaction` in `selection.go`), `skill_state.py` (state, journal, recovery) | `internal/projectsync/` | ported; state documents and journals are interchangeable with Python's |
 | `memory_runtime.py` (project runtime), `conflict.py` (`collect_resource_conflicts`) | `internal/projectsync/memory.go`, `conflict.go` | ported |
 | `init.py` `project_validation_error`/`project_sync_validation_error`, `resolve.py` `detect_current_project` | `internal/projectsync/sync.go` (`ValidationError`), `internal/project/detect.go` | ported |
 | `global_skills.py`, `instructions.py`, `link.py` | `internal/linkplan/` | ported; `build_project_instruction_batch` is in `projectinstructions.go` and drives `sync project` |
@@ -71,15 +71,15 @@ gaps; see the Go file's doc comment), **not ported**.
 | `cli.py`, `cli_parser.py` | `internal/cli/run.go` and one file per command | ported, option gaps listed in README |
 | `cli_show.py`, `resolve.py`, `memory.py`, `inbox.py` | `internal/cli/show.go`, `edit.go`, `rm.go`, `rename.go` | ported |
 | `adopt.py`, `cli.py` `cmd_adopt`, `doctor.py` `check_adoption` | `internal/cli/adopt.go`, `doctor.go` (`checkAdoption`) | ported |
-| `add.py`, `remove.py`, `init.py`, `templating.py`, `bundled_skills.py` | `internal/cli/add.go`, `sanitize.go`, `rm.go`, `init.go` | partial (see README Status) |
+| `add.py`, `remove.py`, `init.py`, `templating.py`, `bundled_skills.py` | `internal/cli/add.go`, `addskill.go`, `skillimport.go`, `addmcp.go`, `addsubagent.go`, `sanitize.go`, `rm.go`, `rmskill.go`, `init.go` | ported |
 | `status.py`, `render.py`, `context_footprint.py`, `project.py` (summaries, health) | `internal/cli/status.go`, `statusagents.go`, `statusmemory.go`, `projectsummary.go`, `subagentmatrix.go`, `render.go`, `table.go`, `showdetails.go` (`--agent` detail views, `--live`) | ported (no animated loading line for `--live`) |
-| `diff.py`, `diff_model.py` | `internal/cli/diff.go`, `unifieddiff.go` | partial (`diff project` missing) |
+| `diff.py`, `diff_model.py`, `project.py` `collect_project_skill_diffs` | `internal/cli/diff.go`, `unifieddiff.go` | ported |
 | `doctor.py`, `conflict.py`, `local_state.py` | `internal/cli/doctor.go`, `localstate.go`, `agentfields.go` | ported (`--fix` cleans stale local state; the agent-registry backfill is not ported; the interpreter-consistency check is Python-only) |
-| `maintain.py`, `memory_runtime.py` | `internal/cli/maintain.go`, `rm.go` | partial |
+| `maintain.py`, `memory_runtime.py` | `internal/cli/maintain.go`, `rm.go` | ported |
 | `completion.py`, `completion_powershell.py` | `internal/cli/completion.go` | ported (hand-maintained schema) |
 | `update_notifier.py` | `internal/cli/version.go` | partial: no PyPI update check |
 | `compat.py` | `internal/compat/`, plus helpers spread across packages | partial |
-| `frontmatter.py` | `internal/workspace/frontmatter.go` (`_parse_markdown_frontmatter`); `internal/cli/add.go` (simplified parse/update for `add skill`) | partial |
+| `frontmatter.py` | `internal/workspace/frontmatter.go` (`_parse_markdown_frontmatter`), `frontmatter_update.go` (`_update_markdown_frontmatter`, `_format_yaml_scalar`) | ported |
 | CPython `json` error messages (`_json` scanner) | `internal/mcp/pyjsonerror.go` | ported for MCP JSON config errors |
 | `__init__.py`, `workspace/api.py` (public Python API) | — | not ported; the port is CLI-only |
 | `web_console.py` (`aikito web`) | — | not ported |
@@ -112,6 +112,9 @@ diff.
 | `internal/projectsync/testdata/vectors.json` (`plan_single_skill`, `plan_link_target`, fingerprints, binding hash, state JSON) | `python3 internal/projectsync/testdata/gen_vectors.py` |
 | `e2e/testdata/project_sync_*` (whole-command transcripts and trees) | `AIKITO_PYTHON_SRC=../aikito/src go test -tags e2e_generate -run TestGenerateProjectSyncGoldens ./e2e/... -v` |
 | `e2e/testdata/workspace_sync_*` (bare `aikito sync` transcripts and trees) | `AIKITO_PYTHON_SRC=../aikito/src go test -tags e2e_generate -run TestGenerateWorkspaceSyncGoldens ./e2e/... -v` |
+| `internal/cli/testdata/options_vectors.json` (add/rm/maintain/edit/diff options, run from inside projects) | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/cli/testdata/gen_options_vectors.py` |
+| `internal/workspace/testdata/frontmatter_update_vectors.json` | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/workspace/testdata/gen_frontmatter_update_vectors.py` |
+| `internal/mcp/testdata/toml_order_vectors.json` (tomllib key order) | `python3 internal/mcp/testdata/gen_toml_order_vectors.py` |
 | `internal/cli/helptext/help.json` (embedded `--help` text) | `python3 internal/cli/helptext/gen_help.py`, then fix any marker `help_test.go` reports in `helpAnnotations` (`help.go`) |
 
 These were generated with one-off scripts that weren't kept. Regenerate by

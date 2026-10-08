@@ -109,6 +109,19 @@ time it was applied.
   the parent parser's `--dry-run` stays set on the shared namespace. Flags
   are matched by unique prefix (`--dry`), and an unknown parent flag is a
   root-level "unrecognized arguments" error.
+- **Two `sync_global_resources`.** `cli.py`'s is the `sync global` command
+  (summary line, conflict report); `workspace/sync.py`'s is what `add`/`rm`
+  `--sync` call and prints only the executors' lines (nothing at all when the
+  plan can't apply). Go: `syncGlobalResources` vs `syncGlobalResourcesQuiet`.
+- **The writer lock is re-entrant** within a process, as
+  `WorkspaceWriterLock` is: `add skill --sync` holds it while project sync
+  takes it again. A second `flock` on a new descriptor would deadlock.
+- **tomllib keeps key order.** `mcp.DecodeTOMLOrdered` recovers document order
+  from go-toml's parser; `workspace.DecodeTOML` returns plain (unordered)
+  maps, so use it only where order can't show.
+- **argparse in Go.** `parseArgparseOpts` (`argparseopts.go`) handles value
+  options, `--opt=value`, unique prefixes and argparse's error wording;
+  required positionals are checked by the caller.
 - **Same domain, two entry points.** Python's whole-workspace sync calls the
   same planners as the per-domain commands but with different defaults
   (e.g. `build_global_sync_plan` without `outdated_bundled_skills`, and
@@ -185,19 +198,18 @@ debugged locally; expect path-separator and `PATH` issues there first.
 
 ## Open gaps worth knowing before changing nearby code
 
-- `project.DetectCurrentProject` exists now, but `maintain memory .` and
-  `edit instructions` (no target) still don't use it.
-- Python's `execute_selection_transaction` (used by `rm skill` and
-  `add skill --sync` to deactivate copied-skill state) is not ported, so
-  removing a skill in Go leaves its project state record active until the
-  next `sync project`.
 - `import workspace` compares against current templates only, with no
   `TEMPLATE_HISTORY` (Python's `adopt` doesn't use it either).
 - `init workspace` writes bundled skill files as 0644 (embedded files have
   no mode). Python's `copytree` copies the installed package's modes, which
   depend on how Aikito was installed, so vectors don't compare modes there.
-- `add.go` still has its own simplified frontmatter parser;
-  `workspace.ParseMarkdownFrontmatter` is the faithful port.
+- `projectsummary.go` (status Context column) still reads skill
+  descriptions with the simplified `parseSimpleMarkdownFrontmatter`;
+  everything else uses `workspace.ParseMarkdownFrontmatter`.
+- `sync subagents` validates platform options at load (as Python does)
+  but `loadSubagentDefinitions` is otherwise simpler than
+  `load_subagent_definitions` (no unsupported-entry / missing-directory
+  errors).
 - `atomicUnlink` and `PendingKinds` have no callers in the write path yet. A
   few `compat` helpers are unused.
 - status/doctor/show read plans through `internal/cli/inspection.go`

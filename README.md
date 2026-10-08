@@ -79,10 +79,10 @@ to this port.
 |---|---|
 | `version`, `path workspace`, `git` | Done |
 | `init workspace`, `init project` | Done |
-| `add skill`, `add subagent`, `add mcp` | Done, with option gaps below |
+| `add skill`, `add subagent`, `add mcp` | Done |
 | `adopt` | Done |
 | `sync` (whole workspace), `sync global`, `sync mcp`, `sync subagents`, `sync project` | Done, with the differences below |
-| `status`, `show …`, `diff …` | Done, with option gaps below |
+| `status`, `show …`, `diff …` | Done |
 | `edit …`, `rm …`, `rename memory` | Done |
 | `maintain memory`, `auth mcp` | Done |
 | `doctor` | Done (output matches Python apart from its Python-interpreter check) |
@@ -96,13 +96,6 @@ to this port.
 
 Each of these says so when used, rather than being silently ignored:
 
-- `add skill --project/--global`, `add subagent --from`, `add mcp --from`,
-  and `--sync` on `add skill` and `add mcp` (run the matching `sync` command
-  instead).
-- `rm skill --project`.
-- `diff project`.
-- `maintain memory .` (current-directory project detection); pass a project
-  name or `global`.
 - `version --check`/`--force` (the update check).
 
 `--help` on any command prints the same text as the Python version, with
@@ -112,6 +105,8 @@ Each of these says so when used, rather than being silently ignored:
 
 - **TOML parse errors** (for example a broken `agent.toml`) are reported
   with Go's TOML library's wording rather than Python's `tomllib` wording.
+- **`remove skill` usage errors** show `rm skill` in the usage line (the
+  two spellings share one handler).
 - **Bundled skill file modes.** `init workspace` writes the bundled skills'
   files as 0644. Python copies the installed package's file modes, which
   depend on how it was installed.
