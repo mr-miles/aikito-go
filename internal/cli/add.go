@@ -74,7 +74,6 @@ func stringListEquals(raw []any, want []string) bool {
 	return true
 }
 
-
 var defaultSubagentAgents = []string{"codex", "claude-code", "agy", "github-copilot"}
 var defaultMCPAgents = []string{"codex", "claude-code", "opencode", "agy", "github-copilot"}
 

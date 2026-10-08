@@ -117,6 +117,8 @@ diff.
 | `internal/mcp/testdata/toml_order_vectors.json` (tomllib key order) | `python3 internal/mcp/testdata/gen_toml_order_vectors.py` |
 | `internal/cli/testdata/skill_description_vectors.json` | `python3 internal/cli/testdata/gen_skill_description_vectors.py` |
 | `internal/cli/testdata/rm_usage_vectors.json` | `python3 internal/cli/testdata/gen_rm_usage_vectors.py` |
+| `internal/compat/testdata/utf8_replace_vectors.json` (CPython `decode("utf-8", "replace")`) | `python3 internal/compat/testdata/gen_utf8_replace_vectors.py` |
+| `internal/cli/testdata/diff_invalid_utf8/` | `python3 internal/cli/testdata/diff_invalid_utf8/gen.py` |
 | `internal/cli/helptext/help.json` (embedded `--help` text) | `python3 internal/cli/helptext/gen_help.py`, then fix any marker `help_test.go` reports in `helpAnnotations` (`help.go`) |
 
 These were generated with one-off scripts that weren't kept. Regenerate by

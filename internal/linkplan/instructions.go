@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/mr-miles/aikito-go/internal/compat"
 	"github.com/mr-miles/aikito-go/internal/registry"
 )
 
@@ -258,7 +259,7 @@ func readStripped(p string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return strings.TrimSpace(strings.ToValidUTF8(string(data), "�")), nil
+	return strings.TrimSpace(compat.DecodeUTF8Replace(data)), nil
 }
 
 // ExecuteInstructionPlan ports execute_instruction_plan.

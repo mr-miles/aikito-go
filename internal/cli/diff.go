@@ -11,6 +11,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/mr-miles/aikito-go/internal/compat"
 	"github.com/mr-miles/aikito-go/internal/mcp"
 	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/registry"
@@ -313,8 +314,8 @@ func collectProjectSkillDiffs(aikitoDir, home string, projectFilter *string) []d
 						diffText = fmt.Sprintf("Binary files differ: %s and %s", actualLabel, expectedLabel)
 					} else {
 						diffText = unifiedDiff(
-							splitKeepEnds(strings.ToValidUTF8(string(actual), "\uFFFD")),
-							splitKeepEnds(strings.ToValidUTF8(string(expected), "\uFFFD")),
+							splitKeepEnds(compat.DecodeUTF8Replace(actual)),
+							splitKeepEnds(compat.DecodeUTF8Replace(expected)),
 							"actual: "+actualLabel, "expected: "+expectedLabel)
 					}
 					results = append(results, driftDiff{kind: "project_skill", name: skill, diff: diffText,

@@ -97,7 +97,7 @@ func readTextReplace(p string) (string, bool) {
 	if err != nil {
 		return "", false
 	}
-	return strings.ToValidUTF8(string(data), "�"), true
+	return compat.DecodeUTF8Replace(data), true
 }
 
 func isRegularFilePath(p string) bool {

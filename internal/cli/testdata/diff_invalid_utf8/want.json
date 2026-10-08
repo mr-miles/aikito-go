@@ -1,0 +1,22 @@
+[
+ {
+  "args": [
+   "diff",
+   "project",
+   "p1",
+   "s1"
+  ],
+  "stdout": "[Project p1/skill s1 — SKILL.md ({H}/p1)]\n--- actual: {H}/p1/.agents/skills/s1/SKILL.md\n+++ expected: {H}/aikito/skills/s1/SKILL.md\n@@ -2,4 +2,9 @@\n name: s1\n description: s\n ---\n-stray �� bytes, truncated �( euro, overlong �� end\n+\n+# S1\n+\n+## Overview\n+\n+Describe what this skill does and when agents should use it.\n",
+  "stderr": "",
+  "exit": 0
+ },
+ {
+  "args": [
+   "diff",
+   "--all"
+  ],
+  "stdout": "[Project p1/skill s1 — SKILL.md ({H}/p1)]\n--- actual: {H}/p1/.agents/skills/s1/SKILL.md\n+++ expected: {H}/aikito/skills/s1/SKILL.md\n@@ -2,4 +2,9 @@\n name: s1\n description: s\n ---\n-stray �� bytes, truncated �( euro, overlong �� end\n+\n+# S1\n+\n+## Overview\n+\n+Describe what this skill does and when agents should use it.\n",
+  "stderr": "",
+  "exit": 0
+ }
+]

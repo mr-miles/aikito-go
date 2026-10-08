@@ -64,6 +64,10 @@ time it was applied.
   original text. Date/time values must fingerprint as Python's
   `{"toml-type": ..., "value": str(x)}`, where `str(datetime)` uses a space,
   not `T`.
+- **`bytes.decode("utf-8", "replace")`** gives one U+FFFD per maximal
+  invalid subpart; `strings.ToValidUTF8(s, "\uFFFD")` collapses a whole run
+  into one. Use `compat.DecodeUTF8Replace`. (`errors="ignore"` is fine as
+  `ToValidUTF8(s, "")`.)
 - **`str.isprintable()`** equals `unicode.IsPrint` (apart from code points
   added after Go's Unicode tables). A hand-rolled version let U+202E through.
 - **RE2 has no lookahead.** Python regexes with `(?=...)` (e.g. wikilink

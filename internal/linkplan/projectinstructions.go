@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/mr-miles/aikito-go/internal/compat"
 	"github.com/mr-miles/aikito-go/internal/registry"
 )
 
@@ -36,7 +37,7 @@ func CanonicalNonEmpty(p string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return strings.TrimSpace(strings.ToValidUTF8(string(data), "�")) != "", nil
+	return strings.TrimSpace(compat.DecodeUTF8Replace(data)) != "", nil
 }
 
 // BuildProjectInstructionBatch ports instructions.py's

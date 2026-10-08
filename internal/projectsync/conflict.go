@@ -7,6 +7,8 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/mr-miles/aikito-go/internal/compat"
 )
 
 var (
@@ -47,7 +49,7 @@ func blockingConflictLines(path string) []int {
 	if err != nil {
 		return nil
 	}
-	lines := splitLinesPy(strings.ToValidUTF8(string(data), "�"))
+	lines := splitLinesPy(compat.DecodeUTF8Replace(data))
 	var blocking []int
 	if strings.HasSuffix(path, ".toml") {
 		for i, l := range lines {

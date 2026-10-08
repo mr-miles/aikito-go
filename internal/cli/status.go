@@ -8,6 +8,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"github.com/mr-miles/aikito-go/internal/compat"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
@@ -146,7 +147,7 @@ func instructionsLineCountDisplay(path string) (string, string) {
 	if err != nil {
 		return "-", ""
 	}
-	text := strings.ToValidUTF8(string(data), "�")
+	text := compat.DecodeUTF8Replace(data)
 	if strings.TrimSpace(text) == "" {
 		return "-", ""
 	}
