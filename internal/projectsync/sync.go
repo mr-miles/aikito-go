@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/mr-miles/aikito-go/internal/compat"
+	"github.com/mr-miles/aikito-go/internal/linkplan"
 	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/registry"
 	"github.com/mr-miles/aikito-go/internal/workspace"
@@ -69,7 +70,7 @@ func ValidationError(aikitoDir, projectName, projectPath, home string, rejectUne
 	}
 	enabled := false
 	if isFile(canonical) {
-		enabled, _ = canonicalNonEmpty(canonical)
+		enabled, _ = linkplan.CanonicalNonEmpty(canonical)
 	}
 	if enabled {
 		for _, t := range targets {
@@ -140,7 +141,7 @@ type Batch struct {
 	PreflightFindings []string
 	CanApply          bool
 	ConfigCAS         *CandidatePathCAS
-	InstructionPlan   *InstructionPlan
+	InstructionPlan   *linkplan.InstructionPlan
 	MemoryPlan        *MemoryPlan
 }
 
@@ -332,13 +333,13 @@ func BuildBatch(workspaceRoot, home, projectName string, data map[string]any, ex
 	}
 	plan := BuildSkillPlan(workspaceRoot, projectName, ops, cas)
 
-	var instrPlan *InstructionPlan
+	var instrPlan *linkplan.InstructionPlan
 	if isFile(instructions) {
-		batch, err := BuildProjectInstructionBatch(workspaceRoot, projectName, active, home, nil, offline)
+		batch, err := linkplan.BuildProjectInstructionBatch(workspaceRoot, projectName, active, home, nil, offline)
 		if err != nil {
 			findings = append(findings, err.Error())
 		} else {
-			p := PlanInstructions(batch, home)
+			p := linkplan.PlanInstructions(batch, home, false)
 			instrPlan = &p
 		}
 	}
@@ -356,7 +357,7 @@ func applyBatch(out Out, b Batch, home string, dryRun bool) string {
 		return res.ErrorMessage
 	}
 	if b.InstructionPlan != nil {
-		r := ExecuteInstructionPlan(out, *b.InstructionPlan, dryRun)
+		r := linkplan.ExecuteInstructionPlan(*b.InstructionPlan, dryRun, false, out.Stdout, out.Stderr)
 		if !r.Success {
 			return orStr(r.ErrorMessage, "Failed to synchronize project instructions")
 		}

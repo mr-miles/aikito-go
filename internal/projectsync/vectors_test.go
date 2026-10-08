@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
@@ -157,6 +158,9 @@ func TestPlanLinkTargetMatchesPython(t *testing.T) {
 }
 
 func TestDirectoryFingerprintMatchesPython(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("vectors were generated on POSIX, where executable bits are part of the fingerprint")
+	}
 	v := loadVectors(t)
 	for _, fp := range v.Fingerprints {
 		root := t.TempDir()

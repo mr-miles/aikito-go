@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	"github.com/mr-miles/aikito-go/internal/compat"
+	"github.com/mr-miles/aikito-go/internal/linkplan"
 )
 
 // Out carries the two streams Python's print() calls write to.
@@ -88,62 +89,8 @@ func isRelativeTo(p, base string) bool {
 	return strings.HasPrefix(p, base+string(filepath.Separator))
 }
 
-// joinRaw is `parent / raw` for a readlink value: absolute values replace.
-func joinRaw(parent, raw string) string {
-	if filepath.IsAbs(raw) {
-		return raw
-	}
-	return filepath.Join(parent, raw)
-}
-
 // resolveSymlinkTarget is compat.resolve_symlink_target.
-func resolveSymlinkTarget(p string) string {
-	var target string
-	if raw, err := os.Readlink(p); err == nil {
-		if strings.HasPrefix(raw, `\\?\UNC\`) {
-			raw = `\\` + raw[8:]
-		} else if strings.HasPrefix(raw, `\\?\`) {
-			raw = raw[4:]
-		}
-		target = joinRaw(filepath.Dir(p), raw)
-	} else {
-		target = resolve(p)
-	}
-	var parts []string
-	curr := target
-	for !exists(curr) && filepath.Dir(curr) != curr {
-		parts = append(parts, filepath.Base(curr))
-		curr = filepath.Dir(curr)
-	}
-	resolved := curr
-	if r, err := filepath.EvalSymlinks(curr); err == nil {
-		resolved = r
-	} else if r, err := compat.ResolvePath(curr); err == nil {
-		resolved = r
-	}
-	for i := len(parts) - 1; i >= 0; i-- {
-		resolved = filepath.Join(resolved, parts[i])
-	}
-	return resolved
-}
-
-// isSameTargetLocation is compat.is_same_target_location.
-func isSameTargetLocation(p1, p2 string) bool {
-	d1 := physical(filepath.Dir(p1))
-	d2 := physical(filepath.Dir(p2))
-	probe := d1
-	for !exists(probe) && filepath.Dir(probe) != probe {
-		probe = filepath.Dir(probe)
-	}
-	folds := compat.IsWindows()
-	if exists(probe) {
-		folds = compat.DirectoryFoldsCase(probe)
-	}
-	if folds {
-		return strings.EqualFold(d1, d2) && strings.EqualFold(filepath.Base(p1), filepath.Base(p2))
-	}
-	return d1 == d2 && filepath.Base(p1) == filepath.Base(p2)
-}
+func resolveSymlinkTarget(p string) string { return linkplan.ResolveSymlinkTarget(p) }
 
 // safeSymlink is compat.safe_symlink: target -> source, reporting failures
 // on stderr.

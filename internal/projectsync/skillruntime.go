@@ -9,7 +9,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/mr-miles/aikito-go/internal/linkplan"
 	"github.com/mr-miles/aikito-go/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/writerlock"
 )
 
 // SkillExecutionResult is skill_runtime.py's SkillExecutionResult.
@@ -83,7 +85,7 @@ func InspectSkillTarget(t SkillTarget, desiredMode, home string) (ObservedSkill,
 		o.EntryType = "symlink"
 		o.ResolvedLinkTarget = resolveSymlinkTarget(runtimePath)
 		if raw, err := os.Readlink(runtimePath); err == nil {
-			o.RawLinkTarget = joinRaw(filepath.Dir(runtimePath), raw)
+			o.RawLinkTarget = linkplan.PathlibJoin(filepath.Dir(runtimePath), raw)
 		}
 		skillsRoot := resolve(filepath.Join(t.WorkspaceRoot, "skills"))
 		for _, cand := range []string{o.ResolvedLinkTarget, o.RawLinkTarget} {
@@ -225,11 +227,11 @@ func ExecuteSkillPlan(out Out, plan SkillPlan, home string, dryRun bool) SkillEx
 		return res
 	}
 
-	release, err := AcquireWriterLock(home)
+	lock, err := writerlock.Acquire(home)
 	if err != nil {
 		return SkillExecutionResult{FailedOps: plan.Operations, ErrorMessage: err.Error()}
 	}
-	defer release()
+	defer lock.Release()
 
 	var skillNames []string
 	for _, op := range plan.Operations {

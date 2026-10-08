@@ -84,6 +84,11 @@ time it was applied.
   file order; Go's `AgentRegistry` uses policy order (`BuiltinAgents`
   first). Where order is visible (e.g. "Codex/DeepSeek Harness/…" in
   `sync global`), use `reg.InFileOrder()`.
+- **Whole-command diffs need a fixed `$HOME` path.** Project skill state
+  files are named by a hash of absolute paths, so run both CLIs against the
+  same home path (recreated between runs) to compare state files byte for
+  byte. Python must also run with `PYTHONUNBUFFERED=1` if stdout and stderr
+  share a pipe.
 - **`Path / raw_link`** keeps `..` components; `filepath.Join` cleans them.
   Messages that show a symlink's destination use `linkplan`'s
   `pathlibJoin`.
@@ -153,15 +158,12 @@ debugged locally; expect path-separator and `PATH` issues there first.
 
 ## Open gaps worth knowing before changing nearby code
 
-- `internal/linkplan` (link.py, global_skills.py, instructions.py) drives
-  `sync global` only. `sync project` still uses `internal/sync/link.go`'s
-  simpler `PlanSymlink`; the project-scope branches of
-  `linkplan.PlanInstructions` are ported but not yet called.
-  `build_project_instruction_batch` is not ported.
-- `writerlock` holds no OS lock on Windows (no `LockFileEx` without
-  `x/sys`); the lock file is still created.
-- `sync project` copy mode uses a simple state file, not `skill_plan.py`'s
-  CAS engine.
+- `project.DetectCurrentProject` exists now, but `maintain memory .` and
+  `edit instructions` (no target) still don't use it.
+- Python's `execute_selection_transaction` (used by `rm skill` and
+  `add skill --sync` to deactivate copied-skill state) is not ported, so
+  removing a skill in Go leaves its project state record active until the
+  next `sync project`.
 - `adopt`/`import workspace` compare against current templates only, with no
   `TEMPLATE_HISTORY`.
 - `doctor --fix` applies nothing yet (needs `registry.py` schema migration).

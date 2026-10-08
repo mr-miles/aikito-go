@@ -691,7 +691,7 @@ func ExecuteMemoryPlan(out Out, plan MemoryPlan, dryRun bool) MemoryResult {
 			}
 			continue
 		}
-		res := ApplyLinkOperation(out, op, dryRun, false)
+		res := applyLink(out, op, dryRun)
 		if !res.Success {
 			msg := res.ErrorMessage
 			if msg == "" {

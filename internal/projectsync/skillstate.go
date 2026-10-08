@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
-	"sync"
 
 	"github.com/mr-miles/aikito-go/internal/compat"
 	"github.com/mr-miles/aikito-go/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/writerlock"
 )
 
 // SkillStateRecord is skill_state.py's SkillStateRecord.
@@ -311,9 +311,7 @@ func CalculateDirectoryFingerprint(dirPath string) (string, string) {
 }
 
 // SkillStateDir is get_skill_state_dir.
-func SkillStateDir(home string) string {
-	return filepath.Join(home, ".local", "state", "aikito", "project-skills")
-}
+func SkillStateDir(home string) string { return writerlock.StateDir(home) }
 
 func normalizeIdentityPath(p string) string {
 	posix := filepath.ToSlash(physical(p))
@@ -467,69 +465,4 @@ func SaveProjectSkillState(home string, doc *ProjectSkillStateDocument, expected
 		return false, fmt.Sprintf("Failed to atomically write state file %s: %s", stateFile, pyOSError(werr))
 	}
 	return true, ""
-}
-
-// writerLock is skill_state.py's WorkspaceWriterLock: an exclusive,
-// process-reentrant lock on <state dir>/writer.lock.
-var writerLock struct {
-	mu    sync.Mutex
-	depth int
-	path  string
-	file  *os.File
-}
-
-// AcquireWriterLock takes the workspace writer lock and returns its
-// release function.
-func AcquireWriterLock(home string) (func(), error) {
-	resolvedHome, err := compat.ResolvePath(home)
-	if err != nil {
-		resolvedHome = home
-	}
-	lockPath := filepath.Join(SkillStateDir(resolvedHome), "writer.lock")
-	writerLock.mu.Lock()
-	if writerLock.depth > 0 {
-		if writerLock.path != lockPath {
-			writerLock.mu.Unlock()
-			return nil, fmt.Errorf("Cannot nest workspace writer locks for different state stores")
-		}
-		writerLock.depth++
-		writerLock.mu.Unlock()
-		return releaseWriterLock, nil
-	}
-	defer writerLock.mu.Unlock()
-	stateDir, errMsg := validateStateStoreRoot(resolvedHome, true)
-	if errMsg != "" {
-		return nil, fmt.Errorf("Failed to validate state store root %s: %s", stateDir, errMsg)
-	}
-	if isReparsePoint(lockPath) {
-		return nil, fmt.Errorf("Writer lock file is a reparse point or symlink: %s", lockPath)
-	}
-	f, err := os.OpenFile(lockPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0o666)
-	if err != nil {
-		return nil, err
-	}
-	secureFilePermissions(lockPath)
-	if err := lockFile(f); err != nil {
-		f.Close()
-		return nil, err
-	}
-	writerLock.file = f
-	writerLock.path = lockPath
-	writerLock.depth = 1
-	return releaseWriterLock, nil
-}
-
-func releaseWriterLock() {
-	writerLock.mu.Lock()
-	defer writerLock.mu.Unlock()
-	if writerLock.depth <= 0 {
-		return
-	}
-	writerLock.depth--
-	if writerLock.depth == 0 && writerLock.file != nil {
-		_ = unlockFile(writerLock.file)
-		writerLock.file.Close()
-		writerLock.file = nil
-		writerLock.path = ""
-	}
 }
