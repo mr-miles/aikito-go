@@ -74,3 +74,11 @@ entry, so a real directory in its place fails the comparison.
 The full `sync global` behaviour matrix (conflicts, stale entries, legacy
 layouts, dry runs, bundled-skill refresh) is covered in-process by
 `internal/cli/syncglobal_test.go` against vectors generated from Python.
+
+Whole-workspace `aikito sync` scenarios (`workspacesync_common_test.go`)
+reuse the project-sync transcript harness: `generate_workspacesync_test.go`
+captures them from Python into `testdata/workspace_sync_*`, and
+`workspacesync_test.go` replays them. Regenerate with
+`go test -tags e2e_generate -run TestGenerateWorkspaceSyncGoldens ./e2e/... -v`.
+The full matrix (conflicts in every domain, broken configuration, bundled
+refresh, parent flags) is in `internal/cli/syncall_test.go`.
