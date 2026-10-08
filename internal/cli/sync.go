@@ -8,14 +8,13 @@ import (
 	"github.com/mr-miles/aikito-rs/internal/mcp"
 )
 
-// cmdSync dispatches `aikito sync <target> ...`. "mcp", "global", and
-// "subagents" are implemented in this Go build; "project" (and the bare
-// `aikito sync` full-workspace form) needs project_sync.py's domain plan
-// builder, not yet ported — it prints a clear error rather than a silent
-// no-op.
+// cmdSync dispatches `aikito sync <target> ...`. "mcp", "global",
+// "subagents", and "project" are implemented in this Go build; the bare
+// `aikito sync` full-workspace form (sync everything at once) is not yet
+// wired up — it prints a clear error rather than a silent no-op.
 func cmdSync(args []string, stdout, stderr io.Writer, env Environment) int {
 	if len(args) == 0 {
-		fmt.Fprintln(stderr, "[ERROR] aikito sync requires a target: mcp, global, subagents (project is not yet implemented in this Go build)")
+		fmt.Fprintln(stderr, "[ERROR] aikito sync requires a target: mcp, global, subagents, project")
 		return 2
 	}
 	switch args[0] {
@@ -26,8 +25,7 @@ func cmdSync(args []string, stdout, stderr io.Writer, env Environment) int {
 	case "subagents", "subagent":
 		return cmdSyncSubagents(args[1:], stdout, stderr, env)
 	case "project":
-		fmt.Fprintf(stderr, "[ERROR] 'aikito sync %s' is not yet implemented in this Go build (needs ported domain plan builders not yet available).\n", args[0])
-		return 2
+		return cmdSyncProject(args[1:], stdout, stderr, env)
 	default:
 		fmt.Fprintf(stderr, "[ERROR] Unknown sync target: %s\n", args[0])
 		return 2
