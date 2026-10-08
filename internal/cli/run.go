@@ -35,6 +35,12 @@ func Run(args []string, stdin io.Reader, stdout, stderr io.Writer, env Environme
 		return cmdSync(args[1:], stdout, stderr, env)
 	case "status":
 		return cmdStatus(args[1:], stdout, stderr, env)
+	case "edit":
+		return cmdEdit(args[1:], stdout, stderr, env)
+	case "rm", "remove":
+		return cmdRm(args[1:], stdout, stderr, env)
+	case "diff":
+		return cmdDiff(args[1:], stdout, stderr, env)
 	default:
 		fmt.Fprintf(stderr, "[ERROR] Unknown command: %s\n", args[0])
 		return 2
