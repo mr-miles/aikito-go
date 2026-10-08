@@ -14,6 +14,10 @@ All eight of the original's default agents are supported: Codex, Claude Code,
 Antigravity CLI (`agy`), OpenCode, GitHub Copilot CLI, DeepSeek Harness
 (`dsh`), Grok Build and Pi.
 
+It currently tracks upstream release `v1.57.7`. [UPSTREAM.md](UPSTREAM.md)
+records the exact commit, which Python module each Go file ports, and how to
+backport later upstream changes.
+
 ## Install
 
 Download the archive for your platform from the
