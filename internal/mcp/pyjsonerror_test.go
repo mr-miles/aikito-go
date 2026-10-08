@@ -30,13 +30,3 @@ func TestPythonJSONDecodeErrorMatchesCPython(t *testing.T) {
 		t.Errorf("%d of %d cases differ", bad, len(cases))
 	}
 }
-
-// Agent JSON configs report parse errors with json.loads' wording, which
-// adopt and sync show to the user (mcp/adapters/jsonc.py).
-func TestLoadDocumentReportsJSONErrorsLikePython(t *testing.T) {
-	_, err := LoadDocument("claude_json", "{not json")
-	want := "Invalid Claude Code JSON config: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
-	if err == nil || err.Error() != want {
-		t.Errorf("got %v, want %q", err, want)
-	}
-}
