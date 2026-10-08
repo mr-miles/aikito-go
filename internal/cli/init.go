@@ -14,6 +14,7 @@ import (
 	"github.com/mr-miles/aikito-go/internal/projectsync"
 	"github.com/mr-miles/aikito-go/internal/registry"
 	"github.com/mr-miles/aikito-go/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/writerlock"
 )
 
 // bundledSkillOrder mirrors templating.py's BUNDLED_SKILL_NAMES tuple order
@@ -41,20 +42,22 @@ func cmdInit(args []string, stdout, stderr io.Writer, env Environment) int {
 func cmdInitWorkspace(args []string, stdout, stderr io.Writer, env Environment) int {
 	var workspacePathArg string
 	force := false
+	var extra []string
 	for _, a := range args {
 		switch {
-		case a == "--force":
+		// argparse accepts any unique prefix of --force.
+		case len(a) > 2 && strings.HasPrefix("--force", a):
 			force = true
-		case strings.HasPrefix(a, "-"):
-			fmt.Fprintf(stderr, "[ERROR] Unknown flag: %s\n", a)
-			return 2
-		default:
-			if workspacePathArg != "" {
-				fmt.Fprintf(stderr, "[ERROR] Unexpected argument: %s\n", a)
-				return 2
-			}
+		case strings.HasPrefix(a, "-") && a != "-":
+			extra = append(extra, a)
+		case workspacePathArg == "":
 			workspacePathArg = a
+		default:
+			extra = append(extra, a)
 		}
+	}
+	if len(extra) > 0 {
+		return argparseUnrecognized(stderr, extra)
 	}
 
 	if !compat.CanSymlink() {
@@ -78,6 +81,7 @@ func cmdInitWorkspace(args []string, stdout, stderr io.Writer, env Environment) 
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
 	}
+	existingWorkspace := isRecognizedWorkspace(resolvedTarget)
 
 	if !initWorkspace(resolvedTarget, env.Home, force, stdout, stderr) {
 		return 1
@@ -93,10 +97,54 @@ func cmdInitWorkspace(args []string, stdout, stderr io.Writer, env Environment) 
 		fmt.Fprintf(stdout, "[CONFIG] Workspace pointer: %s\n", pointerPath)
 	}
 
-	// Deferred: Python prints an "aikito adopt" hint here, computed from
-	// build_adopt_plan/summarize_adopt_plan. The adopt command and its
-	// plan-summary machinery don't exist yet in this Go port.
+	// cmd_init's next-step hint.
+	plan, err := buildAdoptPlan(resolvedTarget, env.Home, stderr)
+	if err != nil {
+		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
+		return 1
+	}
+	adoption := summarizeAdoptPlan(plan)
+	switch {
+	case adoption.totalChanges() > 0 || adoption.Conflicts > 0 || adoption.Errors > 0:
+		fmt.Fprintln(stdout, "\nNext step: Run 'aikito adopt'. It checks the complete import plan before changing the workspace.")
+	case existingWorkspace:
+		fmt.Fprintln(stdout, "\nNext step: Run 'aikito doctor' to check this workspace against the Agents and paths available on this host.")
+	case len(detectExistingAgents(env.Home)) > 0:
+		fmt.Fprintln(stdout, "\nNext step: Run 'aikito sync'. It checks the complete plan for conflicts before changing managed configuration on this host.")
+	default:
+		fmt.Fprintln(stdout, "\n[INFO] No supported Agents detected on this host. The workspace is ready; synchronization can wait until an Agent is installed.")
+	}
 	return 0
+}
+
+// targetValidationError ports init.py's _target_validation_error. The
+// "inside the CLI source tree" check has no meaning for a compiled binary;
+// the source-checkout marker check is kept.
+func targetValidationError(target string) string {
+	info, err := os.Stat(target)
+	if err != nil {
+		return ""
+	}
+	if !info.IsDir() {
+		return fmt.Sprintf("Target path exists but is not a directory: %s", target)
+	}
+	entries, _ := os.ReadDir(target)
+	if len(entries) == 0 {
+		return ""
+	}
+	source := true
+	for _, m := range []string{"LICENSE", "README.md", "pyproject.toml"} {
+		if _, err := os.Stat(filepath.Join(target, m)); err != nil {
+			source = false
+		}
+	}
+	if source {
+		return fmt.Sprintf("Target looks like an Aikito source checkout. Keep the CLI source and workspace in separate directories: %s", target)
+	}
+	if isRecognizedWorkspace(target) {
+		return ""
+	}
+	return fmt.Sprintf("Target directory is not empty and is not a recognized Aikito workspace: %s", target)
 }
 
 // isRecognizedWorkspace mirrors init.py's is_recognized_workspace: the
@@ -129,20 +177,14 @@ func fileExists(path string) bool {
 func initWorkspace(target, home string, force bool, stdout, stderr io.Writer) bool {
 	existingWorkspace := isRecognizedWorkspace(target)
 
-	if existingWorkspace {
-		if err := workspace.RequireCurrentLayout(target); err != nil {
-			fmt.Fprintf(stderr, "[ERROR] %v\n", err)
-			return false
-		}
+	if err := requireLayoutLikePython(target); err != nil {
+		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
+		return false
 	}
-
-	// Deferred simplification: Python's _target_validation_error also
-	// refuses to initialize inside the CLI's own source checkout and
-	// refuses a non-empty, non-recognized target directory. This Go binary
-	// has no equivalent "source checkout" concept (it's a single compiled
-	// binary, not a source tree being run in place), so that check is
-	// skipped; the non-empty-and-unrecognized refusal is also not yet
-	// ported (TODO if this is reached for real usage).
+	if msg := targetValidationError(target); msg != "" {
+		fmt.Fprintf(stderr, "[ERROR] %s\n", msg)
+		return false
+	}
 
 	detected := detectExistingAgents(home)
 
@@ -178,7 +220,7 @@ func initWorkspace(target, home string, force bool, stdout, stderr io.Writer) bo
 	// TODO(resourcewrite pipeline): once internal/sync's resource-write
 	// path exists, route these writes through it (atomic write + proper
 	// workspace-resource bookkeeping) instead of writing files directly.
-	if !writeWorkspaceTemplateFiles(target, detected, force, stdout, stderr) {
+	if !writeWorkspaceTemplateFiles(target, detected, force, existingWorkspace, stdout, stderr) {
 		return false
 	}
 
@@ -197,10 +239,19 @@ func initWorkspace(target, home string, force bool, stdout, stderr io.Writer) bo
 		fmt.Fprintf(stdout, "[CREATE DIR] %s (Bundled %s skill)\n", dest, skillName)
 	}
 
-	// Deferred: Python also runs refresh_bundled_skills() under a
-	// WorkspaceWriterLock for an existing workspace, to detect/replace a
-	// drifted bundled-skill snapshot against its template history. Not yet
-	// ported (bundled_skills.py / templates.py's TEMPLATE_HISTORY).
+	if existingWorkspace {
+		lock, err := writerlock.Acquire(home)
+		if err != nil {
+			fmt.Fprintf(stderr, "[ERROR] %v\n", err)
+			return false
+		}
+		_, rerr := executeBundledRefresh(planBundledRefresh(target, true), target, home, false, stdout)
+		lock.Release()
+		if rerr != nil {
+			fmt.Fprintf(stderr, "[ERROR] %v\n", rerr)
+			return false
+		}
+	}
 
 	gitDir := filepath.Join(target, ".git")
 	if _, err := os.Stat(gitDir); err != nil {
@@ -288,24 +339,11 @@ func detectExistingAgents(home string) []detectedAgent {
 // agents/<name>.toml per detected agent (the v2 per-file layout — there is
 // no "_join_agent_templates" monolithic-file step in the current,
 // post-migration init path).
-func writeWorkspaceTemplateFiles(target string, detected []detectedAgent, force bool, stdout, stderr io.Writer) bool {
+func writeWorkspaceTemplateFiles(target string, detected []detectedAgent, force, existingWorkspace bool, stdout, stderr io.Writer) bool {
 	type fileSpec struct {
 		dest, content, desc string
 	}
 	var files []fileSpec
-
-	for _, d := range detected {
-		content, err := registry.BundledAgentTemplateText(d.name)
-		if err != nil {
-			fmt.Fprintf(stderr, "[ERROR] %v\n", err)
-			return false
-		}
-		files = append(files, fileSpec{
-			dest:    filepath.Join(target, "agents", d.name+".toml"),
-			content: content,
-			desc:    fmt.Sprintf("%s Agent definition", d.name),
-		})
-	}
 
 	templateFiles := []struct{ dest, templateName, desc string }{
 		{"config.toml", "config.toml", "Workspace config template"},
@@ -315,6 +353,22 @@ func writeWorkspaceTemplateFiles(target string, detected []detectedAgent, force 
 		{"layout.toml", "", "Workspace resource layout version"},
 	}
 	for _, tf := range templateFiles {
+		// render_workspace_files puts the detected agents' definitions
+		// just before layout.toml.
+		if tf.dest == "layout.toml" {
+			for _, d := range detected {
+				content, err := registry.BundledAgentTemplateText(d.name)
+				if err != nil {
+					fmt.Fprintf(stderr, "[ERROR] %v\n", err)
+					return false
+				}
+				files = append(files, fileSpec{
+					dest:    filepath.Join(target, "agents", d.name+".toml"),
+					content: content,
+					desc:    fmt.Sprintf("%s Agent definition", d.name),
+				})
+			}
+		}
 		content := workspace.LayoutContent
 		if tf.templateName != "" {
 			c, err := loadTemplate(tf.templateName)
@@ -344,7 +398,7 @@ func writeWorkspaceTemplateFiles(target string, detected []detectedAgent, force 
 				tag = "[FORCE WRITE]"
 			}
 			fmt.Fprintf(stdout, "%s %s (%s)\n", tag, f.dest, f.desc)
-		} else {
+		} else if !existingWorkspace {
 			fmt.Fprintf(stdout, "[SKIP FILE] %s (Already exists)\n", f.dest)
 		}
 	}

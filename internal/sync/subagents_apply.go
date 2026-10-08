@@ -81,6 +81,20 @@ func ApplySubagentPlan(ops []SubagentOperation, home string) (string, error) {
 	failed := func(path string, err error) (string, error) {
 		return fmt.Sprintf("Failed writing configuration to '%s': %v", path, err), err
 	}
+	// execute_subagent_plan validates every mutated file's pre-image before
+	// writing anything.
+	for _, path := range order {
+		for _, op := range byPath[path] {
+			if op.IsAuthorized && (op.Action == SACreate || op.Action == SAUpdate || op.Action == SARemove) {
+				if op.PreImage != nil {
+					if ok, msg := op.PreImage.ValidatePrecondition(path); !ok {
+						return "Plan is stale: " + msg, fmt.Errorf("%s", msg)
+					}
+				}
+				break
+			}
+		}
+	}
 	for _, path := range order {
 		fileOps := byPath[path]
 		mutates := false

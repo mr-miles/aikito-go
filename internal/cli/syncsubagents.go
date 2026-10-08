@@ -57,18 +57,24 @@ func cmdSyncSubagents(args []string, stdout, stderr io.Writer, env Environment) 
 		return 1
 	}
 
-	opts := sync.BuildSubagentPlanOptions{Prune: prune, GateInstalled: true}
-	if forceSeen {
-		if forceTargets == nil {
-			forceTargets = []string{} // present-but-empty: triggers Python's "requires explicit target(s)" error
-		}
-		opts.ForceTargets = forceTargets
+	if forceSeen && forceTargets == nil {
+		forceTargets = []string{} // present-but-empty: triggers Python's "requires explicit target(s)" error
 	}
+	if !syncSubagentConfigs(aikitoDir, env.Home, dryRun, forceTargets, prune, stdout, stderr) {
+		return 1
+	}
+	return 0
+}
 
-	ops, err := sync.BuildSubagentPlan(aikitoDir, env.Home, opts)
+// syncSubagentConfigs ports subagent.py's sync_subagent_configs, including
+// its callers' handling of a SubagentConfigError ("[ERROR] <message>").
+// forceTargets nil means no --force; non-nil and empty is a bare --force.
+func syncSubagentConfigs(aikitoDir, home string, dryRun bool, forceTargets []string, prune bool, stdout, stderr io.Writer) bool {
+	opts := sync.BuildSubagentPlanOptions{Prune: prune, GateInstalled: true, ForceTargets: forceTargets}
+	ops, err := sync.BuildSubagentPlan(aikitoDir, home, opts)
 	if err != nil {
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
-		return 1
+		return false
 	}
 
 	hasErrors := false
@@ -111,24 +117,24 @@ func cmdSyncSubagents(args []string, stdout, stderr io.Writer, env Environment) 
 
 	if hasErrors {
 		fmt.Fprintln(stderr, "[ERROR] Synchronization aborted due to errors in plan. No changes were made.")
-		return 1
+		return false
 	}
 	if hasUnforcedConflicts {
 		fmt.Fprintln(stderr, "[WARN] Synchronization aborted due to unhandled conflicts. No changes were made.")
-		return 1
+		return false
 	}
 	if dryRun {
 		fmt.Fprintln(stdout, "[SUCCESS] Subagent synchronization plan completed (dry-run).")
-		return 0
+		return true
 	}
 
-	if msg, err := sync.ApplySubagentPlan(ops, env.Home); err != nil {
+	if msg, err := sync.ApplySubagentPlan(ops, home); err != nil {
 		fmt.Fprintf(stderr, "[ERROR] Subagent synchronization failed: %s\n", msg)
-		return 1
+		return false
 	}
 
 	fmt.Fprintln(stdout, "[SUCCESS] Subagent synchronization completed successfully.")
-	return 0
+	return true
 }
 
 func pyBool(b bool) string {

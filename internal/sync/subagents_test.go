@@ -74,7 +74,7 @@ func TestBuildAndApplySubagentPlanCreateThenNoop(t *testing.T) {
 				t.Errorf("op for %s/%s = %s, want CREATE", op.Agent, op.Subagent, op.Action)
 			}
 			creates++
-			if err := ApplySubagentOperation(op); err != nil {
+			if _, err := ApplySubagentPlan([]SubagentOperation{op}, home); err != nil {
 				t.Fatal(err)
 			}
 		}
@@ -124,7 +124,7 @@ func TestBuildSubagentPlanConflictAndForce(t *testing.T) {
 	}
 	for _, op := range ops {
 		if op.Subagent == "reviewer" && op.Action == SACreate {
-			if err := ApplySubagentOperation(op); err != nil {
+			if _, err := ApplySubagentPlan([]SubagentOperation{op}, home); err != nil {
 				t.Fatal(err)
 			}
 		}
@@ -164,7 +164,7 @@ func TestBuildSubagentPlanConflictAndForce(t *testing.T) {
 				t.Errorf("expected an authorized force UPDATE, got action=%s authorized=%v requiresForce=%v",
 					op.Action, op.IsAuthorized, op.RequiresForce)
 			}
-			if err := ApplySubagentOperation(op); err != nil {
+			if _, err := ApplySubagentPlan([]SubagentOperation{op}, home); err != nil {
 				t.Fatal(err)
 			}
 		}

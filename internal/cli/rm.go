@@ -12,6 +12,7 @@ import (
 	"github.com/mr-miles/aikito-go/internal/registry"
 	"github.com/mr-miles/aikito-go/internal/sync"
 	"github.com/mr-miles/aikito-go/internal/workspace"
+	"github.com/mr-miles/aikito-go/internal/writerlock"
 )
 
 // cmdRm dispatches `aikito rm|remove <target> ...`, ported from
@@ -339,18 +340,22 @@ func cmdRmSubagent(args []string, stdout, stderr io.Writer, env Environment) int
 		fmt.Fprintf(stderr, "[ERROR] Failed to remove subagent: %v\n", perr)
 		return 1
 	}
-	if err := os.Remove(subagentFile); err != nil {
+	lock, err := writerlock.Acquire(env.Home)
+	if err != nil {
+		fmt.Fprintf(stderr, "[ERROR] Failed to remove subagent: %v\n", err)
+		return 1
+	}
+	err = os.Remove(subagentFile)
+	lock.Release()
+	if err != nil {
 		fmt.Fprintf(stderr, "[ERROR] Failed to remove subagent: %v\n", err)
 		return 1
 	}
 	fmt.Fprintf(stdout, "[DELETE FILE] %s\n", displayPathRelativeToHome(subagentFile, env.Home))
 	fmt.Fprintf(stdout, "[SUCCESS] Removed subagent '%s'.\n", nameClean)
-	if syncFlag {
-		// subagent.py's sync_subagent_configs(prune=True) equivalent isn't
-		// built in this Go port yet (internal/subagent has the per-platform
-		// render/validate primitives but no sync planner on top) — print a
-		// clear hint rather than silently skipping agent-native cleanup.
-		fmt.Fprintln(stdout, "[INFO] --sync: agent-native subagent file cleanup is not yet implemented in this Go build; run 'aikito sync subagents' once available.")
+	// remove_subagent(sync=True) prunes the agent-native files.
+	if syncFlag && !syncSubagentConfigs(aikitoDir, env.Home, false, nil, true, stdout, stderr) {
+		return 1
 	}
 	return 0
 }

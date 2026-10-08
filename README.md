@@ -97,9 +97,9 @@ to this port.
 Each of these says so when used, rather than being silently ignored:
 
 - `add skill --project/--global`, `add subagent --from`, `add mcp --from`,
-  and `--sync` on all three `add` commands (run the matching `sync` command
+  and `--sync` on `add skill` and `add mcp` (run the matching `sync` command
   instead).
-- `rm skill --project`, and `rm subagent --sync` agent-side cleanup.
+- `rm skill --project`.
 - `show mcp --live`, and `--agent` detail views on `show mcp`/`show subagents`.
 - `diff project`.
 - `maintain memory .` (current-directory project detection); pass a project
@@ -114,6 +114,9 @@ Each of these says so when used, rather than being silently ignored:
 
 - **TOML parse errors** (for example a broken `agent.toml`) are reported
   with Go's TOML library's wording rather than Python's `tomllib` wording.
+- **Bundled skill file modes.** `init workspace` writes the bundled skills'
+  files as 0644. Python copies the installed package's file modes, which
+  depend on how it was installed.
 - **`diff subagent`** reports drift for an agent-native subagent file that
   was written by hand and never synced. Python only compares files it synced.
 

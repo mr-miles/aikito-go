@@ -1,0 +1,451 @@
+{
+ "adoptable_instructions": {
+  "setup": [
+   [
+    "write",
+    ".claude/CLAUDE.md",
+    "# hi\n"
+   ]
+  ],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Initializing Aikito workspace in: {H}/aikito\n[CREATE DIR] {H}/aikito\n[CREATE DIR] {H}/aikito/global\n[CREATE DIR] {H}/aikito/projects\n[CREATE DIR] {H}/aikito/mcps\n[CREATE DIR] {H}/aikito/skills\n[CREATE DIR] {H}/aikito/subagents\n[CREATE DIR] {H}/aikito/agents\n[CREATE DIR] {H}/aikito/memory/notes\n[CREATE FILE] {H}/aikito/config.toml (Workspace config template)\n[CREATE FILE] {H}/aikito/skills.toml (Global skills config)\n[CREATE FILE] {H}/aikito/global/AGENTS.md (Global agent instructions)\n[CREATE FILE] {H}/aikito/.gitignore (Workspace .gitignore with leading slashes)\n[CREATE FILE] {H}/aikito/agents/claude-code.toml (claude-code Agent definition)\n[CREATE FILE] {H}/aikito/layout.toml (Workspace resource layout version)\n[CREATE DIR] {H}/aikito/skills/aikito (Bundled aikito skill)\n[CREATE DIR] {H}/aikito/skills/durable-memory (Bundled durable-memory skill)\n[GIT INIT] Initialized Git repository in {H}/aikito\n\n[SUCCESS] Aikito workspace initialization complete!\n\n[INFO] Detected installed Agent(s):\n  - Claude Code ({H}/.claude)\n\nNext step: Run 'aikito adopt'. It checks the complete import plan before changing the workspace.\n"
+   }
+  ],
+  "tree": [
+   ".claude",
+   ".claude/CLAUDE.md",
+   "aikito",
+   "aikito/.gitignore",
+   "aikito/agents",
+   "aikito/agents/claude-code.toml",
+   "aikito/config.toml",
+   "aikito/global",
+   "aikito/global/AGENTS.md",
+   "aikito/layout.toml",
+   "aikito/mcps",
+   "aikito/memory",
+   "aikito/memory/notes",
+   "aikito/projects",
+   "aikito/skills",
+   "aikito/skills.toml",
+   "aikito/skills/aikito",
+   "aikito/skills/aikito/SKILL.md",
+   "aikito/skills/aikito/references",
+   "aikito/skills/aikito/references/adoption.md",
+   "aikito/skills/aikito/references/installation.md",
+   "aikito/skills/aikito/references/projects.md",
+   "aikito/skills/durable-memory",
+   "aikito/skills/durable-memory/SKILL.md",
+   "aikito/subagents"
+  ]
+ },
+ "claude_detected": {
+  "setup": [
+   [
+    "mkdir",
+    ".claude"
+   ]
+  ],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Initializing Aikito workspace in: {H}/aikito\n[CREATE DIR] {H}/aikito\n[CREATE DIR] {H}/aikito/global\n[CREATE DIR] {H}/aikito/projects\n[CREATE DIR] {H}/aikito/mcps\n[CREATE DIR] {H}/aikito/skills\n[CREATE DIR] {H}/aikito/subagents\n[CREATE DIR] {H}/aikito/agents\n[CREATE DIR] {H}/aikito/memory/notes\n[CREATE FILE] {H}/aikito/config.toml (Workspace config template)\n[CREATE FILE] {H}/aikito/skills.toml (Global skills config)\n[CREATE FILE] {H}/aikito/global/AGENTS.md (Global agent instructions)\n[CREATE FILE] {H}/aikito/.gitignore (Workspace .gitignore with leading slashes)\n[CREATE FILE] {H}/aikito/agents/claude-code.toml (claude-code Agent definition)\n[CREATE FILE] {H}/aikito/layout.toml (Workspace resource layout version)\n[CREATE DIR] {H}/aikito/skills/aikito (Bundled aikito skill)\n[CREATE DIR] {H}/aikito/skills/durable-memory (Bundled durable-memory skill)\n[GIT INIT] Initialized Git repository in {H}/aikito\n\n[SUCCESS] Aikito workspace initialization complete!\n\n[INFO] Detected installed Agent(s):\n  - Claude Code ({H}/.claude)\n\nNext step: Run 'aikito sync'. It checks the complete plan for conflicts before changing managed configuration on this host.\n"
+   },
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Connecting to existing Aikito workspace: {H}/aikito\n\n[CONNECTED] Existing Aikito workspace is ready on this host.\n\n[INFO] Detected installed Agent(s):\n  - Claude Code ({H}/.claude)\n\nNext step: Run 'aikito doctor' to check this workspace against the Agents and paths available on this host.\n"
+   }
+  ],
+  "tree": [
+   ".claude",
+   ".local",
+   ".local/state",
+   ".local/state/aikito",
+   ".local/state/aikito/project-skills",
+   ".local/state/aikito/project-skills/writer.lock",
+   "aikito",
+   "aikito/.gitignore",
+   "aikito/agents",
+   "aikito/agents/claude-code.toml",
+   "aikito/config.toml",
+   "aikito/global",
+   "aikito/global/AGENTS.md",
+   "aikito/layout.toml",
+   "aikito/mcps",
+   "aikito/memory",
+   "aikito/memory/notes",
+   "aikito/projects",
+   "aikito/skills",
+   "aikito/skills.toml",
+   "aikito/skills/aikito",
+   "aikito/skills/aikito/SKILL.md",
+   "aikito/skills/aikito/references",
+   "aikito/skills/aikito/references/adoption.md",
+   "aikito/skills/aikito/references/installation.md",
+   "aikito/skills/aikito/references/projects.md",
+   "aikito/skills/durable-memory",
+   "aikito/skills/durable-memory/SKILL.md",
+   "aikito/subagents"
+  ]
+ },
+ "drifted_bundled_skill": {
+  "setup": [
+   [
+    "init"
+   ],
+   [
+    "append",
+    "aikito/skills/aikito/SKILL.md",
+    "junk\n"
+   ]
+  ],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Connecting to existing Aikito workspace: {H}/aikito\n[BACKUP] Bundled skill 'aikito': {H}/.aikito/backups/bundled-skills_{TS}/aikito\n[REFRESH] Bundled skill 'aikito' updated from installed Aikito\n\n[CONNECTED] Existing Aikito workspace is ready on this host.\n\nNext step: Run 'aikito doctor' to check this workspace against the Agents and paths available on this host.\n"
+   }
+  ],
+  "tree": [
+   ".aikito",
+   ".aikito/backups",
+   ".aikito/backups/bundled-skills_{TS}",
+   ".aikito/backups/bundled-skills_{TS}/aikito",
+   ".aikito/backups/bundled-skills_{TS}/aikito/SKILL.md",
+   ".aikito/backups/bundled-skills_{TS}/aikito/references",
+   ".aikito/backups/bundled-skills_{TS}/aikito/references/adoption.md",
+   ".aikito/backups/bundled-skills_{TS}/aikito/references/installation.md",
+   ".aikito/backups/bundled-skills_{TS}/aikito/references/projects.md",
+   ".local",
+   ".local/state",
+   ".local/state/aikito",
+   ".local/state/aikito/project-skills",
+   ".local/state/aikito/project-skills/writer.lock",
+   "aikito",
+   "aikito/.gitignore",
+   "aikito/agents",
+   "aikito/config.toml",
+   "aikito/global",
+   "aikito/global/AGENTS.md",
+   "aikito/layout.toml",
+   "aikito/mcps",
+   "aikito/memory",
+   "aikito/memory/notes",
+   "aikito/projects",
+   "aikito/skills",
+   "aikito/skills.toml",
+   "aikito/skills/aikito",
+   "aikito/skills/aikito/SKILL.md",
+   "aikito/skills/aikito/references",
+   "aikito/skills/aikito/references/adoption.md",
+   "aikito/skills/aikito/references/installation.md",
+   "aikito/skills/aikito/references/projects.md",
+   "aikito/skills/durable-memory",
+   "aikito/skills/durable-memory/SKILL.md",
+   "aikito/subagents"
+  ]
+ },
+ "empty_existing_dir": {
+  "setup": [
+   [
+    "mkdir",
+    "ws"
+   ]
+  ],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace",
+     "{H}/ws"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Initializing Aikito workspace in: {H}/ws\n[CREATE DIR] {H}/ws/global\n[CREATE DIR] {H}/ws/projects\n[CREATE DIR] {H}/ws/mcps\n[CREATE DIR] {H}/ws/skills\n[CREATE DIR] {H}/ws/subagents\n[CREATE DIR] {H}/ws/agents\n[CREATE DIR] {H}/ws/memory/notes\n[CREATE FILE] {H}/ws/config.toml (Workspace config template)\n[CREATE FILE] {H}/ws/skills.toml (Global skills config)\n[CREATE FILE] {H}/ws/global/AGENTS.md (Global agent instructions)\n[CREATE FILE] {H}/ws/.gitignore (Workspace .gitignore with leading slashes)\n[CREATE FILE] {H}/ws/layout.toml (Workspace resource layout version)\n[CREATE DIR] {H}/ws/skills/aikito (Bundled aikito skill)\n[CREATE DIR] {H}/ws/skills/durable-memory (Bundled durable-memory skill)\n[GIT INIT] Initialized Git repository in {H}/ws\n\n[SUCCESS] Aikito workspace initialization complete!\n[CONFIG] Default workspace: {H}/ws\n[CONFIG] Workspace pointer: {H}/.config/aikito/workspace\n\n[INFO] No supported Agents detected on this host. The workspace is ready; synchronization can wait until an Agent is installed.\n"
+   }
+  ],
+  "tree": [
+   ".config",
+   ".config/aikito",
+   ".config/aikito/workspace",
+   "ws",
+   "ws/.gitignore",
+   "ws/agents",
+   "ws/config.toml",
+   "ws/global",
+   "ws/global/AGENTS.md",
+   "ws/layout.toml",
+   "ws/mcps",
+   "ws/memory",
+   "ws/memory/notes",
+   "ws/projects",
+   "ws/skills",
+   "ws/skills.toml",
+   "ws/skills/aikito",
+   "ws/skills/aikito/SKILL.md",
+   "ws/skills/aikito/references",
+   "ws/skills/aikito/references/adoption.md",
+   "ws/skills/aikito/references/installation.md",
+   "ws/skills/aikito/references/projects.md",
+   "ws/skills/durable-memory",
+   "ws/skills/durable-memory/SKILL.md",
+   "ws/subagents"
+  ]
+ },
+ "fresh_rerun_force": {
+  "setup": [],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Initializing Aikito workspace in: {H}/aikito\n[CREATE DIR] {H}/aikito\n[CREATE DIR] {H}/aikito/global\n[CREATE DIR] {H}/aikito/projects\n[CREATE DIR] {H}/aikito/mcps\n[CREATE DIR] {H}/aikito/skills\n[CREATE DIR] {H}/aikito/subagents\n[CREATE DIR] {H}/aikito/agents\n[CREATE DIR] {H}/aikito/memory/notes\n[CREATE FILE] {H}/aikito/config.toml (Workspace config template)\n[CREATE FILE] {H}/aikito/skills.toml (Global skills config)\n[CREATE FILE] {H}/aikito/global/AGENTS.md (Global agent instructions)\n[CREATE FILE] {H}/aikito/.gitignore (Workspace .gitignore with leading slashes)\n[CREATE FILE] {H}/aikito/layout.toml (Workspace resource layout version)\n[CREATE DIR] {H}/aikito/skills/aikito (Bundled aikito skill)\n[CREATE DIR] {H}/aikito/skills/durable-memory (Bundled durable-memory skill)\n[GIT INIT] Initialized Git repository in {H}/aikito\n\n[SUCCESS] Aikito workspace initialization complete!\n\n[INFO] No supported Agents detected on this host. The workspace is ready; synchronization can wait until an Agent is installed.\n"
+   },
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Connecting to existing Aikito workspace: {H}/aikito\n\n[CONNECTED] Existing Aikito workspace is ready on this host.\n\nNext step: Run 'aikito doctor' to check this workspace against the Agents and paths available on this host.\n"
+   },
+   {
+    "args": [
+     "init",
+     "workspace",
+     "--force"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Refreshing Aikito workspace templates in: {H}/aikito\n[FORCE WRITE] {H}/aikito/config.toml (Workspace config template)\n[FORCE WRITE] {H}/aikito/skills.toml (Global skills config)\n[FORCE WRITE] {H}/aikito/global/AGENTS.md (Global agent instructions)\n[FORCE WRITE] {H}/aikito/.gitignore (Workspace .gitignore with leading slashes)\n[FORCE WRITE] {H}/aikito/layout.toml (Workspace resource layout version)\n[SKIP DIR] {H}/aikito/skills/aikito (Already exists)\n[SKIP DIR] {H}/aikito/skills/durable-memory (Already exists)\n\n[SUCCESS] Existing Aikito workspace templates refreshed!\n\nNext step: Run 'aikito doctor' to check this workspace against the Agents and paths available on this host.\n"
+   },
+   {
+    "args": [
+     "init",
+     "workspace",
+     "--fo"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Refreshing Aikito workspace templates in: {H}/aikito\n[FORCE WRITE] {H}/aikito/config.toml (Workspace config template)\n[FORCE WRITE] {H}/aikito/skills.toml (Global skills config)\n[FORCE WRITE] {H}/aikito/global/AGENTS.md (Global agent instructions)\n[FORCE WRITE] {H}/aikito/.gitignore (Workspace .gitignore with leading slashes)\n[FORCE WRITE] {H}/aikito/layout.toml (Workspace resource layout version)\n[SKIP DIR] {H}/aikito/skills/aikito (Already exists)\n[SKIP DIR] {H}/aikito/skills/durable-memory (Already exists)\n\n[SUCCESS] Existing Aikito workspace templates refreshed!\n\nNext step: Run 'aikito doctor' to check this workspace against the Agents and paths available on this host.\n"
+   }
+  ],
+  "tree": [
+   ".local",
+   ".local/state",
+   ".local/state/aikito",
+   ".local/state/aikito/project-skills",
+   ".local/state/aikito/project-skills/writer.lock",
+   "aikito",
+   "aikito/.gitignore",
+   "aikito/agents",
+   "aikito/config.toml",
+   "aikito/global",
+   "aikito/global/AGENTS.md",
+   "aikito/layout.toml",
+   "aikito/mcps",
+   "aikito/memory",
+   "aikito/memory/notes",
+   "aikito/projects",
+   "aikito/skills",
+   "aikito/skills.toml",
+   "aikito/skills/aikito",
+   "aikito/skills/aikito/SKILL.md",
+   "aikito/skills/aikito/references",
+   "aikito/skills/aikito/references/adoption.md",
+   "aikito/skills/aikito/references/installation.md",
+   "aikito/skills/aikito/references/projects.md",
+   "aikito/skills/durable-memory",
+   "aikito/skills/durable-memory/SKILL.md",
+   "aikito/subagents"
+  ]
+ },
+ "layout_unsupported": {
+  "setup": [
+   [
+    "write",
+    "ws/layout.toml",
+    "version = 1\n"
+   ]
+  ],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace",
+     "{H}/ws"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Unsupported workspace layout version 1: {H}/ws\n",
+    "stdout": ""
+   }
+  ],
+  "tree": [
+   "ws",
+   "ws/layout.toml"
+  ]
+ },
+ "legacy_layout": {
+  "setup": [
+   [
+    "write",
+    "ws/agents.toml",
+    ""
+   ]
+  ],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace",
+     "{H}/ws"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Workspace needs migration: {H}/ws\nRun: aikito migrate workspace-resources --dry-run\nThen: aikito migrate workspace-resources\n",
+    "stdout": ""
+   }
+  ],
+  "tree": [
+   "ws",
+   "ws/agents.toml"
+  ]
+ },
+ "non_empty_unknown_dir": {
+  "setup": [
+   [
+    "write",
+    "ws/notes.txt",
+    "x\n"
+   ]
+  ],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace",
+     "{H}/ws"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Target directory is not empty and is not a recognized Aikito workspace: {H}/ws\n",
+    "stdout": ""
+   }
+  ],
+  "tree": [
+   "ws",
+   "ws/notes.txt"
+  ]
+ },
+ "source_checkout": {
+  "setup": [
+   [
+    "write",
+    "src/LICENSE",
+    ""
+   ],
+   [
+    "write",
+    "src/README.md",
+    ""
+   ],
+   [
+    "write",
+    "src/pyproject.toml",
+    ""
+   ]
+  ],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace",
+     "{H}/src"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Target looks like an Aikito source checkout. Keep the CLI source and workspace in separate directories: {H}/src\n",
+    "stdout": ""
+   }
+  ],
+  "tree": [
+   "src",
+   "src/LICENSE",
+   "src/README.md",
+   "src/pyproject.toml"
+  ]
+ },
+ "target_is_file": {
+  "setup": [
+   [
+    "write",
+    "f",
+    "x\n"
+   ]
+  ],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace",
+     "{H}/f"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Target path exists but is not a directory: {H}/f\n",
+    "stdout": ""
+   }
+  ],
+  "tree": [
+   "f"
+  ]
+ },
+ "unknown_args": {
+  "setup": [],
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace",
+     "a",
+     "b"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: b\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "init",
+     "workspace",
+     "--bogus"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --bogus\n",
+    "stdout": ""
+   }
+  ],
+  "tree": []
+ }
+}
