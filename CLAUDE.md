@@ -28,8 +28,12 @@ time it was applied.
 - Inspect real bytes (`.encode().hex()`), never `repr()`. Python's `repr()`
   shows ` ` escaped even though `json.dumps(..., ensure_ascii=False)`
   outputs it raw. Go's `%q` has the same problem.
-- Negative control: when adding a regression test, confirm it fails on the
-  old code (e.g. `git stash push <file>`, run, `git stash pop`).
+- Negative control (required): every behaviour change needs a test that fails
+  without it. Check with `scripts/negative-control.sh <commit> [base]`, which
+  runs the commit's tests against the old code. A compile failure only counts
+  for new internal APIs; user-visible changes need a black-box test through
+  `Run` (or e2e) that compiles against the old code and fails on behaviour
+  (see `help_run_test.go`, `syncproject_cli_test.go`).
 - Whole-command checks: run both CLIs against identical fresh `$HOME`s and
   `diff -r` the results. The e2e suite (`e2e/`) does this against golden
   fixtures captured from Python once.
