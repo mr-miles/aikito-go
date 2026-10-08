@@ -2919,5 +2919,455 @@
     "op": "run"
    }
   ]
+ },
+ "add_subagent_from": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/reviewer.md"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Invalid subagent name 'Reviewer'. Must be kebab-case (lowercase alphanumeric characters separated by hyphens, e.g. 'my-subagent').\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/helper.agent.md",
+     "--description",
+     "Given"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE FILE] ~/aikito/subagents/helper.md\n[SUCCESS] Added subagent 'helper'.\nNext step: aikito sync subagents\n"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/pkg"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE FILE] ~/aikito/subagents/pkg.md\n[SUCCESS] Added subagent 'pkg'.\nNext step: aikito sync subagents\n"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/multi"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Multiple markdown files found in '~/src/multi'. Please specify the file directly with --from.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "a",
+     "--from",
+     "src/multi"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE FILE] ~/aikito/subagents/a.md\n[SUCCESS] Added subagent 'a'.\nNext step: aikito sync subagents\n"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/empty"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Source directory '~/src/empty' does not contain a subagent markdown file.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/nobody.md"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Source file '~/src/nobody.md' does not contain any instructions.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/top.md"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Top-level platform options require one target Agent.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/top.md",
+     "--agents",
+     "claude-code",
+     "--force"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE FILE] ~/aikito/subagents/top.md\n[SUCCESS] Added subagent 'top'.\nNext step: aikito sync subagents\n"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/bad-plat.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE FILE] ~/aikito/subagents/bad-plat.md\n[SUCCESS] Added subagent 'bad-plat'.\nNext step: aikito sync subagents\n"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/bad-field.md"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Subagent 'bad-field' contains unknown field 'bogus' for platform 'claude-code'. Allowed: ['effort', 'model']\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/x.txt"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Source file '~/src/x.txt' must be a markdown (.md) file.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/missing.md"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Source path does not exist: src/missing.md\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/reviewer.md"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Invalid subagent name 'Reviewer'. Must be kebab-case (lowercase alphanumeric characters separated by hyphens, e.g. 'my-subagent').\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "x",
+     "--force"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] --force requires --from when adding a subagent.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/reviewer.md",
+     "--force"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Invalid subagent name 'Reviewer'. Must be kebab-case (lowercase alphanumeric characters separated by hyphens, e.g. 'my-subagent').\n",
+    "stdout": ""
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/agents/codex.toml \"# =============================================================================\\n# Codex CLI\\n# =============================================================================\\n[agents.codex]\\ndisplay_name = \\\"Codex\\\"\\ninstruction_path = \\\".codex/AGENTS.md\\\"\\nproject_instruction_path = \\\"AGENTS.md\\\"\\nskills_path = \\\".agents/skills\\\"\\n\\n[agents.codex.detect]\\ncommands = [\\\"codex\\\"]\\npaths = [\\\".codex\\\"]\\n\\n[agents.codex.runner]\\ncommand = [\\\"codex\\\", \\\"-C\\\", \\\"{workdir}\\\", \\\"{prompt}\\\"]\\n\\n# Local runner environment overrides are omitted from open-source exports.\\n# [agents.codex.runner.env]\\n# EXAMPLE_VARIABLE = \\\"local-value\\\"\\n[agents.codex.subagents]\\nconfig_path = \\\".codex/agents\\\"\\nconfig_format = \\\"codex_toml\\\"\\n\\n[agents.codex.mcp]\\nconfig_path = \\\".codex/config.toml\\\"\\nconfig_format = \\\"toml\\\"\\nname_style = \\\"underscore\\\"                       # server-name -> server_name\\nbuiltin_mcps = [\\\"openaiDeveloperDocs\\\"]\\nlive_command = [\\\"codex\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"codex\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/subagents/a.md \"---\\ndescription: \\\"Subagent a.\\\"\\nagents: [\\\"codex\\\", \\\"claude-code\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\n---\\nA\\n\"",
+     "F aikito/subagents/bad-plat.md \"---\\ndescription: \\\"Subagent bad-plat.\\\"\\nagents: [\\\"codex\\\", \\\"claude-code\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\n---\\nBody\\n\"",
+     "F aikito/subagents/helper.md \"---\\ndescription: \\\"Given\\\"\\nagents: [\\\"codex\\\", \\\"claude-code\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\n---\\nPlain helper body.\\n\"",
+     "F aikito/subagents/pkg.md \"---\\ndescription: \\\"From dir\\\"\\nagents: [\\\"codex\\\", \\\"claude-code\\\", \\\"agy\\\", \\\"github-copilot\\\"]\\n---\\nDir body\\n\"",
+     "F aikito/subagents/top.md \"---\\ndescription: \\\"Top-level opts\\\"\\nagents: [\\\"claude-code\\\"]\\nclaude-code: {\\\"model\\\": \\\"sonnet\\\"}\\n---\\nDo things.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: Reviewer\ndescription: Reviews code\nagents: [claude-code, codex]\nclaude-code:\n  model: opus\n  effort: high\ncodex:\n  model: gpt\n---\n\n  # Reviewer\n\nReview it.\n\n",
+    "op": "write",
+    "path": "src/reviewer.md"
+   },
+   {
+    "content": "Plain helper body.\n",
+    "op": "write",
+    "path": "src/helper.agent.md"
+   },
+   {
+    "content": "---\ndescription: From dir\n---\nDir body\n",
+    "op": "write",
+    "path": "src/pkg/instructions.md"
+   },
+   {
+    "content": "A\n",
+    "op": "write",
+    "path": "src/multi/a.md"
+   },
+   {
+    "content": "B\n",
+    "op": "write",
+    "path": "src/multi/b.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "src/empty"
+   },
+   {
+    "content": "x\n",
+    "op": "write",
+    "path": "src/empty/notes.txt"
+   },
+   {
+    "content": "---\ndescription: d\n---\n\n",
+    "op": "write",
+    "path": "src/nobody.md"
+   },
+   {
+    "content": "---\ndescription: Top-level opts\nmodel: sonnet\ntools: [Read, Grep]\n---\nDo things.\n",
+    "op": "write",
+    "path": "src/top.md"
+   },
+   {
+    "content": "---\nnosuch:\n  model: x\n---\nBody\n",
+    "op": "write",
+    "path": "src/bad-plat.md"
+   },
+   {
+    "content": "---\nclaude-code:\n  bogus: 1\n---\nBody\n",
+    "op": "write",
+    "path": "src/bad-field.md"
+   },
+   {
+    "content": "x\n",
+    "op": "write",
+    "path": "src/x.txt"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/reviewer.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/helper.agent.md",
+     "--description",
+     "Given"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/pkg"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/multi"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "a",
+     "--from",
+     "src/multi"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/empty"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/nobody.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/top.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/top.md",
+     "--agents",
+     "claude-code",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/bad-plat.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/bad-field.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/x.txt"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/missing.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/reviewer.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "x",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "---\nname: Reviewer\ndescription: Reviews code\nagents: [claude-code, codex]\nclaude-code:\n  model: opus\n  effort: high\ncodex:\n  model: gpt\n---\n\n  # Reviewer\n\nReview it twice.\n\n",
+    "op": "write",
+    "path": "src/reviewer.md"
+   },
+   {
+    "args": [
+     "add",
+     "subagent",
+     "--from",
+     "src/reviewer.md",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
  }
 }

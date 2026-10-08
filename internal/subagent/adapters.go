@@ -591,9 +591,14 @@ func (a Adapter) ValidateOptions(agentName, subagentName string, options map[str
 				allowed = append(allowed, f)
 			}
 			sort.Strings(allowed)
+			// Python interpolates sorted(...) directly: ['a', 'b'].
+			quoted := make([]string, len(allowed))
+			for i, f := range allowed {
+				quoted[i] = "'" + f + "'"
+			}
 			return nil, configErrorf(
-				"Subagent '%s' contains unknown field '%s' for platform '%s'. Allowed: %v",
-				subagentName, key, agentName, allowed,
+				"Subagent '%s' contains unknown field '%s' for platform '%s'. Allowed: [%s]",
+				subagentName, key, agentName, strings.Join(quoted, ", "),
 			)
 		}
 		kind := OptString

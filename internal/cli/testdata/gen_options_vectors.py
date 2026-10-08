@@ -255,6 +255,38 @@ scenario("add_mcp_sync_conflict", init(".claude")
             WTREE])
 
 
+# --- add subagent --from ---
+SUB_FULL = ("---\nname: Reviewer\ndescription: Reviews code\nagents: [claude-code, codex]\n"
+            "claude-code:\n  model: opus\n  effort: high\ncodex:\n  model: gpt\n---\n\n  # Reviewer\n\nReview it.\n\n")
+SUB_TOP = "---\ndescription: Top-level opts\nmodel: sonnet\ntools: [Read, Grep]\n---\nDo things.\n"
+scenario("add_subagent_from", init(".claude", ".codex")
+         + [w("src/reviewer.md", SUB_FULL), w("src/helper.agent.md", "Plain helper body.\n"),
+            w("src/pkg/instructions.md", "---\ndescription: From dir\n---\nDir body\n"),
+            w("src/multi/a.md", "A\n"), w("src/multi/b.md", "B\n"),
+            {"op": "mkdir", "path": "src/empty"}, w("src/empty/notes.txt", "x\n"),
+            w("src/nobody.md", "---\ndescription: d\n---\n\n"), w("src/top.md", SUB_TOP),
+            w("src/bad-plat.md", "---\nnosuch:\n  model: x\n---\nBody\n"),
+            w("src/bad-field.md", "---\nclaude-code:\n  bogus: 1\n---\nBody\n"),
+            w("src/x.txt", "x\n"),
+            run("add", "subagent", "--from", "src/reviewer.md"),
+            run("add", "subagent", "--from", "src/helper.agent.md", "--description", "Given"),
+            run("add", "subagent", "--from", "src/pkg"),
+            run("add", "subagent", "--from", "src/multi"),
+            run("add", "subagent", "a", "--from", "src/multi"),
+            run("add", "subagent", "--from", "src/empty"),
+            run("add", "subagent", "--from", "src/nobody.md"),
+            run("add", "subagent", "--from", "src/top.md"),
+            run("add", "subagent", "--from", "src/top.md", "--agents", "claude-code", "--force"),
+            run("add", "subagent", "--from", "src/bad-plat.md"),
+            run("add", "subagent", "--from", "src/bad-field.md"),
+            run("add", "subagent", "--from", "src/x.txt"),
+            run("add", "subagent", "--from", "src/missing.md"),
+            run("add", "subagent", "--from", "src/reviewer.md"),
+            run("add", "subagent", "x", "--force"),
+            w("src/reviewer.md", SUB_FULL.replace("Review it.", "Review it twice.")),
+            run("add", "subagent", "--from", "src/reviewer.md", "--force"), WTREE])
+
+
 def main():
     vectors = {name: {"steps": steps, "expect": run_scenario(steps)} for name, steps in SCENARIOS.items()}
     with open(os.path.join(HERE, "options_vectors.json"), "w") as f:
