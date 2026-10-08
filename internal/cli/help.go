@@ -50,7 +50,6 @@ var helpAnnotations = map[string][]string{
 	"show subagent":     {"  --agent [AGENT]       "},
 	"diff":              {"    project             "},
 	"diff project":      {"usage: aikito diff project"},
-	"doctor":            {"  --fix                 "},
 	"edit instructions": {"  target      global, a project name, or . for the current project"},
 	"maintain memory":   {"  target         global, a project name, or . for the current project"},
 }
