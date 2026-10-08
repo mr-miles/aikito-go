@@ -572,25 +572,32 @@ func cmdShowMemory(args []string, aikitoDir string, stdout, stderr io.Writer) in
 		labels = append(labels, "global")
 	}
 
-	type note struct{ label, rel, path string }
+	// find_memory_files (memory.py) only ever looks under <scope>/memory/notes/*.md
+	// (a non-recursive glob("*.md"), never flat memory/*.md and never a
+	// deeper nested subdirectory under notes/), matched by bare filename
+	// stem. An earlier version of this function walked the whole memory/
+	// tree and keyed by notes/-prefixed relative path, which a bare stem
+	// can never prefix-match — the same bug internal/cli/rm.go's memory
+	// removal hit and fixed, cross-validated against live Python there;
+	// mirrored here so `show memory <name>` can actually resolve a note.
+	type note struct{ label, stem, path string }
 	var notes []note
 	for i, dir := range dirs {
-		filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-			if err != nil || info.IsDir() || !strings.HasSuffix(path, ".md") {
-				return nil
+		notesDir := filepath.Join(dir, "notes")
+		entries, _ := os.ReadDir(notesDir)
+		for _, e := range entries {
+			if e.IsDir() || !strings.HasSuffix(e.Name(), ".md") {
+				continue
 			}
-			rel, rerr := filepath.Rel(dir, path)
-			if rerr == nil {
-				notes = append(notes, note{labels[i], filepath.ToSlash(rel), path})
-			}
-			return nil
-		})
+			stem := strings.TrimSuffix(e.Name(), ".md")
+			notes = append(notes, note{labels[i], stem, filepath.Join(notesDir, e.Name())})
+		}
 	}
 	sort.Slice(notes, func(i, j int) bool {
 		if notes[i].label != notes[j].label {
 			return notes[i].label < notes[j].label
 		}
-		return notes[i].rel < notes[j].rel
+		return notes[i].stem < notes[j].stem
 	})
 
 	if target == "" {
@@ -600,20 +607,27 @@ func cmdShowMemory(args []string, aikitoDir string, stdout, stderr io.Writer) in
 		}
 		fmt.Fprintln(stdout, "Memory notes:")
 		for _, n := range notes {
-			fmt.Fprintf(stdout, "  - [%s] %s\n", n.label, n.rel)
+			fmt.Fprintf(stdout, "  - [%s] %s\n", n.label, n.stem)
 		}
 		return 0
 	}
 
+	// Matching mirrors memory.py's match_keys: a bare stem (no "/") is
+	// always a valid match key regardless of scope count — two notes with
+	// the same stem in different scopes correctly fall through to
+	// resolveByName's conflict path rather than one silently shadowing the
+	// other — and a "label/stem" qualified form is also offered whenever
+	// more than one scope is in play, for disambiguation.
 	var names []string
 	byName := map[string]string{}
 	for _, n := range notes {
-		key := n.rel
+		names = append(names, n.stem)
+		byName[n.stem] = n.path
 		if len(dirs) > 1 {
-			key = n.label + "/" + n.rel
+			qualified := n.label + "/" + n.stem
+			names = append(names, qualified)
+			byName[qualified] = n.path
 		}
-		names = append(names, key)
-		byName[key] = n.path
 	}
 	// notFoundSingular/notFoundHint here are a best-effort pattern match,
 	// not source-confirmed the way the conflict path above is (this
