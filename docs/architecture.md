@@ -1,0 +1,188 @@
+# Architecture
+
+Aikito separates a stateless CLI source checkout from a stateful, Git-managed
+user workspace. This boundary allows the CLI to evolve without treating user
+memory and configuration as application installation files.
+
+## Source and Workspace
+
+The two directories serve different purposes:
+
+```text
+~/aikito-src   CLI source checkout
+<workspace>    canonical user workspace (defaults to ~/aikito)
+```
+
+They must remain separate. The default workspace is `~/aikito`. An explicit
+`aikito init workspace <path>` persists another default; `AIKITO_DIR` overrides
+it temporarily. Use `aikito path workspace` for machine-readable resolution.
+
+## Canonical Source
+
+The workspace is the source of truth:
+
+```text
+<workspace>
+├── global/AGENTS.md
+├── skills/
+├── memory/
+├── projects/
+├── mcps/
+├── agents/
+├── skills.toml
+└── subagents/
+        |
+        | aikito sync ...
+        v
+Agent-native configs + <project>/.agents/
+```
+
+Agent configuration directories and project-level `.agents/` directories are
+runtime entry points. Do not maintain independent copies there when Aikito owns
+the corresponding resource.
+
+## Use or Adapt the Aikito Skill
+
+The complete [Aikito skill](https://github.com/lsaint/aikito/blob/main/src/aikito/templates/skills/aikito/SKILL.md) teaches a coding agent
+how to install, configure, and operate an Aikito workspace. Use it as provided
+or adapt its workspace layout, Agent registry, synchronization policy, and
+review requirements to match your environment.
+
+## Resources
+
+| Resource | Canonical source | Purpose |
+| --- | --- | --- |
+| Memory | `memory/`, `projects/<name>/memory/` | Durable global and project knowledge |
+| Skills | `skills/<name>/` | Reusable Agent workflows |
+| Instructions | `global/AGENTS.md`, `projects/<name>/AGENTS.md` | Global and project behavior |
+| MCP servers | `mcps/*.toml` | Cross-Agent server definitions |
+| Subagents | `subagents/<name>.md` | Cross-Agent specialist definitions |
+| Agent registry | `agents/<name>.toml` | Integration paths and supported capabilities |
+
+The bundled `skills/aikito/` and `skills/durable-memory/` directories are
+system-managed snapshots whose source is the installed Aikito package. Read-only
+inspection commands report divergence. Workspace initialization and global
+synchronization back up divergent snapshots under
+`~/.aikito/backups/bundled-skills_<timestamp>/` and replace them before
+synchronizing Agent runtime targets. Other workspace skills remain
+user-managed canonical resources.
+
+Aikito calls the resource “instructions” while retaining the ecosystem-standard
+`AGENTS.md` filename for its canonical content.
+
+Integrations are capability-based. An Agent may participate in instructions,
+skills, MCP, or subagent synchronization independently. The default registry
+contains Codex, Claude Code, Antigravity CLI (`agy`), OpenCode, GitHub Copilot
+CLI, DeepSeek Harness (`dsh`), Grok Build, and Pi.
+
+Grok Build uses `~/.grok/rules/aikito.md` for global instructions,
+`~/.agents/skills` for shared skills, `~/.grok/config.toml` for MCP servers,
+`~/.grok/agents/` for subagents, and root `AGENTS.md` files for project rules.
+
+Pi participates in instructions, skills, and runners. It uses
+`~/.pi/agent/AGENTS.md` for global instructions, `~/.agents/skills` for shared
+skills, and root `AGENTS.md` files for project rules. When Pi's optional
+`subagent` extension entry point exists, Aikito synchronizes global definitions
+to `~/.pi/agent/agents`; without it, the capability is skipped and no target
+files are written. Pi has no MCP section and is omitted from MCP
+synchronization.
+
+An Agent's `[agents.<name>.mcp]` table supports optional configuration keys:
+`name_style` (e.g. `"underscore"` for runtimes requiring snake_case identifiers)
+and `builtin_mcps` (a list of Agent-native default server names, such as
+`["openaiDeveloperDocs"]` for Codex, that `aikito adopt` automatically omits from
+workspace adoption).
+
+### Agent definitions and adapters
+
+Agent TOML declares paths, runner commands, optional capabilities, and portable
+installation policy. Core plans and executes capabilities; MCP and Subagent
+registries own native rendering, parsing, field validation, and file layouts.
+`config_format` selects the semantic adapter. Agents with the same file syntax
+can use different adapters when their header or authentication behavior differs.
+
+An optional detection table accepts CLI command names and safe paths relative
+to the host's home directory:
+
+```toml
+[agents.example.detect]
+commands = ["example"]
+paths = [".example"]
+```
+
+Any command on `PATH` or existing marker counts as installed. Missing detection
+metadata in an older built-in definition uses only the bundled detection policy;
+other capability fields are never merged. Custom agents without signals use the
+target parent directory when available and otherwise remain unknown. Observation
+results stay local and are never written into portable resources.
+
+Subagent platform tables resolve through the workspace's Agent definition to
+its adapter. Local authoring (`add`, `adopt`, layout migration) rejects unknown
+platforms, missing capabilities, and invalid fields before writing. Workspace
+resource batches validate only written subagents and those whose platform
+definitions changed, against the resulting workspace including Agent
+definitions in the same batch; platforms without a definition there stay
+portable. Runtime loading and synchronization ignore such platforms and Doctor
+reports them as warnings. Shared-file adapters provide text merges; Core still
+freezes final content, checks stale plans, protects conflicts, backs up, and
+writes atomically.
+
+MCP capabilities may declare an optional `adapter` when one file format carries
+different semantics. Grok and Codex both use `config_format = "toml"`; Grok
+declares `adapter = "grok_toml"` to keep `${ENV}` headers independent of Codex's
+`env_http_headers`. Without `adapter`, the key defaults to `config_format`, and
+an older built-in definition whose format still matches its bundled template
+inherits only the bundled adapter. Older clients ignore the field, so the
+portable definition stays compatible. Subagent formats are already one per
+native semantics, so subagent capabilities have no separate adapter key.
+
+## Project Runtime Directory
+
+Project synchronization creates a managed `.agents/` directory in the target
+project for skills and memory. Project instructions are linked only to each
+workspace-registered agent's configured `project_instruction_path`; paths shared
+by multiple agents are created once. Aikito refuses to replace unmanaged content
+at any instruction target. Skills use the project's configured
+`sync_mode`, which can link or copy them.
+
+### Project Skill Sync Modes
+
+`sync_mode` applies only to project skills under `.agents/skills/`. Project
+instructions and memory always remain linked to the Aikito workspace so that
+their canonical content has a single source of truth. Selecting `copy` therefore
+does not make every managed project resource independent of Aikito or eliminate
+all symbolic links.
+
+The two skill modes serve different collaboration models:
+
+| Mode | Runtime representation | Design intent | Trade-off |
+| --- | --- | --- | --- |
+| `link` | Symbolic links to workspace skills | Keep one live canonical skill shared by projects | Skill content is not stored in the project repository and requires access to the Aikito workspace and symbolic-link support |
+| `copy` | Managed copies inside the project | Make selected skill contents reviewable and versionable with the project | Copies can drift from their canonical skills and must be reconciled before synchronization replaces collaborator changes |
+
+Use `link` when the workspace is the authoritative working environment and
+projects should immediately see canonical skill updates. Use `copy` when a
+project needs a self-contained, Git-trackable snapshot of its selected skills,
+for example when collaborators or CI do not share the same Aikito workspace.
+Treat copied skills as generated project artifacts. `aikito status` reports
+drift and `aikito diff` compares runtime files with their canonical workspace
+versions. Make lasting improvements in the canonical skill, or reconcile
+project changes back into it before synchronizing again. Synchronization stops
+on drift unless `--force` is supplied after review.
+
+Project `.agents/skills/` uses entry-level ownership. Skills not selected by the
+project configuration coexist as project-owned entries and appear as notices;
+only selected-name collisions are conflicts. A matching directory copy does not
+prove Aikito ownership; only provably managed links are removed after
+deselection. `.agents/memory/` remains exclusively managed by Aikito.
+
+## Synchronization Behavior
+
+Aikito plans synchronization against the canonical workspace, identifies
+managed and unmanaged targets, and stops on conflicts that require user
+judgment. Managed-entry fingerprints expose drift rather than silently
+replacing local changes.
+
+Use `aikito status` for the aggregate view and the resource-specific status
+commands for details. See [Safety model](safety.md) for write boundaries and
+recovery expectations.

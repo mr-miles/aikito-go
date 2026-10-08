@@ -1,0 +1,38 @@
+# Build output
+/aikito
+/aikito.exe
+/bin/
+/dist/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test and coverage artifacts
+*.test
+*.out
+coverage.*
+*.coverprofile
+
+# Go workspace files (local multi-module setups)
+go.work
+go.work.sum
+
+# Docs site build (mkdocs)
+/site/
+
+# Python, for the golden-fixture generators under */testdata/
+__pycache__/
+*.py[cod]
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Local aikito state if a workspace is ever created inside the repo
+/.local/
+/.agents/
