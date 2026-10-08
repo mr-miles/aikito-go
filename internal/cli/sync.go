@@ -8,26 +8,70 @@ import (
 	"github.com/mr-miles/aikito-go/internal/mcp"
 )
 
-// cmdSync dispatches `aikito sync <target> ...`. "mcp", "global",
-// "subagents", and "project" are implemented in this Go build; the bare
-// `aikito sync` full-workspace form (sync everything at once) is not yet
-// wired up — it prints a clear error rather than a silent no-op.
+// cmdSync dispatches `aikito sync [--dry-run] [--verbose] [<target> ...]`
+// as cli_parser.py's p_sync does. With no target it runs the whole-workspace
+// sync (cmd_sync_all). The parent --dry-run carries into the subcommand,
+// as argparse leaves it set on the shared namespace; --verbose only affects
+// the whole-workspace form.
 func cmdSync(args []string, stdout, stderr io.Writer, env Environment) int {
-	if len(args) == 0 {
-		fmt.Fprintln(stderr, "[ERROR] aikito sync requires a target: mcp, global, subagents, project")
+	parentFlags := []string{"--dry-run", "--verbose"}
+	set := map[string]bool{}
+	var extras []string
+	i := 0
+loop:
+	for ; i < len(args); i++ {
+		a := args[i]
+		switch {
+		case a == "--":
+			i++
+			break loop
+		case a == "-" || !strings.HasPrefix(a, "-"):
+			break loop
+		}
+		var matches []string
+		for _, f := range parentFlags {
+			if f == a {
+				matches = []string{f}
+				break
+			}
+			if strings.HasPrefix(a, "--") && strings.HasPrefix(f, a) {
+				matches = append(matches, f)
+			}
+		}
+		switch len(matches) {
+		case 0:
+			extras = append(extras, a)
+		case 1:
+			set[matches[0]] = true
+		default:
+			fmt.Fprintf(stderr, "%saikito sync: error: ambiguous option: %s could match %s\n", subcommandUsage("sync"), a, strings.Join(matches, ", "))
+			return 2
+		}
+	}
+	if len(extras) > 0 {
+		fmt.Fprintf(stderr, "%saikito: error: unrecognized arguments: %s\n", rootUsage(), strings.Join(extras, " "))
 		return 2
 	}
-	switch args[0] {
+	rest := args[i:]
+	if len(rest) == 0 {
+		return cmdSyncAll(set["--dry-run"], set["--verbose"], stdout, stderr, env)
+	}
+	sub := rest[1:]
+	if set["--dry-run"] {
+		sub = append([]string{"--dry-run"}, sub...)
+	}
+	switch rest[0] {
 	case "mcp":
-		return cmdSyncMCP(args[1:], stdout, stderr, env)
+		return cmdSyncMCP(sub, stdout, stderr, env)
 	case "global":
-		return cmdSyncGlobal(args[1:], stdout, stderr, env)
+		return cmdSyncGlobal(sub, stdout, stderr, env)
 	case "subagents", "subagent":
-		return cmdSyncSubagents(args[1:], stdout, stderr, env)
+		return cmdSyncSubagents(sub, stdout, stderr, env)
 	case "project":
-		return cmdSyncProject(args[1:], stdout, stderr, env)
+		return cmdSyncProject(sub, stdout, stderr, env)
 	default:
-		fmt.Fprintf(stderr, "[ERROR] Unknown sync target: %s\n", args[0])
+		fmt.Fprintf(stderr, "%saikito sync: error: argument sync_target: invalid choice: '%s' (choose from global, project, mcp, subagents, subagent)\n",
+			subcommandUsage("sync"), rest[0])
 		return 2
 	}
 }

@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"sort"
 	"time"
+
+	"github.com/mr-miles/aikito-go/internal/sync"
 )
 
 // Bundled-skill refresh: ports bundled_skills.py's directory digest and
@@ -98,28 +100,73 @@ func bundledSkillDigest(name string) string {
 	return digestEntries(entries)
 }
 
+// bundledRefreshOp is BundledSkillRefreshOperation: refresh is the
+// "REFRESH" action, otherwise "NOOP".
 type bundledRefreshOp struct {
 	name, sourceDigest, targetDigest string
+	refresh                          bool
 }
 
-// planBundledRefresh ports build_bundled_refresh_plan with
-// outdated_bundled_skills: the bundled skills whose workspace copy differs
-// from the embedded one. Nothing is refreshed when <workspace>/skills is
-// not a directory.
-func planBundledRefresh(aikitoDir string) []bundledRefreshOp {
+func (op bundledRefreshOp) action() string {
+	if op.refresh {
+		return "REFRESH"
+	}
+	return "NOOP"
+}
+
+// planBundledRefresh ports build_bundled_refresh_plan: one operation per
+// bundled skill. With outdatedFn (as `sync global` passes
+// outdated_bundled_skills), nothing is refreshed when <workspace>/skills is
+// not a directory; without it (whole-workspace `aikito sync`), any digest
+// difference, including a missing copy, is a refresh.
+func planBundledRefresh(aikitoDir string, outdatedFn bool) []bundledRefreshOp {
 	skillsRoot := filepath.Join(aikitoDir, "skills")
-	if info, err := os.Stat(skillsRoot); err != nil || !info.IsDir() {
-		return nil
+	rootIsDir := false
+	if info, err := os.Stat(skillsRoot); err == nil && info.IsDir() {
+		rootIsDir = true
 	}
 	var ops []bundledRefreshOp
 	for _, name := range bundledSkillOrder {
 		src := bundledSkillDigest(name)
 		dst := directoryDigest(filepath.Join(skillsRoot, name))
-		if src != dst {
-			ops = append(ops, bundledRefreshOp{name: name, sourceDigest: src, targetDigest: dst})
+		refresh := src != dst
+		if outdatedFn && !rootIsDir {
+			refresh = false
 		}
+		ops = append(ops, bundledRefreshOp{name: name, sourceDigest: src, targetDigest: dst, refresh: refresh})
 	}
 	return ops
+}
+
+// refreshedNames is BundledSkillRefreshPlan.refreshed_names.
+func refreshedNames(ops []bundledRefreshOp) map[string]bool {
+	out := map[string]bool{}
+	for _, op := range ops {
+		if op.refresh {
+			out[op.name] = true
+		}
+	}
+	return out
+}
+
+// observeBundledRefresh ports BundledSkillRefreshPlan.observe.
+func observeBundledRefresh(ops []bundledRefreshOp) sync.PlanObservation {
+	obs := sync.PlanObservation{CanApply: true}
+	for _, op := range ops {
+		effect := sync.EffectNoop
+		if op.refresh {
+			effect = sync.EffectUpdate
+		}
+		reason := "Bundled skill matches package"
+		if op.refresh {
+			reason = "Bundled skill diverged from package"
+		}
+		obs.Operations = append(obs.Operations, sync.PlanOperationView{
+			ResourceType: "bundled_skill", ResourceName: op.name, Effect: effect,
+			Scope: "global", Target: op.name, Reason: reason, DomainAction: op.action(), Authorized: true,
+		})
+	}
+	return obs
 }
 
 func pythonTimestamp(t time.Time) string {
@@ -211,7 +258,13 @@ func replaceWithBundled(name, target string) error {
 
 // executeBundledRefresh ports execute_bundled_refresh_plan. The caller holds
 // the writer lock for a real run.
-func executeBundledRefresh(ops []bundledRefreshOp, aikitoDir, home string, dryRun bool, stdout io.Writer) ([]string, error) {
+func executeBundledRefresh(planOps []bundledRefreshOp, aikitoDir, home string, dryRun bool, stdout io.Writer) ([]string, error) {
+	var ops []bundledRefreshOp
+	for _, op := range planOps {
+		if op.refresh {
+			ops = append(ops, op)
+		}
+	}
 	if len(ops) == 0 {
 		return nil, nil
 	}

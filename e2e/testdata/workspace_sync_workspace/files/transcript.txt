@@ -1,0 +1,189 @@
+$ () aikito init project p1 {H}/p1
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p1/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' initialized in Aikito workspace.
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] <HOME>/p1/.agents/memory/notes -> <HOME>/aikito/projects/p1/memory/notes
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1.
+--- stderr
+--- exit 0
+$ () aikito init project p2 {H}/p2
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p2/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p2/AGENTS.md
+[SUCCESS] Project 'p2' initialized in Aikito workspace.
+[INFO] Syncing project 'p2' (mode: link)
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[LINK] <HOME>/p2/.agents/memory/notes -> <HOME>/aikito/projects/p2/memory/notes
+[SUCCESS] Project 'p2' synced successfully at <HOME>/p2.
+--- stderr
+--- exit 0
+$ () aikito init project p3 {H}/p3
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p3/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p3/AGENTS.md
+[SUCCESS] Project 'p3' initialized in Aikito workspace.
+[INFO] Syncing project 'p3' (mode: link)
+[OK] Claude Code instructions: <HOME>/p3/.claude/CLAUDE.md -> <HOME>/aikito/projects/p3/AGENTS.md
+[LINK] <HOME>/p3/.agents/memory/notes -> <HOME>/aikito/projects/p3/memory/notes
+[SUCCESS] Project 'p3' synced successfully at <HOME>/p3.
+--- stderr
+--- exit 0
+$ () aikito sync --dry-run --verbose
+--- stdout
+Sync plan
+
+  Changes:   10
+  Unchanged: 6
+  Offline:   1
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+
+Details
+
+  [CREATE] <HOME>/aikito/skills -> <HOME>/.agents/skills
+  [CREATE] <HOME>/aikito/skills/aikito -> <HOME>/.agents/skills/aikito
+  [CREATE] <HOME>/aikito/skills/durable-memory -> <HOME>/.agents/skills/durable-memory
+  [CREATE] <HOME>/aikito/skills/gskill -> <HOME>/.agents/skills/gskill
+  [CREATE] <HOME>/.agents/skills -> <HOME>/.claude/skills
+  [CREATE] <HOME>/aikito/global/AGENTS.md -> <HOME>/.claude/CLAUDE.md
+  [CREATE] claude-code/verifier -> <HOME>/.claude/agents/verifier.md
+  [CREATE] claude-code/remote-s (New server entry)
+  [CREATE] p1/pskill -> <HOME>/p1/.agents/skills/pskill
+  [CREATE] p2/pskill -> <HOME>/p2/.agents/skills/pskill
+  Project 'p3': offline on this host (~/p3), skipping.
+  Project 'p4': no configured paths (unbound), skipping.
+--- stderr
+--- exit 0
+$ () aikito sync
+--- stdout
+Sync plan
+
+  Changes:   10
+  Unchanged: 6
+  Offline:   1
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+[LINK] <HOME>/.agents/skills/aikito -> <HOME>/aikito/skills/aikito
+[LINK] <HOME>/.agents/skills/durable-memory -> <HOME>/aikito/skills/durable-memory
+[LINK] <HOME>/.agents/skills/gskill -> <HOME>/aikito/skills/gskill
+[LINK] Claude Code skills: <HOME>/.claude/skills -> <HOME>/.agents/skills
+[LINK] Claude Code instructions: <HOME>/.claude/CLAUDE.md -> <HOME>/aikito/global/AGENTS.md
+[SYNC] claude-code/remote-s: created <HOME>/.claude.json
+[AUTH] aikito auth mcp claude-code remote-s
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+
+[SUCCESS] Full workspace sync completed successfully.
+--- stderr
+--- exit 0
+$ () aikito sync --verbose
+--- stdout
+Sync plan
+
+  Changes:   0
+  Unchanged: 16
+  Offline:   1
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+
+Details
+
+  Project 'p3': offline on this host (~/p3), skipping.
+  Project 'p4': no configured paths (unbound), skipping.
+[OK] Claude Code skills: <HOME>/.claude/skills -> <HOME>/.agents/skills
+[OK] Claude Code instructions: <HOME>/.claude/CLAUDE.md -> <HOME>/aikito/global/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+
+[SUCCESS] Full workspace sync completed successfully.
+--- stderr
+--- exit 0
+$ () aikito sync --dry-run --verbose
+--- stdout
+Sync plan
+
+  Changes:   1
+  Unchanged: 15
+  Offline:   1
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+
+Details
+
+  [UPDATE] p2/pskill -> <HOME>/p2/.agents/skills/pskill
+  Project 'p3': offline on this host (~/p3), skipping.
+  Project 'p4': no configured paths (unbound), skipping.
+--- stderr
+--- exit 0
+$ () aikito sync
+--- stdout
+Sync plan
+
+  Changes:   1
+  Unchanged: 15
+  Offline:   1
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+[OK] Claude Code skills: <HOME>/.claude/skills -> <HOME>/.agents/skills
+[OK] Claude Code instructions: <HOME>/.claude/CLAUDE.md -> <HOME>/aikito/global/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+
+[SUCCESS] Full workspace sync completed successfully.
+--- stderr
+--- exit 0
+$ () aikito sync --verbose
+--- stdout
+Sync plan
+
+  Changes:   0
+  Unchanged: 15
+  Offline:   1
+  Warnings:  0
+  Conflicts: 1
+  Errors:    0
+
+Needs attention:
+  Project skill 'pskill' drifted at <HOME>/p2/.agents/skills/pskill
+
+Blocked; no changes were made
+
+Details
+
+  [CONFLICT] p2/pskill -> <HOME>/p2/.agents/skills/pskill
+  Project 'p3': offline on this host (~/p3), skipping.
+  Project 'p4': no configured paths (unbound), skipping.
+--- stderr
+--- exit 1
+$ () aikito sync --dry-run global
+--- stdout
+[OK] Claude Code skills: <HOME>/.claude/skills -> <HOME>/.agents/skills
+[OK] Claude Code instructions: <HOME>/.claude/CLAUDE.md -> <HOME>/aikito/global/AGENTS.md
+[SUCCESS] Global resources synced successfully (3 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).
+--- stderr
+--- exit 0
+$ () aikito sync extra
+--- stdout
+--- stderr
+usage: aikito sync [-h] [--dry-run] [--verbose]
+                   {global,project,mcp,subagents,subagent} ...
+aikito sync: error: argument sync_target: invalid choice: 'extra' (choose from global, project, mcp, subagents, subagent)
+--- exit 2
