@@ -28,6 +28,7 @@ type syncGlobalStep struct {
 	Old     string            `json:"old"`
 	New     string            `json:"new"`
 	Env     map[string]string `json:"env"`
+	Cwd     string            `json:"cwd"`
 }
 
 type syncGlobalExpect struct {
@@ -38,6 +39,7 @@ type syncGlobalExpect struct {
 	Tree    []string `json:"tree"`
 	Read    string   `json:"read"`
 	Content string   `json:"content"`
+	WTree   []string `json:"wtree"`
 }
 
 var backupTimestampRe = regexp.MustCompile(`bundled-skills_\d{8}_\d{6}_\d{6}`)
@@ -183,12 +185,17 @@ func replayCLIVectors(t *testing.T, vectorsPath string) {
 						}
 						runEnv.Env = vars
 					}
+					if st.Cwd != "" {
+						runEnv.Cwd = filepath.Join(home, filepath.FromSlash(st.Cwd))
+					}
 					var out, errb bytes.Buffer
 					code := Run(st.Args, nil, &out, &errb, runEnv)
 					got = append(got, syncGlobalExpect{Args: st.Args, Exit: &code,
 						Stdout: normalizeHome(out.String(), home), Stderr: normalizeHome(errb.String(), home)})
 				case "tree":
 					got = append(got, syncGlobalExpect{Tree: homeTree(t, home)})
+				case "wtree":
+					got = append(got, syncGlobalExpect{WTree: workspaceTree(t, home)})
 				case "read":
 					content, err := os.ReadFile(path)
 					if err != nil {
@@ -222,6 +229,11 @@ func replayCLIVectors(t *testing.T, vectorsPath string) {
 					gotTree, wantTree := norm(g.Tree), norm(want.Tree)
 					if gotTree != wantTree {
 						t.Errorf("step %d tree:\n--- got\n%s\n--- want\n%s", i, gotTree, wantTree)
+					}
+				case want.WTree != nil:
+					gotTree, wantTree := strings.Join(g.WTree, "\n"), strings.Join(want.WTree, "\n")
+					if gotTree != wantTree {
+						t.Errorf("step %d workspace tree:\n--- got\n%s\n--- want\n%s", i, gotTree, wantTree)
 					}
 				default:
 					if g.Content != want.Content {

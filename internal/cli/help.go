@@ -32,7 +32,6 @@ var helpAnnotations = map[string][]string{
 	"":                  {"    web                 Start the read-only local Web Console"},
 	"web":               {"usage: aikito web "},
 	"version":           {"  -c, --check  ", "  --force      "},
-	"add skill":         {"  --project PROJECT     ", "  --global              ", "  --sync                "},
 	"add subagent":      {"  --from FROM_SOURCE    ", "  --sync                "},
 	"add subagents":     {"  --from FROM_SOURCE    ", "  --sync                "},
 	"add mcp":           {"  --from FROM_SOURCE    ", "  --sync                "},

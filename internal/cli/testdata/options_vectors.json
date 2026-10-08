@@ -1,0 +1,1908 @@
+{
+ "add_skill_detected_project": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "s1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[aikito] Target project: 'p1' (detected from cwd)\n[UPDATE FILE] ~/aikito/projects/p1/agent.toml (registered skill for project 'p1')\n[CREATE DIR] ~/aikito/skills/s1\n[CREATE FILE] ~/aikito/skills/s1/SKILL.md\n\n[SUCCESS] Added skill 's1' to project(s): 'p1'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/s1/SKILL.md (or run 'aikito edit skill s1')\n  2. Synchronize project(s): aikito sync project p1\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/s1",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"s1\\\"\\n]\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/s1/SKILL.md \"---\\nname: s1\\ndescription: Description for s1 skill.\\n---\\n\\n# S1\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s1"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Skill 's1' already exists and is already registered in project 'p1'\n",
+    "stdout": "[aikito] Target project: 'p1' (detected from cwd)\n"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[aikito] Target project: 'p2' (detected from cwd)\n[UPDATE FILE] ~/aikito/projects/p2/agent.toml (registered skill for project 'p2')\n[INFO] Using existing canonical skill 's1' at ~/aikito/skills/s1\n\n[SUCCESS] Added skill 's1' to project(s): 'p2'.\n💡 Next steps:\n  1. Synchronize project(s): aikito sync project p2\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/s1",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"s1\\\"\\n]\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"s1\\\"\\n]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/s1/SKILL.md \"---\\nname: s1\\ndescription: Description for s1 skill.\\n---\\n\\n# S1\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s1"
+    ],
+    "cwd": "p1/sub",
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s1"
+    ],
+    "cwd": "p1",
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s1"
+    ],
+    "cwd": "p2",
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_from_file_frontmatter": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/my-tool.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE DIR] ~/aikito/skills/folded-name\n[CREATE FILE] ~/aikito/skills/folded-name/SKILL.md\n[UPDATE FILE] ~/aikito/skills.toml (registered global skill)\n\n[SUCCESS] Added global skill 'folded-name'.\n💡 Next steps:\n  1. Synchronize to agents: aikito sync global\n"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/plain"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE DIR] ~/aikito/skills/plain\n[CREATE FILE] ~/aikito/skills/plain/SKILL.md\n[UPDATE FILE] ~/aikito/skills.toml (registered global skill)\n\n[SUCCESS] Added global skill 'plain'.\n💡 Next steps:\n  1. Synchronize to agents: aikito sync global\n"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/quoted.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE DIR] ~/aikito/skills/quoted-skill\n[CREATE FILE] ~/aikito/skills/quoted-skill/SKILL.md\n[UPDATE FILE] ~/aikito/skills.toml (registered global skill)\n\n[SUCCESS] Added global skill 'quoted-skill'.\n💡 Next steps:\n  1. Synchronize to agents: aikito sync global\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/folded-name",
+     "D aikito/skills/plain",
+     "D aikito/skills/quoted-skill",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\",\\n    \\\"folded-name\\\",\\n    \\\"plain\\\",\\n    \\\"quoted-skill\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/folded-name/SKILL.md \"---\\nname: >\\n  folded-name\\ndescription: |\\n  Multi\\n  line\\n---\\nBody\\n\"",
+     "F aikito/skills/plain/SKILL.md \"---\\nname: plain\\ndescription: Description for plain skill.\\n---\\n\\nNo frontmatter\\n\"",
+     "F aikito/skills/quoted-skill/SKILL.md \"---\\nname: \\\"quoted-skill\\\"\\ndescription: 'single: quoted'\\n---\\nB\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: >\n  folded-name\ndescription: |\n  Multi\n  line\n---\nBody\n",
+    "op": "write",
+    "path": "src/my-tool.md"
+   },
+   {
+    "content": "No frontmatter\n",
+    "op": "write",
+    "path": "src/plain/SKILL.md"
+   },
+   {
+    "content": "---\nname: \"quoted-skill\"\ndescription: 'single: quoted'\n---\nB\n",
+    "op": "write",
+    "path": "src/quoted.md"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/my-tool.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/plain"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/quoted.md"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_from_project_and_force": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/imported",
+     "--project",
+     "p1",
+     "--description",
+     "Overridden"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/projects/p1/agent.toml (registered skill for project 'p1')\n[CREATE DIR] ~/aikito/skills/imported\n[CREATE FILE] ~/aikito/skills/imported/SKILL.md\n\n[SUCCESS] Added skill 'imported' to project(s): 'p1'.\n💡 Next steps:\n  1. Synchronize project(s): aikito sync project p1\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/imported",
+     "D aikito/skills/imported/ref",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"imported\\\"\\n]\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/imported/SKILL.md \"---\\nname: imported\\ndescription: Overridden\\nextra: keep\\n---\\n\\n# Imported\\n\\nBody.\\n\"",
+     "F aikito/skills/imported/ref/notes.md \"ref\\n\""
+    ]
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/imported",
+     "--project",
+     "p1"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Skill 'imported' already exists at ~/aikito/skills/imported\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/imported",
+     "--project",
+     "p1,p2",
+     "--force"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/projects/p2/agent.toml (registered skill for project 'p2')\n[UPDATE DIR] ~/aikito/skills/imported\n[UPDATE FILE] ~/aikito/skills/imported/SKILL.md\n[INFO] Skill 'imported' was already registered in project 'p1'.\n\n[SUCCESS] Updated skill 'imported' for project(s): 'p2'.\n💡 Next steps:\n  1. Synchronize project(s): aikito sync project p1 && aikito sync project p2\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/imported",
+     "D aikito/skills/imported/ref",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"imported\\\"\\n]\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"imported\\\"\\n]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/imported/SKILL.md \"---\\nname: imported\\ndescription: An imported skill\\nextra: keep\\n---\\n\\n# Imported\\n\\nBody v2.\\n\"",
+     "F aikito/skills/imported/ref/notes.md \"ref\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "content": "---\nname: imported\ndescription: An imported skill\nextra: keep\n---\n\n# Imported\n\nBody.\n",
+    "op": "write",
+    "path": "src/imported/SKILL.md"
+   },
+   {
+    "content": "ref\n",
+    "op": "write",
+    "path": "src/imported/ref/notes.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "src/imported/.git"
+   },
+   {
+    "content": "x\n",
+    "op": "write",
+    "path": "src/imported/.git/HEAD"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/imported",
+     "--project",
+     "p1",
+     "--description",
+     "Overridden"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/imported",
+     "--project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "---\nname: imported\ndescription: An imported skill\nextra: keep\n---\n\n# Imported\n\nBody v2.\n",
+    "op": "write",
+    "path": "src/imported/SKILL.md"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "--from",
+     "src/imported",
+     "--project",
+     "p1,p2",
+     "--force"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_global_flag": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "g1",
+     "--global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE DIR] ~/aikito/skills/g1\n[CREATE FILE] ~/aikito/skills/g1/SKILL.md\n[UPDATE FILE] ~/aikito/skills.toml (registered global skill)\n\n[SUCCESS] Added global skill 'g1'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/g1/SKILL.md (or run 'aikito edit skill g1')\n  2. Synchronize to agents: aikito sync global\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/g1",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\",\\n    \\\"g1\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/g1/SKILL.md \"---\\nname: g1\\ndescription: Description for g1 skill.\\n---\\n\\n# G1\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "g1",
+     "--global"
+    ],
+    "cwd": "p1",
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_global_sync": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "gs",
+     "--global",
+     "--sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE DIR] ~/aikito/skills/gs\n[CREATE FILE] ~/aikito/skills/gs/SKILL.md\n[UPDATE FILE] ~/aikito/skills.toml (registered global skill)\n\n[SUCCESS] Added global skill 'gs'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/gs/SKILL.md (or run 'aikito edit skill gs')\n  2. Synchronize to agents: aikito sync global\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gs -> H/aikito/skills/gs\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .agents/skills/gs -> H/aikito/skills/gs",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/gs",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\",\\n    \\\"gs\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/gs/SKILL.md \"---\\nname: gs\\ndescription: Description for gs skill.\\n---\\n\\n# Gs\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "gs",
+     "--global",
+     "--sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_outside_is_global": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "g2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[CREATE DIR] ~/aikito/skills/g2\n[CREATE FILE] ~/aikito/skills/g2/SKILL.md\n[UPDATE FILE] ~/aikito/skills.toml (registered global skill)\n\n[SUCCESS] Added global skill 'g2'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/g2/SKILL.md (or run 'aikito edit skill g2')\n  2. Synchronize to agents: aikito sync global\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/g2",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\",\\n    \\\"g2\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/g2/SKILL.md \"---\\nname: g2\\ndescription: Description for g2 skill.\\n---\\n\\n# G2\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "g2"
+    ],
+    "cwd": "outside",
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_project_errors": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "x",
+     "--project",
+     "nope"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Project 'nope' not found.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "x",
+     "--project",
+     "p1",
+     "--global"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Cannot specify both --project and --global.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "x",
+     "--project"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito add skill [-h] [--from FROM_SOURCE] [--description DESCRIPTION]\n                        [--project PROJECT] [--global] [--sync] [--force]\n                        [name]\naikito add skill: error: argument --project: expected one argument\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "x",
+     "--proj",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/projects/p1/agent.toml (registered skill for project 'p1')\n[CREATE DIR] ~/aikito/skills/x\n[CREATE FILE] ~/aikito/skills/x/SKILL.md\n\n[SUCCESS] Added skill 'x' to project(s): 'p1'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/x/SKILL.md (or run 'aikito edit skill x')\n  2. Synchronize project(s): aikito sync project p1\n"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "aikito",
+     "--project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] 'aikito' is a built-in skill and already active globally.\n[UPDATE FILE] ~/aikito/projects/p1/agent.toml (registered skill for project 'p1')\n[INFO] Using existing canonical skill 'aikito' at ~/aikito/skills/aikito\n\n[SUCCESS] Added skill 'aikito' to project(s): 'p1'.\n💡 Next steps:\n  1. Synchronize project(s): aikito sync project p1\n"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "durable-memory",
+     "--project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] 'durable-memory' is a built-in skill and already active globally.\n[UPDATE FILE] ~/aikito/projects/p1/agent.toml (registered skill for project 'p1')\n[INFO] Using existing canonical skill 'durable-memory' at ~/aikito/skills/durable-memory\n\n[SUCCESS] Added skill 'durable-memory' to project(s): 'p1'.\n💡 Next steps:\n  1. Synchronize project(s): aikito sync project p1\n"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "durable-memory",
+     "--project",
+     "p1"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Skill 'durable-memory' already exists and is already registered in project 'p1'\n",
+    "stdout": "[INFO] 'durable-memory' is a built-in skill and already active globally.\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/x",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"x\\\",\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/x/SKILL.md \"---\\nname: x\\ndescription: Description for x skill.\\n---\\n\\n# X\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "x",
+     "--project",
+     "nope"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "x",
+     "--project",
+     "p1",
+     "--global"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "x",
+     "--project"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "x",
+     "--proj",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "aikito",
+     "--project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "durable-memory",
+     "--project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "durable-memory",
+     "--project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_project_list": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "s2",
+     "--project",
+     "p1, p2,p1",
+     "--description",
+     "Two"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/projects/p1/agent.toml (registered skill for project 'p1')\n[UPDATE FILE] ~/aikito/projects/p2/agent.toml (registered skill for project 'p2')\n[CREATE DIR] ~/aikito/skills/s2\n[CREATE FILE] ~/aikito/skills/s2/SKILL.md\n\n[SUCCESS] Added skill 's2' to project(s): 'p1', 'p2'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/s2/SKILL.md (or run 'aikito edit skill s2')\n  2. Synchronize project(s): aikito sync project p1 && aikito sync project p2\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/s2",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"s2\\\"\\n]\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"s2\\\"\\n]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/s2/SKILL.md \"---\\nname: s2\\ndescription: Two\\n---\\n\\n# S2\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s2",
+     "--project",
+     "p1,p2"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Skill 's2' already exists and is already registered in all specified projects: p1, p2\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s2",
+     "--project=p2"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Skill 's2' already exists and is already registered in project 'p2'\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s2",
+     "--project",
+     "p1, p2,p1",
+     "--description",
+     "Two"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s2",
+     "--project",
+     "p1,p2"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "s2",
+     "--project=p2"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "add_skill_project_sync": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "ps",
+     "--project",
+     "p1",
+     "--sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/projects/p1/agent.toml (registered skill for project 'p1')\n[CREATE DIR] ~/aikito/skills/ps\n[CREATE FILE] ~/aikito/skills/ps/SKILL.md\n\n[SUCCESS] Added skill 'ps' to project(s): 'p1'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/ps/SKILL.md (or run 'aikito edit skill ps')\n  2. Synchronize project(s): aikito sync project p1\n[INFO] Syncing project 'p1' (mode: link)\n[LINK] H/p1/.agents/skills/ps -> H/aikito/skills/ps\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[SUCCESS] Project 'p1' synced successfully.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D outside",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p1/sub",
+     "D p2",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p1/.agents/skills/ps -> H/aikito/skills/ps"
+    ]
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/ps",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"ps\\\"\\n]\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/ps/SKILL.md \"---\\nname: ps\\ndescription: Description for ps skill.\\n---\\n\\n# Ps\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "ps",
+     "--project",
+     "p1",
+     "--sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_project_sync_blocked": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "pb",
+     "--project",
+     "p1",
+     "--sync"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] notes memory: Target preserved: H/p1/.agents/memory/notes. Entry is a regular dir (expected symlink)\n[ERROR] Project synchronization aborted.\n\n[ERROR] Registration completed, but synchronization was blocked.\nReview differences with 'aikito diff' and run 'aikito sync project <project> <path> --force' to overwrite.\n",
+    "stdout": "[UPDATE FILE] ~/aikito/projects/p1/agent.toml (registered skill for project 'p1')\n[CREATE DIR] ~/aikito/skills/pb\n[CREATE FILE] ~/aikito/skills/pb/SKILL.md\n\n[SUCCESS] Added skill 'pb' to project(s): 'p1'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/pb/SKILL.md (or run 'aikito edit skill pb')\n  2. Synchronize project(s): aikito sync project p1\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D outside",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/memory",
+     "D p1/.agents/memory/notes",
+     "D p1/sub",
+     "D p2",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p1/.agents/memory/notes/x.md"
+    ]
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p1",
+     "D aikito/projects/p1/memory",
+     "D aikito/projects/p1/memory/notes",
+     "D aikito/projects/p2",
+     "D aikito/projects/p2/memory",
+     "D aikito/projects/p2/memory/notes",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/pb",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p1/AGENTS.md \"\"",
+     "F aikito/projects/p1/agent.toml \"name = \\\"p1\\\"\\npath = \\\"~/p1\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"pb\\\"\\n]\\n\"",
+     "F aikito/projects/p2/AGENTS.md \"\"",
+     "F aikito/projects/p2/agent.toml \"name = \\\"p2\\\"\\npath = \\\"~/p2\\\"\\nsync_mode = \\\"link\\\"\\nskills = []\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/pb/SKILL.md \"---\\nname: pb\\ndescription: Description for pb skill.\\n---\\n\\n# Pb\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/.agents/memory/notes"
+   },
+   {
+    "content": "x\n",
+    "op": "write",
+    "path": "p1/.agents/memory/notes/x.md"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "pb",
+     "--project",
+     "p1",
+     "--sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_project_toml_shapes": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "t1",
+     "--project",
+     "p3"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/projects/p3/agent.toml (registered skill for project 'p3')\n[CREATE DIR] ~/aikito/skills/t1\n[CREATE FILE] ~/aikito/skills/t1/SKILL.md\n\n[SUCCESS] Added skill 't1' to project(s): 'p3'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/t1/SKILL.md (or run 'aikito edit skill t1')\n  2. Synchronize project(s): aikito sync project p3\n"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "t1",
+     "--project",
+     "p4"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/projects/p4/agent.toml (registered skill for project 'p4')\n[INFO] Using existing canonical skill 't1' at ~/aikito/skills/t1\n\n[SUCCESS] Added skill 't1' to project(s): 'p4'.\n💡 Next steps:\n  1. Synchronize project(s): aikito sync project p4\n"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "t2",
+     "--project",
+     "p5"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[UPDATE FILE] ~/aikito/projects/p5/agent.toml (registered skill for project 'p5')\n[CREATE DIR] ~/aikito/skills/t2\n[CREATE FILE] ~/aikito/skills/t2/SKILL.md\n\n[SUCCESS] Added skill 't2' to project(s): 'p5'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/t2/SKILL.md (or run 'aikito edit skill t2')\n  2. Synchronize project(s): aikito sync project p5\n"
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/projects/p3",
+     "D aikito/projects/p3/memory",
+     "D aikito/projects/p3/memory/notes",
+     "D aikito/projects/p4",
+     "D aikito/projects/p5",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/t1",
+     "D aikito/skills/t2",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/projects/p3/AGENTS.md \"\"",
+     "F aikito/projects/p3/agent.toml \"name = \\\"p3\\\"\\npath = \\\"~/p3\\\"\\nsync_mode = \\\"link\\\"\\nskills = [\\n    \\\"t1\\\"\\n]\\n\\n[extra]\\nkey = \\\"v\\\"\\n\"",
+     "F aikito/projects/p4/agent.toml \"name = \\\"p4\\\"\\n# comment\\n\\nskills = [\\n    \\\"t1\\\"\\n]\\n\\n[table]\\nx = 1\\n\"",
+     "F aikito/projects/p5/agent.toml \"name = \\\"p5\\\"\\nskills = [\\n    \\\"t2\\\"\\n]\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/t1/SKILL.md \"---\\nname: t1\\ndescription: Description for t1 skill.\\n---\\n\\n# T1\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\"",
+     "F aikito/skills/t2/SKILL.md \"---\\nname: t2\\ndescription: Description for t2 skill.\\n---\\n\\n# T2\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p3"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = []\n\n[extra]\nkey = \"v\"\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\n# comment\n\n[table]\nx = 1\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "content": "name = \"p5\"\nskills = \"notalist\"\n",
+    "op": "write",
+    "path": "aikito/projects/p5/agent.toml"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "t1",
+     "--project",
+     "p3"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "t1",
+     "--project",
+     "p4"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "t2",
+     "--project",
+     "p5"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_sync_global_conflict": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "gc",
+     "--sync"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "[CREATE DIR] ~/aikito/skills/gc\n[CREATE FILE] ~/aikito/skills/gc/SKILL.md\n[UPDATE FILE] ~/aikito/skills.toml (registered global skill)\n\n[SUCCESS] Added global skill 'gc'.\n💡 Next steps:\n  1. Update instructions in ~/aikito/skills/gc/SKILL.md (or run 'aikito edit skill gc')\n  2. Synchronize to agents: aikito sync global\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .claude/CLAUDE.md",
+     "F .local/state/aikito/project-skills/writer.lock 600"
+    ]
+   },
+   {
+    "wtree": [
+     "D aikito/agents",
+     "D aikito/global",
+     "D aikito/mcps",
+     "D aikito/memory",
+     "D aikito/memory/notes",
+     "D aikito/projects",
+     "D aikito/skills",
+     "D aikito/skills/aikito",
+     "D aikito/skills/aikito/references",
+     "D aikito/skills/durable-memory",
+     "D aikito/skills/gc",
+     "D aikito/subagents",
+     "F aikito/.gitignore \"# Aikito Git Ignore Rules\\n# Note: Rules use leading slashes to strictly match top-level workspace items.\\n/.DS_Store\\n/__pycache__/\\n/*.pyc\\n/.venv/\\n/.local/\\n\"",
+     "F aikito/agents/claude-code.toml \"# =============================================================================\\n# Claude Code CLI\\n# =============================================================================\\n[agents.claude-code]\\ndisplay_name = \\\"Claude Code\\\"\\ninstruction_path = \\\".claude/CLAUDE.md\\\"\\nproject_instruction_path = \\\".claude/CLAUDE.md\\\"\\nskills_path = \\\".claude/skills\\\"\\n\\n[agents.claude-code.detect]\\ncommands = [\\\"claude\\\"]\\npaths = [\\\".claude\\\"]\\n\\n[agents.claude-code.runner]\\ncommand = [\\\"claude\\\", \\\"{prompt}\\\"]\\n\\n[agents.claude-code.subagents]\\nconfig_path = \\\".claude/agents\\\"\\nconfig_format = \\\"claude_markdown\\\"\\n\\n[agents.claude-code.mcp]\\nconfig_path = \\\".claude.json\\\"\\nconfig_format = \\\"claude_json\\\"\\nname_style = \\\"verbatim\\\"\\nlive_command = [\\\"claude\\\", \\\"mcp\\\", \\\"list\\\"]\\nauth_command = [\\\"claude\\\", \\\"mcp\\\", \\\"login\\\", \\\"{target}\\\"]\\n\"",
+     "F aikito/config.toml \"# Aikito Workspace Configuration\\n\\n[memory]\\n# Number of days after which an untouched durable memory note is flagged as stale.\\nstale_days = 30\\n\\n[inbox]\\n# Staging directory for incoming distilled notes.\\npath = \\\"inbox\\\"\\n\\n[update]\\n# Enable or disable automatic background update checks and CLI upgrade notifications.\\ncheck = true\\n\"",
+     "F aikito/global/AGENTS.md \"## Persistent Memory\\n\\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\\n\"",
+     "F aikito/layout.toml \"version = 2\\n\"",
+     "F aikito/skills.toml \"skills = [\\n    \\\"aikito\\\",\\n    \\\"durable-memory\\\",\\n    \\\"gc\\\"\\n]\\n\"",
+     "F aikito/skills/aikito/SKILL.md",
+     "F aikito/skills/aikito/references/adoption.md",
+     "F aikito/skills/aikito/references/installation.md",
+     "F aikito/skills/aikito/references/projects.md",
+     "F aikito/skills/durable-memory/SKILL.md",
+     "F aikito/skills/gc/SKILL.md \"---\\nname: gc\\ndescription: Description for gc skill.\\n---\\n\\n# Gc\\n\\n## Overview\\n\\nDescribe what this skill does and when agents should use it.\\n\""
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "mine\n",
+    "op": "write",
+    "path": ".claude/CLAUDE.md"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "gc",
+     "--sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "op": "wtree"
+   }
+  ]
+ },
+ "add_skill_two_projects_conflict": {
+  "expect": [
+   {
+    "args": [
+     "add",
+     "skill",
+     "c1"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Multiple projects match current directory 'H/q1': q1, q2\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "q1"
+   },
+   {
+    "content": "name = \"q1\"\npath = \"~/q1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/q1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/q1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/q1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "q2"
+   },
+   {
+    "content": "name = \"q2\"\npath = \"~/q2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/q2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/q2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/q2/memory/notes"
+   },
+   {
+    "content": "name = \"q2\"\npath = \"~/q1\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/q2/agent.toml"
+   },
+   {
+    "args": [
+     "add",
+     "skill",
+     "c1"
+    ],
+    "cwd": "q1",
+    "op": "run"
+   }
+  ]
+ }
+}

@@ -232,6 +232,27 @@ func executeGlobalSyncPlan(plan globalSyncPlan, aikitoDir, home string, dryRun b
 	return res
 }
 
+// syncGlobalResourcesQuiet ports workspace/sync.py's sync_global_resources,
+// which add and rm call for --sync (cli.py's same-named function is the
+// `sync global` command and reports more). It prints only what the
+// executors print: no summary line, and nothing when the plan can't apply.
+func syncGlobalResourcesQuiet(aikitoDir, home string, stdout, stderr io.Writer) bool {
+	plan := buildGlobalSyncPlan(aikitoDir, home, globalPlanOptions{
+		containerPath: filepath.Join(home, ".agents", "skills"),
+	})
+	if !plan.canApply {
+		return false
+	}
+	res := executeGlobalSyncPlan(plan, aikitoDir, home, false, stdout, stderr)
+	if !isRegularFile(filepath.Join(aikitoDir, "global", "AGENTS.md")) {
+		return false
+	}
+	if plan.instrPlan != nil && len(plan.instrPlan.Conflicts()) > 0 {
+		return false
+	}
+	return res.success
+}
+
 // syncGlobalResources ports cli.py's sync_global_resources.
 func syncGlobalResources(aikitoDir, home string, dryRun bool, stdout, stderr io.Writer) bool {
 	plan := buildGlobalSyncPlan(aikitoDir, home, globalPlanOptions{

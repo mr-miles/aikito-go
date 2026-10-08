@@ -1,0 +1,862 @@
+{
+ "updates": [
+  {
+   "content": "---\nname: old\ndescription: Old desc\n---\n\n# Body\n",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\nname: new-name\ndescription: Old desc\n---\n\n# Body\n"
+  },
+  {
+   "content": "---\nname: old\ndescription: Old desc\n---\n\n# Body\n",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\nname: n\ndescription: \"A description: with colon\"\n---\n\n# Body\n"
+  },
+  {
+   "content": "---\nname: old\ndescription: Old desc\n---\n\n# Body\n",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\nname: old\ndescription: plain\n---\n\n# Body\n"
+  },
+  {
+   "content": "---\nname: old\ndescription: Old desc\n---\n\n# Body\n",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\nname: old\ndescription: \"multi\\nline\"\n---\n\n# Body\n"
+  },
+  {
+   "content": "---\nname: old\ndescription: Old desc\n---\n\n# Body\n",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\nname: \"yes\"\ndescription: \" padded \"\n---\n\n# Body\n"
+  },
+  {
+   "content": "---\nname: old\ndescription: Old desc\n---\n\n# Body\n",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\nname: old\ndescription: \"\"\n---\n\n# Body\n"
+  },
+  {
+   "content": "---\n# leading comment\ndescription: d\n---\nBody\n",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\n# leading comment\nname: new-name\ndescription: d\n---\n\nBody\n"
+  },
+  {
+   "content": "---\n# leading comment\ndescription: d\n---\nBody\n",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\n# leading comment\nname: n\ndescription: \"A description: with colon\"\n---\n\nBody\n"
+  },
+  {
+   "content": "---\n# leading comment\ndescription: d\n---\nBody\n",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\n# leading comment\ndescription: plain\n---\n\nBody\n"
+  },
+  {
+   "content": "---\n# leading comment\ndescription: d\n---\nBody\n",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\n# leading comment\ndescription: \"multi\\nline\"\n---\n\nBody\n"
+  },
+  {
+   "content": "---\n# leading comment\ndescription: d\n---\nBody\n",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\n# leading comment\nname: \"yes\"\ndescription: \" padded \"\n---\n\nBody\n"
+  },
+  {
+   "content": "---\n# leading comment\ndescription: d\n---\nBody\n",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\n# leading comment\ndescription: \"\"\n---\n\nBody\n"
+  },
+  {
+   "content": "---\nname: x\ndescription: >\n  folded line one\n\n  line two\nother: keep\n---\n\nBody text\n",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\nname: new-name\ndescription: >\n  folded line one\n\n  line two\nother: keep\n---\n\nBody text\n"
+  },
+  {
+   "content": "---\nname: x\ndescription: >\n  folded line one\n\n  line two\nother: keep\n---\n\nBody text\n",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\nname: n\ndescription: \"A description: with colon\"\nother: keep\n---\n\nBody text\n"
+  },
+  {
+   "content": "---\nname: x\ndescription: >\n  folded line one\n\n  line two\nother: keep\n---\n\nBody text\n",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\nname: x\ndescription: plain\nother: keep\n---\n\nBody text\n"
+  },
+  {
+   "content": "---\nname: x\ndescription: >\n  folded line one\n\n  line two\nother: keep\n---\n\nBody text\n",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\nname: x\ndescription: \"multi\\nline\"\nother: keep\n---\n\nBody text\n"
+  },
+  {
+   "content": "---\nname: x\ndescription: >\n  folded line one\n\n  line two\nother: keep\n---\n\nBody text\n",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\nname: \"yes\"\ndescription: \" padded \"\nother: keep\n---\n\nBody text\n"
+  },
+  {
+   "content": "---\nname: x\ndescription: >\n  folded line one\n\n  line two\nother: keep\n---\n\nBody text\n",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\nname: x\ndescription: \"\"\nother: keep\n---\n\nBody text\n"
+  },
+  {
+   "content": "---\ndescription: |\n  block\n    nested\nname: y\n---\nB",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\ndescription: |\n  block\n    nested\nname: new-name\n---\n\nB"
+  },
+  {
+   "content": "---\ndescription: |\n  block\n    nested\nname: y\n---\nB",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\ndescription: \"A description: with colon\"\nname: n\n---\n\nB"
+  },
+  {
+   "content": "---\ndescription: |\n  block\n    nested\nname: y\n---\nB",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\ndescription: plain\nname: y\n---\n\nB"
+  },
+  {
+   "content": "---\ndescription: |\n  block\n    nested\nname: y\n---\nB",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\ndescription: \"multi\\nline\"\nname: y\n---\n\nB"
+  },
+  {
+   "content": "---\ndescription: |\n  block\n    nested\nname: y\n---\nB",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\ndescription: \" padded \"\nname: \"yes\"\n---\n\nB"
+  },
+  {
+   "content": "---\ndescription: |\n  block\n    nested\nname: y\n---\nB",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\ndescription: \"\"\nname: y\n---\n\nB"
+  },
+  {
+   "content": "﻿---\nname: bom\n---\n\n\n  Body after blanks\n",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "﻿---\nname: new-name\n---\n\nBody after blanks\n"
+  },
+  {
+   "content": "﻿---\nname: bom\n---\n\n\n  Body after blanks\n",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "﻿---\nname: n\ndescription: \"A description: with colon\"\n---\n\nBody after blanks\n"
+  },
+  {
+   "content": "﻿---\nname: bom\n---\n\n\n  Body after blanks\n",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "﻿---\nname: bom\ndescription: plain\n---\n\nBody after blanks\n"
+  },
+  {
+   "content": "﻿---\nname: bom\n---\n\n\n  Body after blanks\n",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "﻿---\nname: bom\ndescription: \"multi\\nline\"\n---\n\nBody after blanks\n"
+  },
+  {
+   "content": "﻿---\nname: bom\n---\n\n\n  Body after blanks\n",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "﻿---\nname: \"yes\"\ndescription: \" padded \"\n---\n\nBody after blanks\n"
+  },
+  {
+   "content": "﻿---\nname: bom\n---\n\n\n  Body after blanks\n",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "﻿---\nname: bom\ndescription: \"\"\n---\n\nBody after blanks\n"
+  },
+  {
+   "content": "No frontmatter here\n",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\nname: new-name\n---\n\nNo frontmatter here\n"
+  },
+  {
+   "content": "No frontmatter here\n",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\nname: n\ndescription: \"A description: with colon\"\n---\n\nNo frontmatter here\n"
+  },
+  {
+   "content": "No frontmatter here\n",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\ndescription: plain\n---\n\nNo frontmatter here\n"
+  },
+  {
+   "content": "No frontmatter here\n",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\ndescription: \"multi\\nline\"\n---\n\nNo frontmatter here\n"
+  },
+  {
+   "content": "No frontmatter here\n",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\nname: \"yes\"\ndescription: \" padded \"\n---\n\nNo frontmatter here\n"
+  },
+  {
+   "content": "No frontmatter here\n",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\ndescription: \"\"\n---\n\nNo frontmatter here\n"
+  },
+  {
+   "content": "﻿\n\n  plain body",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\nname: new-name\n---\n\nplain body"
+  },
+  {
+   "content": "﻿\n\n  plain body",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\nname: n\ndescription: \"A description: with colon\"\n---\n\nplain body"
+  },
+  {
+   "content": "﻿\n\n  plain body",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\ndescription: plain\n---\n\nplain body"
+  },
+  {
+   "content": "﻿\n\n  plain body",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\ndescription: \"multi\\nline\"\n---\n\nplain body"
+  },
+  {
+   "content": "﻿\n\n  plain body",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\nname: \"yes\"\ndescription: \" padded \"\n---\n\nplain body"
+  },
+  {
+   "content": "﻿\n\n  plain body",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\ndescription: \"\"\n---\n\nplain body"
+  },
+  {
+   "content": "---\n---\nempty fm\n",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\nname: new-name\n---\n\nempty fm\n"
+  },
+  {
+   "content": "---\n---\nempty fm\n",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\nname: n\ndescription: \"A description: with colon\"\n---\n\nempty fm\n"
+  },
+  {
+   "content": "---\n---\nempty fm\n",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\ndescription: plain\n---\n\nempty fm\n"
+  },
+  {
+   "content": "---\n---\nempty fm\n",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\ndescription: \"multi\\nline\"\n---\n\nempty fm\n"
+  },
+  {
+   "content": "---\n---\nempty fm\n",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\nname: \"yes\"\ndescription: \" padded \"\n---\n\nempty fm\n"
+  },
+  {
+   "content": "---\n---\nempty fm\n",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\ndescription: \"\"\n---\n\nempty fm\n"
+  },
+  {
+   "content": "---\r\nname: crlf\r\ndescription: c\r\n---\r\nBody\r\n",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\nname: new-name\ndescription: c\n---\n\nBody\r\n"
+  },
+  {
+   "content": "---\r\nname: crlf\r\ndescription: c\r\n---\r\nBody\r\n",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\nname: n\ndescription: \"A description: with colon\"\n---\n\nBody\r\n"
+  },
+  {
+   "content": "---\r\nname: crlf\r\ndescription: c\r\n---\r\nBody\r\n",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\nname: crlf\ndescription: plain\n---\n\nBody\r\n"
+  },
+  {
+   "content": "---\r\nname: crlf\r\ndescription: c\r\n---\r\nBody\r\n",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\nname: crlf\ndescription: \"multi\\nline\"\n---\n\nBody\r\n"
+  },
+  {
+   "content": "---\r\nname: crlf\r\ndescription: c\r\n---\r\nBody\r\n",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\nname: \"yes\"\ndescription: \" padded \"\n---\n\nBody\r\n"
+  },
+  {
+   "content": "---\r\nname: crlf\r\ndescription: c\r\n---\r\nBody\r\n",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\nname: crlf\ndescription: \"\"\n---\n\nBody\r\n"
+  },
+  {
+   "content": "---\nname:   spaced\nname2: other\n---\n",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\nname: new-name\nname2: other\n---\n\n"
+  },
+  {
+   "content": "---\nname:   spaced\nname2: other\n---\n",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\nname: n\nname2: other\ndescription: \"A description: with colon\"\n---\n\n"
+  },
+  {
+   "content": "---\nname:   spaced\nname2: other\n---\n",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\nname:   spaced\nname2: other\ndescription: plain\n---\n\n"
+  },
+  {
+   "content": "---\nname:   spaced\nname2: other\n---\n",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\nname:   spaced\nname2: other\ndescription: \"multi\\nline\"\n---\n\n"
+  },
+  {
+   "content": "---\nname:   spaced\nname2: other\n---\n",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\nname: \"yes\"\nname2: other\ndescription: \" padded \"\n---\n\n"
+  },
+  {
+   "content": "---\nname:   spaced\nname2: other\n---\n",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\nname:   spaced\nname2: other\ndescription: \"\"\n---\n\n"
+  },
+  {
+   "content": "---\ntitle: t\n---\n",
+   "updates": [
+    [
+     "name",
+     "new-name"
+    ]
+   ],
+   "want": "---\nname: new-name\ntitle: t\n---\n\n"
+  },
+  {
+   "content": "---\ntitle: t\n---\n",
+   "updates": [
+    [
+     "name",
+     "n"
+    ],
+    [
+     "description",
+     "A description: with colon"
+    ]
+   ],
+   "want": "---\nname: n\ntitle: t\ndescription: \"A description: with colon\"\n---\n\n"
+  },
+  {
+   "content": "---\ntitle: t\n---\n",
+   "updates": [
+    [
+     "description",
+     "plain"
+    ]
+   ],
+   "want": "---\ntitle: t\ndescription: plain\n---\n\n"
+  },
+  {
+   "content": "---\ntitle: t\n---\n",
+   "updates": [
+    [
+     "description",
+     "multi\nline"
+    ]
+   ],
+   "want": "---\ntitle: t\ndescription: \"multi\\nline\"\n---\n\n"
+  },
+  {
+   "content": "---\ntitle: t\n---\n",
+   "updates": [
+    [
+     "name",
+     "yes"
+    ],
+    [
+     "description",
+     " padded "
+    ]
+   ],
+   "want": "---\nname: \"yes\"\ntitle: t\ndescription: \" padded \"\n---\n\n"
+  },
+  {
+   "content": "---\ntitle: t\n---\n",
+   "updates": [
+    [
+     "description",
+     ""
+    ]
+   ],
+   "want": "---\ntitle: t\ndescription: \"\"\n---\n\n"
+  }
+ ],
+ "scalars": [
+  [
+   "",
+   "\"\""
+  ],
+  [
+   "plain",
+   "plain"
+  ],
+  [
+   "a: b",
+   "\"a: b\""
+  ],
+  [
+   "#x",
+   "\"#x\""
+  ],
+  [
+   "-dash",
+   "\"-dash\""
+  ],
+  [
+   "?q",
+   "\"?q\""
+  ],
+  [
+   "@a",
+   "\"@a\""
+  ],
+  [
+   "`b",
+   "\"`b\""
+  ],
+  [
+   "%p",
+   "\"%p\""
+  ],
+  [
+   "true",
+   "\"true\""
+  ],
+  [
+   "No",
+   "\"No\""
+  ],
+  [
+   "ON",
+   "\"ON\""
+  ],
+  [
+   " lead",
+   "\" lead\""
+  ],
+  [
+   "trail ",
+   "\"trail \""
+  ],
+  [
+   "quo\"te",
+   "\"quo\\\"te\""
+  ],
+  [
+   "back\\slash",
+   "back\\slash"
+  ],
+  [
+   "new\nline",
+   "\"new\\nline\""
+  ],
+  [
+   "tab\tx",
+   "\"tab\tx\""
+  ],
+  [
+   "comma,x",
+   "\"comma,x\""
+  ],
+  [
+   "q?x",
+   "\"q?x\""
+  ],
+  [
+   "ünïcode",
+   "ünïcode"
+  ],
+  [
+   "a{b}",
+   "\"a{b}\""
+  ],
+  [
+   "x|y",
+   "\"x|y\""
+  ],
+  [
+   "x>y",
+   "\"x>y\""
+  ],
+  [
+   "a&b",
+   "\"a&b\""
+  ],
+  [
+   "*star",
+   "\"*star\""
+  ],
+  [
+   "!bang",
+   "\"!bang\""
+  ]
+ ]
+}

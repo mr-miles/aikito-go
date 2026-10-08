@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	gosync "sync"
 
 	"github.com/mr-miles/aikito-go/internal/compat"
 )
@@ -57,12 +58,35 @@ func validateStateRoot(home string) (string, error) {
 }
 
 // Lock is a held writer lock.
-type Lock struct{ f *os.File }
+type Lock struct {
+	f      *os.File
+	nested bool
+}
+
+// The lock is re-entrant within a process, as WorkspaceWriterLock is: a
+// nested Acquire for the same home only bumps a depth count. Without this,
+// flock on a second descriptor would deadlock (e.g. add skill --sync holds
+// the lock while project sync takes it again).
+var (
+	procMu     gosync.Mutex
+	depth      int
+	activePath string
+	activeLock *Lock
+)
 
 // Acquire blocks until this process holds the writer lock for home.
 func Acquire(home string) (*Lock, error) {
 	if resolved, err := compat.ResolvePath(home); err == nil {
 		home = resolved
+	}
+	procMu.Lock()
+	defer procMu.Unlock()
+	if depth > 0 {
+		if activePath != filepath.Join(StateDir(home), "writer.lock") {
+			return nil, fmt.Errorf("Cannot nest workspace writer locks for different state stores")
+		}
+		depth++
+		return &Lock{nested: true}, nil
 	}
 	stateDir, err := validateStateRoot(home)
 	if err != nil {
@@ -84,15 +108,28 @@ func Acquire(home string) (*Lock, error) {
 		f.Close()
 		return nil, err
 	}
-	return &Lock{f: f}, nil
+	depth, activePath = 1, lockPath
+	activeLock = &Lock{f: f}
+	return activeLock, nil
 }
 
 // Release unlocks and closes the lock file.
 func (l *Lock) Release() {
-	if l == nil || l.f == nil {
+	if l == nil {
+		return
+	}
+	procMu.Lock()
+	defer procMu.Unlock()
+	if l.nested {
+		l.nested = false
+		depth--
+		return
+	}
+	if l.f == nil {
 		return
 	}
 	_ = unlockFile(l.f)
 	_ = l.f.Close()
 	l.f = nil
+	depth, activePath, activeLock = 0, "", nil
 }
