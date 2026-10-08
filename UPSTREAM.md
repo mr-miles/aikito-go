@@ -115,6 +115,7 @@ diff.
 | `internal/cli/testdata/options_vectors.json` (add/rm/maintain/edit/diff options, run from inside projects) | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/cli/testdata/gen_options_vectors.py` |
 | `internal/workspace/testdata/frontmatter_update_vectors.json` | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/workspace/testdata/gen_frontmatter_update_vectors.py` |
 | `internal/mcp/testdata/toml_order_vectors.json` (tomllib key order) | `python3 internal/mcp/testdata/gen_toml_order_vectors.py` |
+| `internal/cli/testdata/skill_description_vectors.json` | `python3 internal/cli/testdata/gen_skill_description_vectors.py` |
 | `internal/cli/helptext/help.json` (embedded `--help` text) | `python3 internal/cli/helptext/gen_help.py`, then fix any marker `help_test.go` reports in `helpAnnotations` (`help.go`) |
 
 These were generated with one-off scripts that weren't kept. Regenerate by

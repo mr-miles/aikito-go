@@ -13,6 +13,7 @@ import (
 	"github.com/mr-miles/aikito-go/internal/linkplan"
 	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/projectsync"
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // projectResourceDetail ports project.py's ProjectResourceDetail.
@@ -114,9 +115,10 @@ func extractSkillDescription(skillDir string) (string, bool) {
 	if err != nil {
 		return "", false
 	}
-	meta, _ := parseSimpleMarkdownFrontmatter(strings.ToValidUTF8(string(data), ""))
+	// read_text(errors="ignore") drops invalid bytes, as ToValidUTF8 with "" does.
+	meta, _ := workspace.ParseMarkdownFrontmatter(strings.ToValidUTF8(string(data), ""), nil)
 	if d, ok := meta["description"].(string); ok {
-		if d = strings.TrimSpace(d); d != "" {
+		if d = workspace.PyStrip(d); d != "" {
 			return d, true
 		}
 	}

@@ -1,0 +1,62 @@
+[
+ {
+  "skill_md": "---\nname: a\ndescription: plain one line\n---\nbody\n",
+  "description": "plain one line"
+ },
+ {
+  "skill_md": "---\nname: a\ndescription: >\n  folded text\n  over lines\n---\nbody\n",
+  "description": "folded text over lines"
+ },
+ {
+  "skill_md": "---\nname: a\ndescription: |\n  literal\n  block\n---\n",
+  "description": "literal\nblock"
+ },
+ {
+  "skill_md": "---\nname: a\ndescription: \"quoted: with colon\"\n---\n",
+  "description": "quoted: with colon"
+ },
+ {
+  "skill_md": "---\nname: a\ndescription: 'single ''quoted'''\n---\n",
+  "description": "single ''quoted"
+ },
+ {
+  "skill_md": "---\nname: a\ndescription:    padded   \n---\n",
+  "description": "padded"
+ },
+ {
+  "skill_md": "---\nname: a\ndescription: \"\"\n---\n",
+  "description": null
+ },
+ {
+  "skill_md": "---\nname: a\n---\nno description\n",
+  "description": null
+ },
+ {
+  "skill_md": "no frontmatter at all\n",
+  "description": null
+ },
+ {
+  "skill_md": "\n\n---\nname: a\ndescription: leading blank lines\n---\n",
+  "description": "leading blank lines"
+ },
+ {
+  "skill_md": "---\r\nname: a\r\ndescription: crlf line\r\n---\r\nbody\r\n",
+  "description": "crlf line"
+ },
+ {
+  "skill_md": "---\nname: a\ndescription: [list, value]\n---\n",
+  "description": null
+ },
+ {
+  "skill_md": "---\nname: a\ndescription: 42\n---\n",
+  "description": "42"
+ },
+ {
+  "skill_md": "---\nname: a\ndescription: café — unicode\n---\n",
+  "description": "café — unicode"
+ },
+ {
+  "skill_md": "---\nname: a\ndescription: two\n  continuation line\n---\n",
+  "description": "two"
+ }
+]

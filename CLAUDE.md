@@ -203,9 +203,6 @@ debugged locally; expect path-separator and `PATH` issues there first.
 - `init workspace` writes bundled skill files as 0644 (embedded files have
   no mode). Python's `copytree` copies the installed package's modes, which
   depend on how Aikito was installed, so vectors don't compare modes there.
-- `projectsummary.go` (status Context column) still reads skill
-  descriptions with the simplified `parseSimpleMarkdownFrontmatter`;
-  everything else uses `workspace.ParseMarkdownFrontmatter`.
 - `sync subagents` validates platform options at load (as Python does)
   but `loadSubagentDefinitions` is otherwise simpler than
   `load_subagent_definitions` (no unsupported-entry / missing-directory

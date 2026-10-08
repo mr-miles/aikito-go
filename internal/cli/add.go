@@ -74,48 +74,6 @@ func stringListEquals(raw []any, want []string) bool {
 	return true
 }
 
-// parseSimpleMarkdownFrontmatter is a simplified stand-in for
-// frontmatter.py's _parse_markdown_frontmatter: handles the common case of
-// "---\nkey: plain scalar value\n---\nbody", stripping surrounding quotes
-// from quoted values. Does NOT implement YAML block scalars (|, >), nested
-// lists/maps, or multi-line values — real-world SKILL.md frontmatter
-// overwhelmingly uses simple name/description scalars, and this port's
-// scope/time budget didn't extend to a full YAML-subset parser. If content
-// has no "---" frontmatter block at all, returns an empty map and the whole
-// trimmed content as body.
-func parseSimpleMarkdownFrontmatter(content string) (map[string]any, string) {
-	lines := strings.Split(content, "\n")
-	if len(lines) == 0 || strings.TrimSpace(lines[0]) != "---" {
-		return map[string]any{}, strings.TrimSpace(content)
-	}
-	closing := -1
-	for i := 1; i < len(lines); i++ {
-		if strings.TrimSpace(lines[i]) == "---" {
-			closing = i
-			break
-		}
-	}
-	if closing == -1 {
-		return map[string]any{}, strings.TrimSpace(content)
-	}
-	meta := map[string]any{}
-	for _, line := range lines[1:closing] {
-		trimmed := strings.TrimSpace(line)
-		if trimmed == "" || strings.HasPrefix(trimmed, "#") {
-			continue
-		}
-		idx := strings.Index(line, ":")
-		if idx < 0 {
-			continue
-		}
-		key := strings.TrimSpace(line[:idx])
-		val := strings.TrimSpace(line[idx+1:])
-		val = strings.Trim(val, `"'`)
-		meta[key] = val
-	}
-	body := strings.Join(lines[closing+1:], "\n")
-	return meta, strings.TrimLeft(body, "\n")
-}
 
 var defaultSubagentAgents = []string{"codex", "claude-code", "agy", "github-copilot"}
 var defaultMCPAgents = []string{"codex", "claude-code", "opencode", "agy", "github-copilot"}
