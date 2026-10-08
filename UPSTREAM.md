@@ -89,6 +89,7 @@ diff.
 | `internal/mcp/testdata/redact_vectors.json` | `python3 internal/mcp/testdata/gen_redact_vectors.py` |
 | `internal/cli/testdata/unified_diff_vectors.json` | `python3 internal/cli/testdata/gen_unified_diff_vectors.py` |
 | `internal/cli/testdata/completion_vectors.json` | `python3 internal/cli/testdata/gen_completion_vectors.py` |
+| `internal/cli/helptext/help.json` (embedded `--help` text) | `python3 internal/cli/helptext/gen_help.py`, then fix any marker `help_test.go` reports in `helpAnnotations` (`help.go`) |
 
 These were generated with one-off scripts that weren't kept. Regenerate by
 calling the named Python function directly (`sys.path.insert(0, "src")`):

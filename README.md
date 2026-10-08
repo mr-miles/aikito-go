@@ -98,10 +98,12 @@ Each of these says so when used, rather than being silently ignored:
 - `rm skill --project`, and `rm subagent --sync` agent-side cleanup.
 - `show mcp --live`, and `--agent` detail views on `show mcp`/`show subagents`.
 - `diff project`.
-- `--prune` on `sync global` and `sync project`.
 - `maintain memory .` (current-directory project detection); pass a project
   name or `global`.
 - `doctor --fix` runs but has no automatic fixes yet.
+
+`--help` on any command prints the same text as the Python version, with
+"(not implemented in this build)" after each of the options above.
 
 ### Behaviour that differs from the Python version
 

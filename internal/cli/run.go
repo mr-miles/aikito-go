@@ -9,9 +9,16 @@ import (
 // handler, and returns a process exit code. It performs no I/O against real
 // process state beyond what's passed in via stdin/stdout/stderr/env.
 func Run(args []string, stdin io.Reader, stdout, stderr io.Writer, env Environment) int {
+	// --debug only switches Python's traceback printing; Go has none to show.
+	for len(args) > 0 && args[0] == "--debug" {
+		args = args[1:]
+	}
 	if len(args) == 0 {
-		fmt.Fprintln(stderr, "usage: aikito <command> [args...]")
+		fmt.Fprint(stderr, noArgsUsage())
 		return 2
+	}
+	if handleHelp(args, stdout) {
+		return 0
 	}
 
 	switch args[0] {

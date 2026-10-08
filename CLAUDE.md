@@ -114,7 +114,11 @@ time it was applied.
 - When adding a command, add it to `cliSchema` in `completion.go`;
   `completion_test.go` fails otherwise.
 - Unfinished options print a message saying they're not implemented. Never
-  silently ignore a flag. Keep README's Status section in sync.
+  silently ignore a flag. Keep README's Status section in sync, and the
+  `helpAnnotations` in `help.go` (they mark those options in `--help`; remove
+  the marker when an option is implemented).
+- `--help` text is Python's, captured verbatim into `helptext/help.json`.
+  Don't hand-edit it; regenerate (see UPSTREAM.md).
 - In-process CLI tests use `testEnv(t)` (restricted `PATH`, resolved temp
   home). e2e tests run the real binary against `e2e/testdata/` goldens.
 - Version: `cli.Version` is stamped by GoReleaser via `-ldflags -X`;
