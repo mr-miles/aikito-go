@@ -1,0 +1,1074 @@
+{
+ "all_markers": {
+  "dirs": [
+   ".claude",
+   ".codex",
+   ".gemini",
+   ".config/opencode",
+   ".copilot",
+   ".grok",
+   ".pi",
+   ".deepseek"
+  ],
+  "targets": {
+   "global_instructions/active": [
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "codex"
+     ],
+     "display": [
+      "Codex"
+     ],
+     "path": "~/.codex/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "opencode"
+     ],
+     "display": [
+      "OpenCode"
+     ],
+     "path": "~/.config/opencode/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "github-copilot"
+     ],
+     "display": [
+      "GitHub Copilot CLI"
+     ],
+     "path": "~/.copilot/copilot-instructions.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "agy"
+     ],
+     "display": [
+      "Antigravity CLI"
+     ],
+     "path": "~/.gemini/GEMINI.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "grok"
+     ],
+     "display": [
+      "Grok Build"
+     ],
+     "path": "~/.grok/rules/aikito.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "pi"
+     ],
+     "display": [
+      "Pi"
+     ],
+     "path": "~/.pi/agent/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "global_instructions/all": [
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "codex"
+     ],
+     "display": [
+      "Codex"
+     ],
+     "path": "~/.codex/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "opencode"
+     ],
+     "display": [
+      "OpenCode"
+     ],
+     "path": "~/.config/opencode/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "github-copilot"
+     ],
+     "display": [
+      "GitHub Copilot CLI"
+     ],
+     "path": "~/.copilot/copilot-instructions.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "dsh"
+     ],
+     "display": [
+      "DeepSeek Harness"
+     ],
+     "path": "~/.dsh/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "agy"
+     ],
+     "display": [
+      "Antigravity CLI"
+     ],
+     "path": "~/.gemini/GEMINI.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "grok"
+     ],
+     "display": [
+      "Grok Build"
+     ],
+     "path": "~/.grok/rules/aikito.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "pi"
+     ],
+     "display": [
+      "Pi"
+     ],
+     "path": "~/.pi/agent/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "global_skills/active": [
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "codex",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "~/.agents/skills",
+     "same_object": true
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/skills",
+     "same_object": false
+    }
+   ],
+   "global_skills/all": [
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "codex",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "~/.agents/skills",
+     "same_object": true
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/skills",
+     "same_object": false
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "agy"
+     ],
+     "display": [
+      "Antigravity CLI"
+     ],
+     "path": "~/.gemini/antigravity-cli/skills",
+     "same_object": false
+    }
+   ],
+   "project_instructions/active": [
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "@/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "codex",
+      "agy",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "Antigravity CLI",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "@/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "project_instructions/all": [
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "@/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "codex",
+      "agy",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "Antigravity CLI",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "@/AGENTS.md",
+     "same_object": false
+    }
+   ]
+  }
+ },
+ "claude_codex": {
+  "dirs": [
+   ".claude",
+   ".codex"
+  ],
+  "targets": {
+   "global_instructions/active": [
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "codex"
+     ],
+     "display": [
+      "Codex"
+     ],
+     "path": "~/.codex/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "global_instructions/all": [
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "codex"
+     ],
+     "display": [
+      "Codex"
+     ],
+     "path": "~/.codex/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "opencode"
+     ],
+     "display": [
+      "OpenCode"
+     ],
+     "path": "~/.config/opencode/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "github-copilot"
+     ],
+     "display": [
+      "GitHub Copilot CLI"
+     ],
+     "path": "~/.copilot/copilot-instructions.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "dsh"
+     ],
+     "display": [
+      "DeepSeek Harness"
+     ],
+     "path": "~/.dsh/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "agy"
+     ],
+     "display": [
+      "Antigravity CLI"
+     ],
+     "path": "~/.gemini/GEMINI.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "grok"
+     ],
+     "display": [
+      "Grok Build"
+     ],
+     "path": "~/.grok/rules/aikito.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "pi"
+     ],
+     "display": [
+      "Pi"
+     ],
+     "path": "~/.pi/agent/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "global_skills/active": [
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "codex",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "~/.agents/skills",
+     "same_object": true
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/skills",
+     "same_object": false
+    }
+   ],
+   "global_skills/all": [
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "codex",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "~/.agents/skills",
+     "same_object": true
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/skills",
+     "same_object": false
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "agy"
+     ],
+     "display": [
+      "Antigravity CLI"
+     ],
+     "path": "~/.gemini/antigravity-cli/skills",
+     "same_object": false
+    }
+   ],
+   "project_instructions/active": [
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "@/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "codex",
+      "agy",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "Antigravity CLI",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "@/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "project_instructions/all": [
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "@/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "codex",
+      "agy",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "Antigravity CLI",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "@/AGENTS.md",
+     "same_object": false
+    }
+   ]
+  }
+ },
+ "empty": {
+  "dirs": [],
+  "targets": {
+   "global_instructions/active": [],
+   "global_instructions/all": [
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "codex"
+     ],
+     "display": [
+      "Codex"
+     ],
+     "path": "~/.codex/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "opencode"
+     ],
+     "display": [
+      "OpenCode"
+     ],
+     "path": "~/.config/opencode/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "github-copilot"
+     ],
+     "display": [
+      "GitHub Copilot CLI"
+     ],
+     "path": "~/.copilot/copilot-instructions.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "dsh"
+     ],
+     "display": [
+      "DeepSeek Harness"
+     ],
+     "path": "~/.dsh/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "agy"
+     ],
+     "display": [
+      "Antigravity CLI"
+     ],
+     "path": "~/.gemini/GEMINI.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "grok"
+     ],
+     "display": [
+      "Grok Build"
+     ],
+     "path": "~/.grok/rules/aikito.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "pi"
+     ],
+     "display": [
+      "Pi"
+     ],
+     "path": "~/.pi/agent/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "global_skills/active": [],
+   "global_skills/all": [
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "codex",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "~/.agents/skills",
+     "same_object": true
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/skills",
+     "same_object": false
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "agy"
+     ],
+     "display": [
+      "Antigravity CLI"
+     ],
+     "path": "~/.gemini/antigravity-cli/skills",
+     "same_object": false
+    }
+   ],
+   "project_instructions/active": [
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "codex",
+      "agy",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "Antigravity CLI",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "@/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "project_instructions/all": [
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "@/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "codex",
+      "agy",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "Antigravity CLI",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "@/AGENTS.md",
+     "same_object": false
+    }
+   ]
+  }
+ },
+ "skills_hub_exists": {
+  "dirs": [
+   ".agents/skills",
+   ".claude"
+  ],
+  "targets": {
+   "global_instructions/active": [
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/CLAUDE.md",
+     "same_object": false
+    }
+   ],
+   "global_instructions/all": [
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "codex"
+     ],
+     "display": [
+      "Codex"
+     ],
+     "path": "~/.codex/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "opencode"
+     ],
+     "display": [
+      "OpenCode"
+     ],
+     "path": "~/.config/opencode/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "github-copilot"
+     ],
+     "display": [
+      "GitHub Copilot CLI"
+     ],
+     "path": "~/.copilot/copilot-instructions.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "dsh"
+     ],
+     "display": [
+      "DeepSeek Harness"
+     ],
+     "path": "~/.dsh/AGENTS.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "agy"
+     ],
+     "display": [
+      "Antigravity CLI"
+     ],
+     "path": "~/.gemini/GEMINI.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "grok"
+     ],
+     "display": [
+      "Grok Build"
+     ],
+     "path": "~/.grok/rules/aikito.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/global/AGENTS.md",
+     "consumers": [
+      "pi"
+     ],
+     "display": [
+      "Pi"
+     ],
+     "path": "~/.pi/agent/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "global_skills/active": [
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "codex",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "~/.agents/skills",
+     "same_object": true
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/skills",
+     "same_object": false
+    }
+   ],
+   "global_skills/all": [
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "codex",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "~/.agents/skills",
+     "same_object": true
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "~/.claude/skills",
+     "same_object": false
+    },
+    {
+     "canonical": "~/.agents/skills",
+     "consumers": [
+      "agy"
+     ],
+     "display": [
+      "Antigravity CLI"
+     ],
+     "path": "~/.gemini/antigravity-cli/skills",
+     "same_object": false
+    }
+   ],
+   "project_instructions/active": [
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "@/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "codex",
+      "agy",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "Antigravity CLI",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "@/AGENTS.md",
+     "same_object": false
+    }
+   ],
+   "project_instructions/all": [
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "claude-code"
+     ],
+     "display": [
+      "Claude Code"
+     ],
+     "path": "@/.claude/CLAUDE.md",
+     "same_object": false
+    },
+    {
+     "canonical": "~/aikito/projects/p/AGENTS.md",
+     "consumers": [
+      "codex",
+      "agy",
+      "opencode",
+      "github-copilot",
+      "dsh",
+      "grok",
+      "pi"
+     ],
+     "display": [
+      "Codex",
+      "Antigravity CLI",
+      "OpenCode",
+      "GitHub Copilot CLI",
+      "DeepSeek Harness",
+      "Grok Build",
+      "Pi"
+     ],
+     "path": "@/AGENTS.md",
+     "same_object": false
+    }
+   ]
+  }
+ }
+}

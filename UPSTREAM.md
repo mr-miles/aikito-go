@@ -51,7 +51,7 @@ gaps; see the Go file's doc comment), **not ported**.
 | `workspace/templates.py` | `internal/cli/adopt.go` (`templateFingerprints`) | partial: current templates only, no `TEMPLATE_HISTORY` |
 | `workspace/sync.py` | `internal/cli/sync*.go` | partial: per-domain commands, no whole-workspace plan |
 | `workspace/inspection.py` | `internal/cli/status.go`, `doctor.go` | partial |
-| `agents.py` | `internal/registry/` | partial: `resolve_targets` not ported (`targets_todo.go`) |
+| `agents.py` | `internal/registry/` | ported (`resolve_targets` in `targets.go`) |
 | `registry.py` (agent schema migration) | — | not ported (`doctor --fix` backfill) |
 | `config.py`, `config_runtime.py` | `internal/workspace/resources.go`, `internal/mcp/configtarget.go` | partial: physical-identity resolution simplified |
 | `project_config.py`, `project_runtime.py`, `project.py` | `internal/project/` | ported (config layer); `project.py`'s status layer is in `internal/cli/status.go` |
@@ -89,6 +89,7 @@ diff.
 | `internal/mcp/testdata/redact_vectors.json` | `python3 internal/mcp/testdata/gen_redact_vectors.py` |
 | `internal/cli/testdata/unified_diff_vectors.json` | `python3 internal/cli/testdata/gen_unified_diff_vectors.py` |
 | `internal/cli/testdata/completion_vectors.json` | `python3 internal/cli/testdata/gen_completion_vectors.py` |
+| `internal/registry/testdata/targets_vectors.json` | `python3 internal/registry/testdata/gen_targets_vectors.py` |
 | `internal/cli/helptext/help.json` (embedded `--help` text) | `python3 internal/cli/helptext/gen_help.py`, then fix any marker `help_test.go` reports in `helpAnnotations` (`help.go`) |
 
 These were generated with one-off scripts that weren't kept. Regenerate by

@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"sync"
+	"unicode"
 )
 
 // IsWindows reports whether the current OS is Windows.
@@ -97,4 +98,91 @@ func IsDirectoryCaseSensitive(dir string) bool {
 	defer os.Remove(probe)
 	_, err := os.Stat(upper)
 	return err != nil
+}
+
+// DirectoryFoldsCase reports whether names in dir are matched
+// case-insensitively, without writing anything (unlike
+// IsDirectoryCaseSensitive). As in compat.py, Linux and other POSIX systems
+// are assumed case-sensitive. On macOS and Windows it checks whether dir
+// itself is reachable under a case-swapped name, falling back to the
+// platform default (case-insensitive) when dir's name has no letters.
+func DirectoryFoldsCase(dir string) bool {
+	if runtime.GOOS != "darwin" && !IsWindows() {
+		return false
+	}
+	for cur := filepath.Clean(dir); ; cur = filepath.Dir(cur) {
+		base := filepath.Base(cur)
+		swapped := swapCase(base)
+		if swapped != base {
+			a, err1 := os.Stat(cur)
+			b, err2 := os.Stat(filepath.Join(filepath.Dir(cur), swapped))
+			if err1 == nil {
+				return err2 == nil && os.SameFile(a, b)
+			}
+		}
+		if filepath.Dir(cur) == cur {
+			return true
+		}
+	}
+}
+
+func swapCase(s string) string {
+	r := []rune(s)
+	for i, c := range r {
+		if unicode.IsUpper(c) {
+			r[i] = unicode.ToLower(c)
+		} else if unicode.IsLower(c) {
+			r[i] = unicode.ToUpper(c)
+		}
+	}
+	return string(r)
+}
+
+// ResolvePath approximates pathlib.Path.resolve(strict=False): make the
+// path absolute (relative to the process's current working directory),
+// clean it, and resolve symlinks for as much of the path as exists on disk,
+// leaving any non-existent trailing components untouched.
+func ResolvePath(path string) (string, error) {
+	if !filepath.IsAbs(path) {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return "", err
+		}
+		path = filepath.Join(cwd, path)
+	}
+	path = filepath.Clean(path)
+
+	if resolved, err := filepath.EvalSymlinks(path); err == nil {
+		return resolved, nil
+	}
+
+	var trailing []string
+	cur := path
+	for {
+		if _, err := os.Lstat(cur); err == nil {
+			break
+		}
+		parent := filepath.Dir(cur)
+		if parent == cur {
+			return path, nil // nothing on this path exists at all
+		}
+		trailing = append([]string{filepath.Base(cur)}, trailing...)
+		cur = parent
+	}
+	resolvedBase, err := filepath.EvalSymlinks(cur)
+	if err != nil {
+		return path, nil
+	}
+	return filepath.Join(append([]string{resolvedBase}, trailing...)...), nil
+}
+
+// PhysicalPath is compat.py's get_physical_path. On POSIX that is
+// Path.resolve(strict=False). Windows' GetFinalPathNameByHandleW drive and
+// volume normalisation is not ported.
+func PhysicalPath(path string) string {
+	p, err := ResolvePath(path)
+	if err != nil {
+		return path
+	}
+	return p
 }

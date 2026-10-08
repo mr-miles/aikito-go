@@ -1,6 +1,8 @@
 package workspace
 
 import (
+	"github.com/mr-miles/aikito-go/internal/compat"
+
 	"os"
 	"path/filepath"
 	"runtime"
@@ -68,39 +70,7 @@ func ExpandUser(home, path string) string {
 // to home — Python's Path.resolve() behaves the same way), clean it, and
 // resolve symlinks for as much of the path as exists on disk, leaving any
 // non-existent trailing components untouched.
-func ResolvePath(path string) (string, error) {
-	if !filepath.IsAbs(path) {
-		cwd, err := os.Getwd()
-		if err != nil {
-			return "", err
-		}
-		path = filepath.Join(cwd, path)
-	}
-	path = filepath.Clean(path)
-
-	if resolved, err := filepath.EvalSymlinks(path); err == nil {
-		return resolved, nil
-	}
-
-	var trailing []string
-	cur := path
-	for {
-		if _, err := os.Lstat(cur); err == nil {
-			break
-		}
-		parent := filepath.Dir(cur)
-		if parent == cur {
-			return path, nil // nothing on this path exists at all
-		}
-		trailing = append([]string{filepath.Base(cur)}, trailing...)
-		cur = parent
-	}
-	resolvedBase, err := filepath.EvalSymlinks(cur)
-	if err != nil {
-		return path, nil
-	}
-	return filepath.Join(append([]string{resolvedBase}, trailing...)...), nil
-}
+func ResolvePath(path string) (string, error) { return compat.ResolvePath(path) }
 
 // ResolveWorkspaceWithSource mirrors workspace/paths.py
 // resolve_workspace_with_source: $AIKITO_DIR env var, else the persisted
