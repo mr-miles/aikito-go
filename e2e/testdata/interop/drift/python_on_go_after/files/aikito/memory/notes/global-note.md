@@ -1,0 +1,3 @@
+# Global note
+
+Remember this.

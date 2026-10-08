@@ -1,0 +1,161 @@
+$ () aikito status
+--- stdout
++---------+-------+--------+--------+---------+-------+------+--------+
+| Project | Instr | Skills | Memory | Context | Paths | Mode | Status |
++---------+-------+--------+--------+---------+-------+------+--------+
+| p1      | -     | 1      | 1      | ~1.6k   | 1/1   | link | v      |
+| p2      | 1L    | 2      | 0      | ~1.6k   | 1/1   | copy | v      |
+| p3      | -     | 0      | 0      | ~1.6k   | 1/1   | link | v      |
++---------+-------+--------+--------+---------+-------+------+--------+
+
+Global: v · Instr - · Skills 4 · Memory 1 · MCP 2 · Sub 2
+Consumers (2): claude · codex
+All in one workspace: ~/aikito (default)
+--- stderr
+--- exit 0
+$ () aikito diff --all
+--- stdout
+No drift detected.
+--- stderr
+--- exit 0
+$ () aikito show skills
+--- stdout
++----------------+--------+--------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Skill          | Scope  | Source | Description                                                                                                                                                                                                                                                           |
++----------------+--------+--------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| aikito         | Global | v      | Operate Aikito workspaces and resources, including reading inbox notes, managing memory, skills, projects, MCP servers, subagents, and synchronization.                                                                                                               |
+| alpha          | Global | v      | Alpha skill                                                                                                                                                                                                                                                           |
+| beta           | Global | v      | Beta skill                                                                                                                                                                                                                                                            |
+| durable-memory | Global | v      | Git-versioned memory stored in the Aikito workspace, separate from any Agent's built-in memory. Use to search, retrieve, or persist cross-project and project-scoped durable knowledge, historical decisions, user preferences, or verified architecture constraints. |
++----------------+--------+--------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+--- stderr
+--- exit 0
+$ () aikito show projects
+--- stdout
++---------+-------+--------+--------+---------+-------+------+--------+
+| Project | Instr | Skills | Memory | Context | Paths | Mode | Status |
++---------+-------+--------+--------+---------+-------+------+--------+
+| p1      | -     | 1      | 1      | ~1.6k   | 1/1   | link | v      |
+| p2      | 1L    | 2      | 0      | ~1.6k   | 1/1   | copy | v      |
+| p3      | -     | 0      | 0      | ~1.6k   | 1/1   | link | v      |
++---------+-------+--------+--------+---------+-------+------+--------+
+--- stderr
+--- exit 0
+$ () aikito show mcps
+--- stdout
++------------+-------------+-------+
+| MCP Server | Claude Code | Codex |
++------------+-------------+-------+
+| docs       | v           | v     |
+| http-s     | v           | -     |
++------------+-------------+-------+
+--- stderr
+--- exit 0
+$ () aikito show subagents
+--- stdout
++----------+-------------+-------+
+| Subagent | Claude Code | Codex |
++----------+-------------+-------+
+| helper   | v           | v     |
+| reviewer | v           | -     |
++----------+-------------+-------+
+--- stderr
+--- exit 0
+$ () aikito show inbox
+--- stdout
++------+------------------+
+| Name | Modified         |
++------+------------------+
+| idea | 2026-01-02 03:04 |
++------+------------------+
+--- stderr
+--- exit 0
+$ () aikito sync --dry-run
+--- stdout
+Sync plan
+
+  Changes:   0
+  Unchanged: 28
+  Offline:   0
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+--- stderr
+--- exit 0
+$ () aikito sync global --dry-run
+--- stdout
+[OK] Codex skills: shared path <HOME>/.agents/skills
+[OK] Claude Code skills: <HOME>/.claude/skills -> <HOME>/.agents/skills
+[OK] Claude Code instructions: <HOME>/.claude/CLAUDE.md -> <HOME>/aikito/global/AGENTS.md
+[OK] Codex instructions: <HOME>/.codex/AGENTS.md -> <HOME>/aikito/global/AGENTS.md
+[SUCCESS] Global resources synced successfully (4 skills, 1 instruction source, 2 Agent skill entries across 2 consumers).
+--- stderr
+--- exit 0
+$ () aikito sync mcp --dry-run
+--- stdout
+[OK] claude-code/docs: already synchronized
+[OK] claude-code/http-s: already synchronized
+[OK] codex/docs: already synchronized
+--- stderr
+--- exit 0
+$ () aikito sync subagents --dry-run
+--- stdout
+[INFO] Subagent synchronization plan (dry_run=True):
+  [OK] claude-code/helper
+  [OK] claude-code/reviewer
+  [OK] codex/helper
+[SUCCESS] Subagent synchronization plan completed (dry-run).
+--- stderr
+--- exit 0
+$ (p2) aikito sync project
+--- stdout
+[aikito] Target project: 'p2' (detected from cwd)
+[INFO] Syncing project 'p2' (mode: copy)
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[OK] Codex instructions: <HOME>/p2/AGENTS.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[SUCCESS] Project 'p2' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync
+--- stdout
+Sync plan
+
+  Changes:   0
+  Unchanged: 28
+  Offline:   0
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+[OK] Codex skills: shared path <HOME>/.agents/skills
+[OK] Claude Code skills: <HOME>/.claude/skills -> <HOME>/.agents/skills
+[OK] Claude Code instructions: <HOME>/.claude/CLAUDE.md -> <HOME>/aikito/global/AGENTS.md
+[OK] Codex instructions: <HOME>/.codex/AGENTS.md -> <HOME>/aikito/global/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[OK] Codex instructions: <HOME>/p1/AGENTS.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[OK] Codex instructions: <HOME>/p2/AGENTS.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p3/.claude/CLAUDE.md -> <HOME>/aikito/projects/p3/AGENTS.md
+[OK] Codex instructions: <HOME>/p3/AGENTS.md -> <HOME>/aikito/projects/p3/AGENTS.md
+
+[SUCCESS] Full workspace sync completed successfully.
+--- stderr
+--- exit 0
+$ () aikito status
+--- stdout
++---------+-------+--------+--------+---------+-------+------+--------+
+| Project | Instr | Skills | Memory | Context | Paths | Mode | Status |
++---------+-------+--------+--------+---------+-------+------+--------+
+| p1      | -     | 1      | 1      | ~1.6k   | 1/1   | link | v      |
+| p2      | 1L    | 2      | 0      | ~1.6k   | 1/1   | copy | v      |
+| p3      | -     | 0      | 0      | ~1.6k   | 1/1   | link | v      |
++---------+-------+--------+--------+---------+-------+------+--------+
+
+Global: v · Instr - · Skills 4 · Memory 1 · MCP 2 · Sub 2
+Consumers (2): claude · codex
+All in one workspace: ~/aikito (default)
+--- stderr
+--- exit 0

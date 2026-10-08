@@ -1,0 +1,20 @@
+{
+  "entries": {
+    "claude-code:docs": {
+      "config_path": "<HOME>/.claude.json",
+      "fingerprint": "ca38406b57403d56b4f274ab72df6c7bfeac0f9548c088dc4e1bfdd220af2d7d",
+      "target_name": "docs"
+    },
+    "claude-code:http-s": {
+      "config_path": "<HOME>/.claude.json",
+      "fingerprint": "ea53fe6067b9ee3a6b080dd3ba4d224d039338e9767bd3a365df6f1621dea9de",
+      "target_name": "http-s"
+    },
+    "codex:docs": {
+      "config_path": "<HOME>/.codex/config.toml",
+      "fingerprint": "2a2be174e61d1f3c95acf8f91c4e5d38481bcf98e09ec594dae96af455ff79cc",
+      "target_name": "docs"
+    }
+  },
+  "version": 1
+}

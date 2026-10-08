@@ -1,0 +1,3 @@
+transport = "remote"
+url = "https://docs.example.com/mcp"
+agents = ["claude-code", "codex"]
