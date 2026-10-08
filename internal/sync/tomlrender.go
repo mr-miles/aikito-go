@@ -21,6 +21,7 @@ import (
 
 	toml "github.com/pelletier/go-toml/v2"
 
+	"github.com/mr-miles/aikito-go/internal/compat"
 	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
@@ -184,23 +185,7 @@ func formatPyFloatStr(f float64) string {
 	if math.IsInf(f, -1) {
 		return "-inf"
 	}
-	s := strconv.FormatFloat(f, 'g', -1, 64)
-	if i := strings.IndexAny(s, "eE"); i >= 0 {
-		mantissa, exp := s[:i], s[i+1:]
-		sign := "+"
-		if len(exp) > 0 && (exp[0] == '+' || exp[0] == '-') {
-			sign = string(exp[0])
-			exp = exp[1:]
-		}
-		for len(exp) < 2 {
-			exp = "0" + exp
-		}
-		return mantissa + "e" + sign + exp
-	}
-	if !strings.ContainsRune(s, '.') {
-		s += ".0"
-	}
-	return s
+	return compat.PyFloatRepr(f)
 }
 
 // FormatTomlValue mirrors add.py's format_toml_value: used directly for

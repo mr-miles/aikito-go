@@ -64,6 +64,14 @@ time it was applied.
   original text. Date/time values must fingerprint as Python's
   `{"toml-type": ..., "value": str(x)}`, where `str(datetime)` uses a space,
   not `T`.
+- **Float printing.** Python's `repr(float)` switches to exponent notation
+  only for decimal exponents < -4 or >= 16 (`12500000000.0`, `1e+16`); Go's
+  `%g`/`'g'` switches earlier (`1.25e+10`). Use `compat.PyFloatRepr`. An
+  integer literal `-0` is Python's `0`.
+- **json.loads hooks run in scan order.** `parse_constant` fires when a
+  NaN/Infinity is read; `object_pairs_hook` when an object closes. Go's
+  decoder can't tell these apart, so `workspace.DecodeStrictJSON` is a small
+  recursive-descent parser returning `*ConstantError`/`*DuplicateKeyError`.
 - **`bytes.decode("utf-8", "replace")`** gives one U+FFFD per maximal
   invalid subpart; `strings.ToValidUTF8(s, "\uFFFD")` collapses a whole run
   into one. Use `compat.DecodeUTF8Replace`. (`errors="ignore"` is fine as
@@ -207,10 +215,6 @@ debugged locally; expect path-separator and `PATH` issues there first.
 - `init workspace` writes bundled skill files as 0644 (embedded files have
   no mode). Python's `copytree` copies the installed package's modes, which
   depend on how Aikito was installed, so vectors don't compare modes there.
-- `sync subagents` validates platform options at load (as Python does)
-  but `loadSubagentDefinitions` is otherwise simpler than
-  `load_subagent_definitions` (no unsupported-entry / missing-directory
-  errors).
 - `atomicUnlink` and `PendingKinds` have no callers in the write path yet. A
   few `compat` helpers are unused.
 - status/doctor/show read plans through `internal/cli/inspection.go`

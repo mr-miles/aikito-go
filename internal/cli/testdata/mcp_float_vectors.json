@@ -1,0 +1,62 @@
+[
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = 1.25e10\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": 12500000000.0\n    }\n  }\n}\n"
+ },
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = -1.25e10\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": -12500000000.0\n    }\n  }\n}\n"
+ },
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = 1.5e-05\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": 1.5e-05\n    }\n  }\n}\n"
+ },
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = 0.0001\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": 0.0001\n    }\n  }\n}\n"
+ },
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = 1e16\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": 1e+16\n    }\n  }\n}\n"
+ },
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = 9999999999999998.0\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": 9999999999999998.0\n    }\n  }\n}\n"
+ },
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = 2.5\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": 2.5\n    }\n  }\n}\n"
+ },
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = 123456789012345.6\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": 123456789012345.6\n    }\n  }\n}\n"
+ },
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = 3e-5\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": 3e-05\n    }\n  }\n}\n"
+ },
+ {
+  "toml": "agents = [\"opencode\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\n\n[overrides.opencode]\ntimeout = 100.0\n",
+  "exit": 0,
+  "file": "opencode.jsonc",
+  "content": "{\n  \"mcp\": {\n    \"num\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com/mcp\",\n      \"enabled\": true,\n      \"timeout\": 100.0\n    }\n  }\n}\n"
+ }
+]

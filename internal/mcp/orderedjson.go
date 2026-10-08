@@ -12,6 +12,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/mr-miles/aikito-go/internal/compat"
 )
 
 // OrderedObject is a JSON object that preserves Python dict semantics
@@ -348,23 +350,7 @@ func writeJSONStringPy(b *strings.Builder, s string) {
 }
 
 func formatPyFloat(f float64) string {
-	s := strconv.FormatFloat(f, 'g', -1, 64)
-	if i := strings.IndexAny(s, "eE"); i >= 0 {
-		mantissa, exp := s[:i], s[i+1:]
-		sign := "+"
-		if len(exp) > 0 && (exp[0] == '+' || exp[0] == '-') {
-			sign = string(exp[0])
-			exp = exp[1:]
-		}
-		for len(exp) < 2 {
-			exp = "0" + exp
-		}
-		return mantissa + "e" + sign + exp
-	}
-	if !strings.ContainsRune(s, '.') {
-		s += ".0"
-	}
-	return s
+	return compat.PyFloatRepr(f)
 }
 
 // --- Canonical compact sorted-key JSON (mcp/adapters/__init__.py's

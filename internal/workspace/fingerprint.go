@@ -16,6 +16,8 @@ import (
 	"time"
 
 	toml "github.com/pelletier/go-toml/v2"
+
+	"github.com/mr-miles/aikito-go/internal/compat"
 )
 
 // --- Ignored filesystem noise (workspace/resources.py IGNORED_NAMES / is_ignored_name) ---
@@ -94,6 +96,9 @@ func encodeCanonical(b *strings.Builder, v any) {
 	case json.Number:
 		s := string(x)
 		if !strings.ContainsAny(s, ".eE") {
+			if strings.Trim(s, "-0") == "" {
+				s = "0" // Python's int(-0) is 0
+			}
 			b.WriteString(s)
 		} else {
 			f, _ := x.Float64()
@@ -201,23 +206,7 @@ func formatPythonFloat(f float64) string {
 	if math.IsInf(f, -1) {
 		return "-Infinity"
 	}
-	s := strconv.FormatFloat(f, 'g', -1, 64)
-	if i := strings.IndexAny(s, "eE"); i >= 0 {
-		mantissa, exp := s[:i], s[i+1:]
-		sign := "+"
-		if len(exp) > 0 && (exp[0] == '+' || exp[0] == '-') {
-			sign = string(exp[0])
-			exp = exp[1:]
-		}
-		for len(exp) < 2 {
-			exp = "0" + exp
-		}
-		return mantissa + "e" + sign + exp
-	}
-	if !strings.ContainsRune(s, '.') {
-		s += ".0"
-	}
-	return s
+	return compat.PyFloatRepr(f)
 }
 
 // encodeJSONString replicates Python's json string escaping with

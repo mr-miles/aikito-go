@@ -119,6 +119,10 @@ diff.
 | `internal/cli/testdata/rm_usage_vectors.json` | `python3 internal/cli/testdata/gen_rm_usage_vectors.py` |
 | `internal/compat/testdata/utf8_replace_vectors.json` (CPython `decode("utf-8", "replace")`) | `python3 internal/compat/testdata/gen_utf8_replace_vectors.py` |
 | `internal/cli/testdata/diff_invalid_utf8/` | `python3 internal/cli/testdata/diff_invalid_utf8/gen.py` |
+| `internal/cli/testdata/subagent_load_error_vectors.json` | `python3 internal/cli/testdata/gen_subagent_load_errors.py` |
+| `internal/workspace/testdata/strictjson_vectors.json` (`json.loads` with strict hooks) | `python3 internal/workspace/testdata/gen_strictjson_vectors.py` |
+| `internal/compat/testdata/float_repr_vectors.json` (CPython `repr(float)`) | `python3 internal/compat/testdata/gen_float_repr_vectors.py` |
+| `internal/cli/testdata/mcp_float_vectors.json` | `python3 internal/cli/testdata/gen_mcp_float_vectors.py` |
 | `internal/cli/helptext/help.json` (embedded `--help` text) | `python3 internal/cli/helptext/gen_help.py`, then fix any marker `help_test.go` reports in `helpAnnotations` (`help.go`) |
 
 These were generated with one-off scripts that weren't kept. Regenerate by
