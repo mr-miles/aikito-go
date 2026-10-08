@@ -605,6 +605,18 @@
  ],
  "loopback": [
   [
+   "http://LOCALHOST:8080/mcp",
+   true
+  ],
+  [
+   "http://Foo.LocalHost/x",
+   true
+  ],
+  [
+   "http://LOCALHOST.evil.com/x",
+   false
+  ],
+  [
    "http://localhost/",
    true
   ],
@@ -694,6 +706,26 @@
   ]
  ],
  "has_sensitive_params": [
+  [
+   "https://a.example/x?token=",
+   false
+  ],
+  [
+   "https://a.example/x?token",
+   false
+  ],
+  [
+   "https://a.example/x?token=&page=2",
+   false
+  ],
+  [
+   "https://a.example/x?API_KEY=abc",
+   true
+  ],
+  [
+   "https://a.example/x?%74oken=abc",
+   true
+  ],
   [
    "https://x/?TOKEN=a",
    true
@@ -930,6 +962,22 @@
   ]
  ],
  "is_authorization_url": [
+  [
+   "https://idp.example/cb?CLIENT_ID=a&REDIRECT_URI=b",
+   true
+  ],
+  [
+   "https://idp.example/cb?client_id=&redirect_uri=b",
+   false
+  ],
+  [
+   "https://oauth@idp.example/cb",
+   true
+  ],
+  [
+   "https://user@idp.example/authorize",
+   true
+  ],
   [
    "https://auth.example.com/authorize?client_id=a",
    true

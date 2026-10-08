@@ -70,13 +70,32 @@ func hasSensitiveParameters(rawURL string) bool {
 	if err != nil {
 		return false
 	}
-	values := u.Query()
-	for key := range values {
-		if IsSensitiveURLParameter(strings.ToLower(key)) {
+	for key := range pythonQueryKeys(u.RawQuery) {
+		if IsSensitiveURLParameter(key) {
 			return true
 		}
 	}
 	return false
+}
+
+// pythonQueryKeys mirrors {key.lower() for key in parse_qs(query)} with
+// parse_qs's defaults: a bare key with no "=" or a key with an empty value
+// is dropped (keep_blank_values=False), so "?token=" and "?token" carry no
+// keys. url.Values keeps both, which would flag more than Python does.
+func pythonQueryKeys(rawQuery string) map[string]bool {
+	keys := map[string]bool{}
+	for _, part := range strings.Split(rawQuery, "&") {
+		name, value, found := strings.Cut(part, "=")
+		if !found || value == "" {
+			continue
+		}
+		decoded, err := url.QueryUnescape(name)
+		if err != nil {
+			decoded = name
+		}
+		keys[strings.ToLower(decoded)] = true
+	}
+	return keys
 }
 
 var envReferencePatterns = []*regexp.Regexp{
@@ -120,7 +139,8 @@ func IsLoopbackURL(rawURL string) bool {
 	if err != nil {
 		return false
 	}
-	host := u.Hostname()
+	// urlsplit().hostname lowercases; url.Hostname() does not.
+	host := strings.ToLower(u.Hostname())
 	if host == "" {
 		return false
 	}
@@ -301,14 +321,17 @@ func IsAuthorizationURL(rawURL string) bool {
 	if err != nil {
 		return false
 	}
-	location := strings.ToLower(u.Host + u.Path)
-	params := u.Query()
+	// Python checks netloc (which includes any user@ userinfo) + path.
+	netloc := u.Host
+	if u.User != nil {
+		netloc = u.User.String() + "@" + u.Host
+	}
+	location := strings.ToLower(netloc + u.Path)
 	if strings.Contains(location, "authorize") || strings.Contains(location, "oauth") {
 		return true
 	}
-	_, hasClientID := params["client_id"]
-	_, hasRedirectURI := params["redirect_uri"]
-	return hasClientID && hasRedirectURI
+	params := pythonQueryKeys(u.RawQuery)
+	return params["client_id"] && params["redirect_uri"]
 }
 
 // RedactSensitiveURLs mirrors _redact_sensitive_urls: replaces any URL

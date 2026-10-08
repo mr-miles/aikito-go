@@ -28,6 +28,8 @@ headers = [
     "Content-Type", "Accept", "X-Request-Id", "User-Agent", "authorisation", "X-Api", "Session", "Mcp-Session-Id", "",
 ]
 loopback = [
+    # case-insensitive host (urlsplit().hostname lowercases)
+    "http://LOCALHOST:8080/mcp", "http://Foo.LocalHost/x", "http://LOCALHOST.evil.com/x",
     "http://localhost/", "http://localhost:8080/mcp", "https://foo.localhost/x", "http://127.0.0.1:9/",
     "http://127.0.0.2/", "http://127.255.255.254/", "http://[::1]:9/", "http://[::1]/",
     "http://[::ffff:127.0.0.1]/",
@@ -37,6 +39,8 @@ loopback = [
     "mcp.example.com", "", "file:///tmp/x", "http:///nohost",
 ]
 qurls = [
+    # parse_qs drops blank-valued and bare keys
+    "https://a.example/x?token=", "https://a.example/x?token", "https://a.example/x?token=&page=2", "https://a.example/x?API_KEY=abc", "https://a.example/x?%74oken=abc",
     "https://x/?TOKEN=a", "https://x/?a=1&token=2", "https://x/?api-key=z", "https://x/?page=2&limit=5",
     "https://x/cb?code=abc&state=xyz", "https://x/", "https://x/?author=me", "https://x/?X-Amz-Signature=deadbeef",
 ]
@@ -68,6 +72,8 @@ texts = [
     "two: https://a.example.com/?token=1 https://b.example.com/?page=1",
 ]
 authz = [
+    # case of query keys, blank values, and userinfo in netloc
+    "https://idp.example/cb?CLIENT_ID=a&REDIRECT_URI=b", "https://idp.example/cb?client_id=&redirect_uri=b", "https://oauth@idp.example/cb", "https://user@idp.example/authorize",
     "https://auth.example.com/authorize?client_id=a",
     "https://accounts.example.com/o/oauth2/auth?client_id=a",
     "https://example.com/cb?client_id=a&redirect_uri=b",
