@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
@@ -39,6 +41,9 @@ func cmdEdit(args []string, stdout, stderr io.Writer, env Environment) int {
 		return 1
 	}
 
+	if kind == "instructions" {
+		return cmdEditInstructions(aikitoDir, rest, stdout, stderr, env)
+	}
 	var target string
 	if len(rest) > 0 {
 		target = rest[0]
@@ -56,8 +61,6 @@ func cmdEdit(args []string, stdout, stderr io.Writer, env Environment) int {
 		path, err = resolveEditInboxPath(aikitoDir, target, stderr)
 	case "memory":
 		path, err = resolveEditMemoryPath(aikitoDir, target, stderr)
-	case "instructions":
-		path, err = resolveEditInstructionsPath(aikitoDir, target, stderr)
 	default:
 		fmt.Fprintf(stderr, "[ERROR] Unknown edit target: %s\n", kind)
 		return 2
@@ -69,12 +72,118 @@ func cmdEdit(args []string, stdout, stderr io.Writer, env Environment) int {
 		return 1
 	}
 
-	code, launchErr := launchEditor(path, env)
+	return openInEditor(path, env, stdout, stderr)
+}
+
+// openInEditor is resolve.py's open_in_editor: run the editor and exit with
+// its status.
+func openInEditor(path string, env Environment, stdout, stderr io.Writer) int {
+	code, editor, launchErr := launchEditor(path, env, stdout, stderr)
 	if launchErr != nil {
-		fmt.Fprintf(stderr, "[ERROR] Failed to launch editor: %v\n", launchErr)
+		fmt.Fprintf(stderr, "[ERROR] Failed to launch editor '%s': %s\n", editor, pyLaunchError(launchErr, editor))
 		return 1
 	}
 	return code
+}
+
+// pyLaunchError renders a failed process launch the way Python's OSError
+// does, e.g. "[Errno 2] No such file or directory: 'vi'".
+func pyLaunchError(err error, command string) string {
+	name := command
+	if parts := splitCommand(command); len(parts) > 0 {
+		name = parts[0]
+	}
+	switch {
+	case errors.Is(err, exec.ErrNotFound), errors.Is(err, os.ErrNotExist):
+		return fmt.Sprintf("[Errno 2] No such file or directory: '%s'", name)
+	case errors.Is(err, os.ErrPermission):
+		return fmt.Sprintf("[Errno 13] Permission denied: '%s'", name)
+	}
+	return err.Error()
+}
+
+// cmdEditInstructions ports cli.py cmd_edit_instructions: with no target,
+// the project containing the current directory, else global.
+func cmdEditInstructions(aikitoDir string, args []string, stdout, stderr io.Writer, env Environment) int {
+	parsed, ok := parseArgparseOpts("edit instructions", args, nil, nil, nil, 1, stderr)
+	if !ok {
+		return 2
+	}
+	target := ""
+	if len(parsed.positionals) > 0 {
+		target = parsed.positionals[0]
+	} else {
+		detected, derr := project.DetectCurrentProject(aikitoDir, env.Cwd, env.Home)
+		var conflict *project.ContextConflictError
+		if errors.As(derr, &conflict) {
+			fmt.Fprintf(stderr, "[CONFLICT] Multiple projects match current directory '%s': %s\n", conflict.Path, strings.Join(conflict.Projects, ", "))
+			return 1
+		}
+		if detected != "" {
+			fmt.Fprintf(stdout, "[aikito] Target project: '%s' (detected from cwd)\n", detected)
+			target = detected
+		} else {
+			target = "global"
+		}
+	}
+	path, code := resolveInstructionTarget(aikitoDir, env, target, stderr)
+	if code != 0 {
+		return code
+	}
+	return openInEditor(path, env, stdout, stderr)
+}
+
+// resolveInstructionTarget is resolve.py's resolve_instruction_target
+// (exit code 1 instead of sys.exit).
+func resolveInstructionTarget(aikitoDir string, env Environment, target string, stderr io.Writer) (string, int) {
+	if target == "." {
+		detected, derr := project.DetectCurrentProject(aikitoDir, env.Cwd, env.Home)
+		var conflict *project.ContextConflictError
+		if errors.As(derr, &conflict) {
+			fmt.Fprintf(stderr, "[CONFLICT] Multiple projects match current directory '%s': %s\n", conflict.Path, strings.Join(conflict.Projects, ", "))
+			return "", 1
+		}
+		if detected == "" {
+			cwd, rerr := workspace.ResolvePath(env.Cwd)
+			if rerr != nil {
+				cwd = env.Cwd
+			}
+			fmt.Fprintf(stderr, "[ERROR] Current directory is not inside a registered project: %s\n", cwd)
+			return "", 1
+		}
+		return filepath.Join(aikitoDir, "projects", detected, "AGENTS.md"), 0
+	}
+	if target == "global" {
+		return filepath.Join(aikitoDir, "global", "AGENTS.md"), 0
+	}
+	// find_instruction_sources: project directories with a readable agent.toml
+	// (every unreadable one is reported, whatever the target).
+	found := ""
+	entries, _ := os.ReadDir(filepath.Join(aikitoDir, "projects"))
+	for _, e := range entries {
+		dir := filepath.Join(aikitoDir, "projects", e.Name())
+		cfg := filepath.Join(dir, "agent.toml")
+		if !isDir(dir) || !isRegularFile(cfg) {
+			continue
+		}
+		raw, err := os.ReadFile(cfg)
+		if err == nil {
+			_, err = workspace.DecodeTOML(raw)
+		}
+		if err != nil {
+			fmt.Fprintf(stderr, "[WARN] Failed to read %s: %v\n", cfg, err)
+			continue
+		}
+		if e.Name() == target && found == "" {
+			found = filepath.Join(dir, "AGENTS.md")
+		}
+	}
+	if found != "" {
+		return found, 0
+	}
+	fmt.Fprintf(stderr, "[ERROR] Instructions target '%s' not found.\n", target)
+	fmt.Fprintln(stderr, "Run 'aikito show instructions' to view available targets.")
+	return "", 1
 }
 
 // errAlreadyReported marks a resolution failure whose message was already
@@ -200,16 +309,6 @@ func resolveEditMemoryPath(aikitoDir, target string, stderr io.Writer) (string, 
 // resolveEditInstructionsPath mirrors cmd_edit_instructions, simplified: a
 // missing target defaults straight to "global" rather than first trying
 // detect_current_project(cwd) — see the package-level doc comment.
-func resolveEditInstructionsPath(aikitoDir, target string, stderr io.Writer) (string, error) {
-	if target == "" || target == "global" {
-		return filepath.Join(aikitoDir, "global", "AGENTS.md"), nil
-	}
-	if _, err := os.Stat(filepath.Join(aikitoDir, "projects", target, "agent.toml")); err != nil {
-		return "", fmt.Errorf("Instructions target '%s' not found.", target)
-	}
-	return filepath.Join(aikitoDir, "projects", target, "AGENTS.md"), nil
-}
-
 // launchEditor resolves $VISUAL/$EDITOR (falling back to "vi" on POSIX,
 // "notepad" on Windows — compat.py's get_default_editor) via env.Env
 // rather than a direct os.Getenv, splits it the way a shell would
@@ -220,7 +319,7 @@ func resolveEditInstructionsPath(aikitoDir, target string, stderr io.Writer) (st
 // inherits file descriptors by default. The actual subprocess launch is a
 // package variable (runEditorProcess) so tests can substitute a fake
 // without spawning a real interactive process.
-func launchEditor(path string, env Environment) (int, error) {
+func launchEditor(path string, env Environment, stdout, stderr io.Writer) (int, string, error) {
 	editor := strings.TrimSpace(env.Env.Getenv("VISUAL"))
 	if editor == "" {
 		editor = strings.TrimSpace(env.Env.Getenv("EDITOR"))
@@ -233,7 +332,8 @@ func launchEditor(path string, env Environment) (int, error) {
 		parts = []string{editor}
 	}
 	cmdArgs := append(append([]string(nil), parts...), path)
-	return runEditorProcess(cmdArgs)
+	code, err := runEditorProcess(cmdArgs, stdout, stderr)
+	return code, editor, err
 }
 
 func defaultEditorName() string {
@@ -244,11 +344,13 @@ func defaultEditorName() string {
 }
 
 // runEditorProcess is the real subprocess launch; overridable in tests.
-var runEditorProcess = func(cmdArgs []string) (int, error) {
+// The editor writes to the command's own stdout/stderr, which are the real
+// terminal when run from main.
+var runEditorProcess = func(cmdArgs []string, stdout, stderr io.Writer) (int, error) {
 	cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
 	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	cmd.Stdout = stdout
+	cmd.Stderr = stderr
 	err := cmd.Run()
 	if err == nil {
 		return 0, nil

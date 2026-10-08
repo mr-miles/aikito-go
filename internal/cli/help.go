@@ -29,13 +29,11 @@ const notImplementedNote = "  (not implemented in this build)"
 // of that path's help text (help_test.go enforces it, so an upstream
 // wording change can't silently drop a note).
 var helpAnnotations = map[string][]string{
-	"":                  {"    web                 Start the read-only local Web Console"},
-	"web":               {"usage: aikito web "},
-	"version":           {"  -c, --check  ", "  --force      "},
-	"diff":              {"    project             "},
-	"diff project":      {"usage: aikito diff project"},
-	"edit instructions": {"  target      global, a project name, or . for the current project"},
-	"maintain memory":   {"  target         global, a project name, or . for the current project"},
+	"":             {"    web                 Start the read-only local Web Console"},
+	"web":          {"usage: aikito web "},
+	"version":      {"  -c, --check  ", "  --force      "},
+	"diff":         {"    project             "},
+	"diff project": {"usage: aikito diff project"},
 }
 
 // helpFor returns the help text for a command path ("" for the root), with

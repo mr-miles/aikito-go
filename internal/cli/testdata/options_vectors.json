@@ -3370,6 +3370,816 @@
    }
   ]
  },
+ "edit_instructions_conflict": {
+  "expect": [
+   {
+    "args": [
+     "edit",
+     "instructions"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Multiple projects match current directory 'H/q1': q1, q2\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "q1"
+   },
+   {
+    "content": "name = \"q1\"\npath = \"~/q1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/q1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/q1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/q1/memory/notes"
+   },
+   {
+    "content": "name = \"q2\"\npath = \"~/q1\"\n",
+    "op": "write",
+    "path": "aikito/projects/q2/agent.toml"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions"
+    ],
+    "cwd": "q1",
+    "env": {
+     "EDITOR": "echo"
+    },
+    "op": "run"
+   }
+  ]
+ },
+ "edit_instructions_targets": {
+  "expect": [
+   {
+    "args": [
+     "edit",
+     "instructions"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[aikito] Target project: 'p1' (detected from cwd)\nH/aikito/projects/p1/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "H/aikito/global/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "."
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Current directory is not inside a registered project: H/outside\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "."
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "H/aikito/projects/p1/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "p2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "H/aikito/projects/p2/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "H/aikito/global/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "nope"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Instructions target 'nope' not found.\nRun 'aikito show instructions' to view available targets.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "p2"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "p2"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Failed to launch editor 'no-such-editor-xyz --flag': [Errno 2] No such file or directory: 'no-such-editor-xyz'\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "zz"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Instructions target 'zz' not found.\nRun 'aikito show instructions' to view available targets.\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "content": "[agents.rt]\ndisplay_name = \"Runner Test\"\n\n[agents.rt.runner]\ncommand = [\"sh\", \"-c\", \"pwd -P; echo scope={scope}; echo mem={memory_dir}; echo work=$RT_WORK; echo braces={{x}}\"]\nenv = { RT_WORK = \"{workdir}\" }\n",
+    "op": "write",
+    "path": "aikito/agents/rt.toml"
+   },
+   {
+    "content": "[agents.bad]\ndisplay_name = \"Bad\"\n\n[agents.bad.runner]\ncommand = [\"echo\", \"{nope}\"]\n",
+    "op": "write",
+    "path": "aikito/agents/bad.toml"
+   },
+   {
+    "content": "[agents.norun]\ndisplay_name = \"No Runner\"\n",
+    "op": "write",
+    "path": "aikito/agents/norun.toml"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions"
+    ],
+    "cwd": "p1/sub",
+    "env": {
+     "EDITOR": "echo"
+    },
+    "op": "run"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions"
+    ],
+    "cwd": "outside",
+    "env": {
+     "EDITOR": "echo"
+    },
+    "op": "run"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "."
+    ],
+    "cwd": "outside",
+    "env": {
+     "EDITOR": "echo"
+    },
+    "op": "run"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "."
+    ],
+    "cwd": "p1",
+    "env": {
+     "EDITOR": "echo"
+    },
+    "op": "run"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "p2"
+    ],
+    "env": {
+     "EDITOR": "echo"
+    },
+    "op": "run"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "global"
+    ],
+    "env": {
+     "EDITOR": "echo"
+    },
+    "op": "run"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "nope"
+    ],
+    "env": {
+     "EDITOR": "echo"
+    },
+    "op": "run"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "p2"
+    ],
+    "env": {
+     "EDITOR": "false"
+    },
+    "op": "run"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "p2"
+    ],
+    "env": {
+     "EDITOR": "no-such-editor-xyz --flag"
+    },
+    "op": "run"
+   },
+   {
+    "content": "zz\n",
+    "op": "write",
+    "path": "aikito/projects/zz/AGENTS.md"
+   },
+   {
+    "args": [
+     "edit",
+     "instructions",
+     "zz"
+    ],
+    "env": {
+     "EDITOR": "echo"
+    },
+    "op": "run"
+   }
+  ]
+ },
+ "maintain_memory_conflict": {
+  "expect": [
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "q1",
+     "--agent",
+     "codex"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Agent 'codex' not found in H/aikito/agents/codex.toml\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Current directory 'H/q1' belongs to multiple projects: q1, q2\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "q1"
+   },
+   {
+    "content": "name = \"q1\"\npath = \"~/q1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/q1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/q1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/q1/memory/notes"
+   },
+   {
+    "content": "name = \"q2\"\npath = \"~/q1\"\n",
+    "op": "write",
+    "path": "aikito/projects/q2/agent.toml"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "q1",
+     "--agent",
+     "codex"
+    ],
+    "cwd": "q1",
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory"
+    ],
+    "cwd": "q1",
+    "op": "run"
+   }
+  ]
+ },
+ "maintain_memory_targets": {
+  "expect": [
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "--agent",
+     "rt"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "H/p1\nscope=p1\nmem=H/aikito/projects/p1/memory\nwork=H/p1\nbraces={x}\n"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     ".",
+     "--agent=rt"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "H/p1\nscope=p1\nmem=H/aikito/projects/p1/memory\nwork=H/p1\nbraces={x}\n"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "--agent",
+     "rt"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Current directory is not inside a registered project: H/outside\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "global",
+     "--agent",
+     "rt"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "H/aikito\nscope=global\nmem=H/aikito/memory\nwork=H/aikito\nbraces={x}\n"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "rt"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "H/p2\nscope=p2\nmem=H/aikito/projects/p2/memory\nwork=H/p2\nbraces={x}\n"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "nope",
+     "--agent",
+     "rt"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Memory scope 'nope' not found\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "bad"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Invalid runner placeholder: 'nope'\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "norun"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Agent 'norun' has no runner configuration in H/aikito/agents/norun.toml\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "missing-agent"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Agent 'missing-agent' not found in H/aikito/agents/missing-agent.toml\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "claude-code"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Failed to launch Agent 'claude-code': [Errno 2] No such file or directory: 'claude'\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito maintain memory [-h] [--agent AGENT] [target]\naikito maintain memory: error: argument --agent: expected one argument\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "rt"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Project 'p2' is registered but has no memory scope: H/aikito/projects/p2/memory\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p3",
+     "--agent",
+     "rt"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Project 'p3' is offline on this host\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p4",
+     "--agent",
+     "rt"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Project path is missing in H/aikito/projects/p4/agent.toml\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "content": "[agents.rt]\ndisplay_name = \"Runner Test\"\n\n[agents.rt.runner]\ncommand = [\"sh\", \"-c\", \"pwd -P; echo scope={scope}; echo mem={memory_dir}; echo work=$RT_WORK; echo braces={{x}}\"]\nenv = { RT_WORK = \"{workdir}\" }\n",
+    "op": "write",
+    "path": "aikito/agents/rt.toml"
+   },
+   {
+    "content": "[agents.bad]\ndisplay_name = \"Bad\"\n\n[agents.bad.runner]\ncommand = [\"echo\", \"{nope}\"]\n",
+    "op": "write",
+    "path": "aikito/agents/bad.toml"
+   },
+   {
+    "content": "[agents.norun]\ndisplay_name = \"No Runner\"\n",
+    "op": "write",
+    "path": "aikito/agents/norun.toml"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "--agent",
+     "rt"
+    ],
+    "cwd": "p1/sub",
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     ".",
+     "--agent=rt"
+    ],
+    "cwd": "p1",
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "--agent",
+     "rt"
+    ],
+    "cwd": "outside",
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "global",
+     "--agent",
+     "rt"
+    ],
+    "cwd": "outside",
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "rt"
+    ],
+    "cwd": "outside",
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "nope",
+     "--agent",
+     "rt"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "bad"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "norun"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "missing-agent"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "claude-code"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/projects/p2/memory"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p2",
+     "--agent",
+     "rt"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/gone\"\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p3",
+     "--agent",
+     "rt"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "name = \"p4\"\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "args": [
+     "maintain",
+     "memory",
+     "p4",
+     "--agent",
+     "rt"
+    ],
+    "op": "run"
+   }
+  ]
+ },
  "rm_skill_aikito_project": {
   "expect": [
    {
@@ -3617,7 +4427,7 @@
      "D p2/.agents",
      "D p2/.agents/memory",
      "D p2/.agents/skills",
-     "F .local/state/aikito/project-skills/8c1a8eb338344ab3b44c6cc26d2cb1fab35ea07533847e267e691625f2df47c2.json 600",
+     "F .local/state/aikito/project-skills/df0674cdb2ac5215b635bc929c4867d1e8a2ba7bfaf2c71eec9905884f37fd65.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/cs/SKILL.md",
      "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
@@ -3902,7 +4712,7 @@
      "D p2/.agents",
      "D p2/.agents/memory",
      "D p2/.agents/skills",
-     "F .local/state/aikito/project-skills/b8cf2c6a50549091814322ae0b792312a34e44e3664ef99e65cb4a9e1828ad64.json 600",
+     "F .local/state/aikito/project-skills/0b7e395673f9b6335e9a61fa7484a8f842bd032fbea0c9f49002fc951fa89cc5.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/cs/SKILL.md",
      "L .agents/skills/aikito -> H/aikito/skills/aikito",
@@ -4118,7 +4928,7 @@
      "D p2/.agents",
      "D p2/.agents/memory",
      "D p2/.agents/skills",
-     "F .local/state/aikito/project-skills/66a7e3b4a0cf7ab16c3aa443af4ed2243a35c4d2b59a6b361e2c66c0feaf5150.json 600",
+     "F .local/state/aikito/project-skills/c239095dd629f92bbec0fe3d2ff489faaa8a6fee300f9310b0514704cc2a545d.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/cs/SKILL.md",
      "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
@@ -4234,7 +5044,7 @@
      "D p2/.agents",
      "D p2/.agents/memory",
      "D p2/.agents/skills",
-     "F .local/state/aikito/project-skills/66a7e3b4a0cf7ab16c3aa443af4ed2243a35c4d2b59a6b361e2c66c0feaf5150.json 600",
+     "F .local/state/aikito/project-skills/c239095dd629f92bbec0fe3d2ff489faaa8a6fee300f9310b0514704cc2a545d.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/cs/SKILL.md",
      "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",

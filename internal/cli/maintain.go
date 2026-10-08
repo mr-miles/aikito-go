@@ -1,11 +1,13 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/mr-miles/aikito-go/internal/project"
@@ -23,187 +25,226 @@ func cmdMaintain(args []string, stdout, stderr io.Writer, env Environment) int {
 	return cmdMaintainMemory(args[1:], stdout, stderr, env)
 }
 
-// cmdMaintainMemory ports maintain.py's run_memory_maintenance: resolve a
-// memory scope (global or a named project), build the confirmation-gated
-// maintenance prompt, resolve the configured agent's runner command, and
-// launch it as a real interactive subprocess (stdio inherited from the
-// real process, like edit.go's editor launch — this spawns a coding agent
-// the user interacts with directly, not something the Environment's
-// injected writers can meaningfully capture).
-//
-// NOT ported: target "." (the default) resolving via resolve.py's
-// detect_current_project, which matches the process's current working
-// directory against every registered project's active path candidates.
-// That function isn't built anywhere in this Go port yet. A bare `aikito
-// maintain memory` (or an explicit ".") prints a clear error asking for an
-// explicit scope ("global" or a project name) instead of silently guessing
-// or crashing on a nil lookup.
+// cmdMaintainMemory ports cli.py cmd_maintain_memory and maintain.py
+// run_memory_maintenance: resolve a memory scope (global, a project name, or
+// "." for the project containing the current directory), then launch the
+// configured Agent runner with the maintenance prompt. The runner inherits
+// the command's stdin/stdout/stderr (the terminal when run from main).
 func cmdMaintainMemory(args []string, stdout, stderr io.Writer, env Environment) int {
-	target := "."
-	agentName := "codex"
-	for i := 0; i < len(args); i++ {
-		a := args[i]
-		switch {
-		case a == "--agent":
-			i++
-			if i >= len(args) {
-				fmt.Fprintln(stderr, "[ERROR] --agent requires a value")
-				return 2
-			}
-			agentName = args[i]
-		case strings.HasPrefix(a, "--agent="):
-			agentName = strings.TrimPrefix(a, "--agent=")
-		case strings.HasPrefix(a, "-"):
-			fmt.Fprintf(stderr, "[ERROR] Unknown flag: %s\n", a)
-			return 2
-		default:
-			target = a
-		}
+	parsed, ok := parseArgparseOpts("maintain memory", args, nil, []string{"--agent"}, nil, 1, stderr)
+	if !ok {
+		return 2
 	}
-
+	target := "."
+	if len(parsed.positionals) > 0 {
+		target = parsed.positionals[0]
+	}
+	agentName := "codex"
+	if a, ok := parsed.values["--agent"]; ok {
+		agentName = a
+	}
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
 	}
-	if msg := checkWorkspaceInitialized(aikitoDir); msg != "" {
-		fmt.Fprintf(stderr, "[ERROR] %s\n", msg)
+	if err := requireLayoutLikePython(aikitoDir); err != nil {
+		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
 	}
-
-	if target == "." {
-		fmt.Fprintln(stderr, "[ERROR] Current-directory project detection (resolve.py's detect_current_project) "+
-			"is not yet implemented in this Go build; pass an explicit scope: 'global' or a registered project name.")
+	code, err := runMemoryMaintenance(aikitoDir, target, agentName, env, stdout, stderr)
+	if err != nil {
+		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
 	}
+	return code
+}
 
+func runMemoryMaintenance(aikitoDir, target, agentName string, env Environment, stdout, stderr io.Writer) (int, error) {
 	scopeName, memoryDir, workdir, err := resolveMemoryMaintenanceScope(aikitoDir, env.Home, target, env.Cwd)
 	if err != nil {
-		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
-		return 1
+		return 0, err
 	}
+	prompt := buildMemoryMaintenancePrompt(scopeName, memoryDir)
 
+	configPath := filepath.Join(aikitoDir, "agents", agentName+".toml")
 	agentDef, err := registry.LoadAgentDefinition(aikitoDir, env.Home, agentName)
 	if err != nil {
-		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
-		return 1
+		return 0, err
 	}
 	if agentDef.Runner == nil {
-		fmt.Fprintf(stderr, "[ERROR] Agent '%s' has no runner configuration in %s\n",
-			agentName, filepath.Join(aikitoDir, "agents", agentName+".toml"))
-		return 1
+		return 0, fmt.Errorf("Agent '%s' has no runner configuration in %s", agentName, configPath)
 	}
-
-	prompt := buildMemoryMaintenancePrompt(scopeName, memoryDir)
-	values := map[string]string{
-		"prompt":     prompt,
-		"scope":      scopeName,
-		"workdir":    workdir,
-		"memory_dir": memoryDir,
-	}
-
+	values := map[string]string{"prompt": prompt, "scope": scopeName, "workdir": workdir, "memory_dir": memoryDir}
 	command := make([]string, len(agentDef.Runner.Command))
 	for i, part := range agentDef.Runner.Command {
-		command[i] = substitutePlaceholders(part, values)
+		if command[i], err = pyFormatMap(part, values); err != nil {
+			return 0, fmt.Errorf("Invalid runner placeholder: %v", err)
+		}
+	}
+	processEnv := os.Environ()
+	envKeys := make([]string, 0, len(agentDef.Runner.Env))
+	for k := range agentDef.Runner.Env {
+		envKeys = append(envKeys, k)
+	}
+	sort.Strings(envKeys)
+	for _, k := range envKeys {
+		v, ferr := pyFormatMap(agentDef.Runner.Env[k], values)
+		if ferr != nil {
+			return 0, fmt.Errorf("Invalid runner placeholder: %v", ferr)
+		}
+		processEnv = append(processEnv, k+"="+v)
 	}
 	if len(command) == 0 {
-		fmt.Fprintf(stderr, "[ERROR] Agent '%s' has an empty runner command\n", agentName)
-		return 1
+		return 0, fmt.Errorf("Failed to launch Agent '%s': list index out of range", agentName)
 	}
-
-	processEnv := os.Environ()
-	for k, v := range agentDef.Runner.Env {
-		processEnv = append(processEnv, k+"="+substitutePlaceholders(v, values))
-	}
-
 	cmd := exec.Command(command[0], command[1:]...)
 	cmd.Dir = workdir
 	cmd.Env = processEnv
 	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	cmd.Stdout = stdout
+	cmd.Stderr = stderr
 	if err := cmd.Run(); err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			return exitErr.ExitCode()
+			return exitErr.ExitCode(), nil
 		}
-		fmt.Fprintf(stderr, "[ERROR] Failed to launch Agent '%s': %v\n", agentName, err)
-		return 1
+		return 0, fmt.Errorf("Failed to launch Agent '%s': %s", agentName, pyLaunchError(err, command[0]))
 	}
-	return 0
+	return 0, nil
 }
 
-// resolveMemoryMaintenanceScope mirrors resolve_memory_maintenance_scope
-// for the "global" and named-project cases (the "." case is handled, and
-// rejected, by the caller before this is reached).
+// pyFormatMap is str.format_map for plain {name} fields, with "{{" and
+// "}}" escapes. Errors read like Python's KeyError / ValueError text.
+func pyFormatMap(s string, values map[string]string) (string, error) {
+	var b strings.Builder
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		switch {
+		case c == '{' && i+1 < len(s) && s[i+1] == '{':
+			b.WriteByte('{')
+			i++
+		case c == '}' && i+1 < len(s) && s[i+1] == '}':
+			b.WriteByte('}')
+			i++
+		case c == '}':
+			return "", fmt.Errorf("Single '}' encountered in format string")
+		case c == '{':
+			end := strings.IndexByte(s[i:], '}')
+			if end < 0 {
+				return "", fmt.Errorf("expected '}' before end of string")
+			}
+			field := s[i+1 : i+end]
+			v, ok := values[field]
+			if !ok {
+				return "", fmt.Errorf("'%s'", field)
+			}
+			b.WriteString(v)
+			i += end
+		default:
+			b.WriteByte(c)
+		}
+	}
+	return b.String(), nil
+}
+
+type loadedMaintenanceProject struct {
+	name, memoryDir, configPath string
+	activePaths                 []string
+	hasCandidates               bool
+}
+
+// resolveMemoryMaintenanceScope ports maintain.py's
+// resolve_memory_maintenance_scope.
 func resolveMemoryMaintenanceScope(aikitoDir, home, target, cwd string) (scopeName, memoryDir, workdir string, err error) {
+	resolve := func(p string) string {
+		if r, rerr := workspace.ResolvePath(p); rerr == nil {
+			return r
+		}
+		return p
+	}
 	if target == "global" {
 		dir := filepath.Join(aikitoDir, "memory")
-		info, statErr := os.Stat(dir)
-		if statErr != nil || !info.IsDir() {
-			return "", "", "", fmt.Errorf("global memory scope not found: %s", dir)
+		if !isDir(dir) {
+			return "", "", "", fmt.Errorf("Global memory scope not found: %s", dir)
 		}
-		return "global", dir, aikitoDir, nil
+		return "global", resolve(dir), resolve(aikitoDir), nil
+	}
+	projectsDir := filepath.Join(aikitoDir, "projects")
+	if !isDir(projectsDir) {
+		return "", "", "", fmt.Errorf("No registered projects found")
+	}
+	var projects []loadedMaintenanceProject
+	entries, _ := os.ReadDir(projectsDir)
+	for _, e := range entries {
+		dir := filepath.Join(projectsDir, e.Name())
+		cfgPath := filepath.Join(dir, "agent.toml")
+		if !isDir(dir) || !isRegularFile(cfgPath) {
+			continue
+		}
+		raw, rerr := os.ReadFile(cfgPath)
+		var cfg map[string]any
+		if rerr == nil {
+			cfg, rerr = workspace.DecodeTOML(raw)
+		}
+		if rerr != nil {
+			return "", "", "", fmt.Errorf("Failed to read %s: %v", cfgPath, rerr)
+		}
+		binding := project.ResolveProjectBinding(cfg, home)
+		lp := loadedMaintenanceProject{name: e.Name(), memoryDir: resolve(filepath.Join(dir, "memory")),
+			configPath: cfgPath, hasCandidates: len(binding.Entries) > 0}
+		for _, a := range binding.ActiveEntries() {
+			lp.activePaths = append(lp.activePaths, a.ResolvedPath)
+		}
+		projects = append(projects, lp)
 	}
 
-	projectDir := filepath.Join(aikitoDir, "projects", target)
-	configPath := filepath.Join(projectDir, "agent.toml")
-	if info, statErr := os.Stat(configPath); statErr != nil || !info.Mode().IsRegular() {
-		return "", "", "", fmt.Errorf("memory scope '%s' not found", target)
-	}
-	data, rerr := os.ReadFile(configPath)
-	if rerr != nil {
-		return "", "", "", fmt.Errorf("failed to read %s: %w", configPath, rerr)
-	}
-	config, derr := workspace.DecodeTOML(data)
-	if derr != nil {
-		return "", "", "", fmt.Errorf("failed to read %s: %w", configPath, derr)
+	if target == "." {
+		detected, derr := project.DetectCurrentProject(aikitoDir, cwd, home)
+		var conflict *project.ContextConflictError
+		if errors.As(derr, &conflict) {
+			return "", "", "", fmt.Errorf("Current directory '%s' belongs to multiple projects: %s", conflict.Path, strings.Join(conflict.Projects, ", "))
+		}
+		if detected == "" {
+			return "", "", "", fmt.Errorf("Current directory is not inside a registered project: %s", resolve(cwd))
+		}
+		target = detected
 	}
 
-	memDir := filepath.Join(projectDir, "memory")
-	info, statErr := os.Stat(memDir)
-	if statErr != nil || !info.IsDir() {
-		return "", "", "", fmt.Errorf("project '%s' is registered but has no memory scope: %s", target, memDir)
+	for _, p := range projects {
+		if p.name != target {
+			continue
+		}
+		if !p.hasCandidates {
+			return "", "", "", fmt.Errorf("Project path is missing in %s", p.configPath)
+		}
+		if len(p.activePaths) == 0 {
+			return "", "", "", fmt.Errorf("Project '%s' is offline on this host", p.name)
+		}
+		work := bestCwdMatch(resolve(cwd), p.activePaths)
+		if work == "" {
+			if len(p.activePaths) != 1 {
+				return "", "", "", fmt.Errorf("Project '%s' has multiple local paths; run this command from one of them: %s", p.name, strings.Join(p.activePaths, ", "))
+			}
+			work = p.activePaths[0]
+		}
+		if !isDir(p.memoryDir) {
+			return "", "", "", fmt.Errorf("Project '%s' is registered but has no memory scope: %s", p.name, p.memoryDir)
+		}
+		return p.name, p.memoryDir, work, nil
 	}
-
-	binding := project.ResolveProjectBinding(config, home)
-	active := binding.ActiveEntries()
-	if len(binding.Entries) == 0 {
-		return "", "", "", fmt.Errorf("project path is missing in %s", configPath)
-	}
-	if len(active) == 0 {
-		return "", "", "", fmt.Errorf("project '%s' is offline on this host", target)
-	}
-
-	matched := bestCwdMatch(cwd, active)
-	if matched != "" {
-		return target, memDir, matched, nil
-	}
-	if len(active) == 1 {
-		return target, memDir, active[0].ResolvedPath, nil
-	}
-	var listed []string
-	for _, e := range active {
-		listed = append(listed, e.ResolvedPath)
-	}
-	return "", "", "", fmt.Errorf("project '%s' has multiple local paths; run this command from one of them: %s",
-		target, strings.Join(listed, ", "))
+	return "", "", "", fmt.Errorf("Memory scope '%s' not found", target)
 }
 
-// bestCwdMatch returns the active path entry whose resolved path is cwd or
-// an ancestor of it, preferring the deepest (most specific) match — mirrors
-// maintain.py's _best_cwd_match.
-func bestCwdMatch(cwd string, active []project.PathEntry) string {
-	best := ""
-	bestDepth := -1
-	for _, e := range active {
-		rp := e.ResolvedPath
+// bestCwdMatch is maintain.py's _best_cwd_match: the deepest root that is
+// cwd or contains it.
+func bestCwdMatch(cwd string, roots []string) string {
+	best, bestDepth := "", -1
+	for _, rp := range roots {
 		if cwd != rp && !isWithinDir(cwd, rp) {
 			continue
 		}
-		depth := strings.Count(filepath.Clean(rp), string(filepath.Separator))
-		if depth > bestDepth {
-			bestDepth = depth
-			best = rp
+		if depth := len(strings.Split(filepath.Clean(rp), string(filepath.Separator))); depth > bestDepth {
+			bestDepth, best = depth, rp
 		}
 	}
 	return best
@@ -245,9 +286,3 @@ After confirmation, apply only the approved changes, repair affected indices and
 // rather than raising — runner command templates are curated agent-config
 // content, not untrusted input, so silently passing through an unknown
 // brace sequence is an acceptable simplification here.
-func substitutePlaceholders(s string, values map[string]string) string {
-	for k, v := range values {
-		s = strings.ReplaceAll(s, "{"+k+"}", v)
-	}
-	return s
-}

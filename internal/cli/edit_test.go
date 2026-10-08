@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bytes"
+	"io"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -13,7 +14,7 @@ func stubEditor(t *testing.T) *[]string {
 	t.Helper()
 	var captured []string
 	orig := runEditorProcess
-	runEditorProcess = func(cmdArgs []string) (int, error) {
+	runEditorProcess = func(cmdArgs []string, _, _ io.Writer) (int, error) {
 		captured = append([]string(nil), cmdArgs...)
 		return 0, nil
 	}

@@ -54,7 +54,7 @@ def wtree(home):
 
 def run_cli(args, home, cwd=None, extra_env=None):
     env = {"HOME": home, "PATH": "/usr/bin:/bin", "PYTHONPATH": os.path.abspath(SRC),
-           "COLUMNS": "80", "LANG": "C.UTF-8"}
+           "COLUMNS": "80", "LANG": "C.UTF-8", "PYTHONUNBUFFERED": "1"}
     for k, v in (extra_env or {}).items():
         env[k] = home + v[1:] if v.startswith("H/") else v
     return subprocess.run(["python3", "-m", "aikito", *args], cwd=os.path.join(home, cwd or ""),
@@ -313,6 +313,55 @@ scenario("rm_skill_global_sync", RM_BASE
             run("rm", "skill", "cs", "--force", "--sync"), STATE, TREE, WTREE])
 scenario("rm_skill_aikito_project", RM_BASE
          + [run("add", "skill", "aikito", "--project", "p1"), run("rm", "skill", "aikito", "--project", "p1"), WTREE])
+
+
+# --- maintain memory / edit instructions: current-project detection ---
+RT_AGENT = ('[agents.rt]\ndisplay_name = "Runner Test"\n\n[agents.rt.runner]\n'
+            'command = ["sh", "-c", "pwd -P; echo scope={scope}; echo mem={memory_dir}; echo work=$RT_WORK; '
+            'echo braces={{x}}"]\nenv = { RT_WORK = "{workdir}" }\n')
+DETECT = (init(".claude") + project("p1") + project("p2")
+          + [{"op": "mkdir", "path": "p1/sub"}, {"op": "mkdir", "path": "outside"},
+             w("aikito/agents/rt.toml", RT_AGENT),
+             w("aikito/agents/bad.toml", '[agents.bad]\ndisplay_name = "Bad"\n\n[agents.bad.runner]\ncommand = ["echo", "{nope}"]\n'),
+             w("aikito/agents/norun.toml", '[agents.norun]\ndisplay_name = "No Runner"\n')])
+EDIT = {"EDITOR": "echo"}
+scenario("maintain_memory_targets", DETECT
+         + [run("maintain", "memory", "--agent", "rt", cwd="p1/sub"),
+            run("maintain", "memory", ".", "--agent=rt", cwd="p1"),
+            run("maintain", "memory", "--agent", "rt", cwd="outside"),
+            run("maintain", "memory", "global", "--agent", "rt", cwd="outside"),
+            run("maintain", "memory", "p2", "--agent", "rt", cwd="outside"),
+            run("maintain", "memory", "nope", "--agent", "rt"),
+            run("maintain", "memory", "p2", "--agent", "bad"),
+            run("maintain", "memory", "p2", "--agent", "norun"),
+            run("maintain", "memory", "p2", "--agent", "missing-agent"),
+            run("maintain", "memory", "p2", "--agent", "claude-code"),
+            run("maintain", "memory", "p2", "--agent"),
+            {"op": "rm", "path": "aikito/projects/p2/memory"},
+            run("maintain", "memory", "p2", "--agent", "rt"),
+            w("aikito/projects/p3/agent.toml", 'name = "p3"\npath = "~/gone"\n'),
+            run("maintain", "memory", "p3", "--agent", "rt"),
+            w("aikito/projects/p4/agent.toml", 'name = "p4"\n'),
+            run("maintain", "memory", "p4", "--agent", "rt")])
+scenario("maintain_memory_conflict", init(".claude") + project("q1")
+         + [w("aikito/projects/q2/agent.toml", 'name = "q2"\npath = "~/q1"\n'),
+            run("maintain", "memory", "q1", "--agent", "codex", cwd="q1"),
+            run("maintain", "memory", cwd="q1")])
+scenario("edit_instructions_targets", DETECT
+         + [run("edit", "instructions", cwd="p1/sub", env=EDIT),
+            run("edit", "instructions", cwd="outside", env=EDIT),
+            run("edit", "instructions", ".", cwd="outside", env=EDIT),
+            run("edit", "instructions", ".", cwd="p1", env=EDIT),
+            run("edit", "instructions", "p2", env=EDIT),
+            run("edit", "instructions", "global", env=EDIT),
+            run("edit", "instructions", "nope", env=EDIT),
+            run("edit", "instructions", "p2", env={"EDITOR": "false"}),
+            run("edit", "instructions", "p2", env={"EDITOR": "no-such-editor-xyz --flag"}),
+            w("aikito/projects/zz/AGENTS.md", "zz\n"),
+            run("edit", "instructions", "zz", env=EDIT)])
+scenario("edit_instructions_conflict", init(".claude") + project("q1")
+         + [w("aikito/projects/q2/agent.toml", 'name = "q2"\npath = "~/q1"\n'),
+            run("edit", "instructions", cwd="q1", env=EDIT)])
 
 
 def main():
