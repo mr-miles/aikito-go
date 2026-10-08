@@ -78,7 +78,9 @@ func TestApplySubagentPlanRefusesStalePlanLikePython(t *testing.T) {
 			before, _ := os.ReadFile(target)
 			msg, err := ApplySubagentPlan(ops, home)
 			after, _ := os.ReadFile(target)
-			want := strings.ReplaceAll(c.Error, "{H}", home)
+			// Target paths are resolved (macOS temp dirs sit behind symlinks).
+			resolvedHome, _ := filepath.EvalSymlinks(home)
+			want := strings.ReplaceAll(c.Error, "{H}", resolvedHome)
 			if (err == nil) != c.Success || msg != want {
 				t.Errorf("got success=%v msg %q\nwant success=%v msg %q", err == nil, msg, c.Success, want)
 			}
