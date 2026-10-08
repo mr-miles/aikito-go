@@ -1,0 +1,68 @@
+{
+  ".gitignore": {
+    "kind": "file"
+  },
+  "agents": {
+    "kind": "dir"
+  },
+  "agents/claude-code.toml": {
+    "kind": "file"
+  },
+  "config.toml": {
+    "kind": "file"
+  },
+  "global": {
+    "kind": "dir"
+  },
+  "global/AGENTS.md": {
+    "kind": "file"
+  },
+  "layout.toml": {
+    "kind": "file"
+  },
+  "mcps": {
+    "kind": "dir"
+  },
+  "memory": {
+    "kind": "dir"
+  },
+  "memory/notes": {
+    "kind": "dir"
+  },
+  "projects": {
+    "kind": "dir"
+  },
+  "skills": {
+    "kind": "dir"
+  },
+  "skills.toml": {
+    "kind": "file"
+  },
+  "skills/aikito": {
+    "kind": "dir"
+  },
+  "skills/aikito/SKILL.md": {
+    "kind": "file"
+  },
+  "skills/aikito/references": {
+    "kind": "dir"
+  },
+  "skills/aikito/references/adoption.md": {
+    "kind": "file"
+  },
+  "skills/aikito/references/installation.md": {
+    "kind": "file"
+  },
+  "skills/aikito/references/projects.md": {
+    "kind": "file"
+  },
+  "skills/durable-memory": {
+    "kind": "dir"
+  },
+  "skills/durable-memory/SKILL.md": {
+    "kind": "file"
+  },
+  "subagents": {
+    "kind": "dir"
+  }
+}

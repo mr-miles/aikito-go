@@ -19,54 +19,41 @@ import (
 // an unordered map, so exact key order isn't always reproduced), which is
 // orthogonal to whether adopt's discovery/decision logic is correct.
 func TestE2EAdoptDiscoversExistingMCPServer(t *testing.T) {
-	goHome, pyHome, pythonSrc := initBothWorkspaces(t)
+	home := initWorkspace(t)
 
 	existingConfig := `{"mcpServers": {"existing-server": {"type": "http", "url": "https://existing.example.com/mcp"}}}`
-	if err := os.WriteFile(goHome+"/.claude.json", []byte(existingConfig), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(pyHome+"/.claude.json", []byte(existingConfig), 0o644); err != nil {
+	if err := os.WriteFile(home+"/.claude.json", []byte(existingConfig), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
-	goRes := runGo(t, goHome, "adopt")
-	if goRes.ExitCode != 0 {
-		t.Fatalf("go adopt failed (exit %d): %s\n%s", goRes.ExitCode, goRes.Stdout, goRes.Stderr)
-	}
-	pyRes := runPython(t, pythonSrc, pyHome, "adopt")
-	if pyRes.ExitCode != 0 {
-		t.Fatalf("python adopt failed (exit %d): %s\n%s", pyRes.ExitCode, pyRes.Stdout, pyRes.Stderr)
+	res := runGo(t, home, "adopt")
+	if res.ExitCode != 0 {
+		t.Fatalf("go adopt failed (exit %d): %s\n%s", res.ExitCode, res.Stdout, res.Stderr)
 	}
 
-	goData, err := os.ReadFile(goHome + "/aikito/mcps/existing-server.toml")
+	goData, err := os.ReadFile(home + "/aikito/mcps/existing-server.toml")
 	if err != nil {
 		t.Fatalf("go: expected mcps/existing-server.toml to be adopted: %v", err)
 	}
-	pyData, err := os.ReadFile(pyHome + "/aikito/mcps/existing-server.toml")
-	if err != nil {
-		t.Fatalf("python: expected mcps/existing-server.toml to be adopted: %v", err)
-	}
-
 	goDoc, err := workspace.DecodeTOML(goData)
 	if err != nil {
 		t.Fatalf("decoding go's adopted TOML: %v\n%s", err, goData)
 	}
+
+	pyData := loadGoldenSingleFile(t, "adopt_mcp", "adopted.toml")
 	pyDoc, err := workspace.DecodeTOML(pyData)
 	if err != nil {
-		t.Fatalf("decoding python's adopted TOML: %v\n%s", err, pyData)
+		t.Fatalf("decoding golden (python) adopted TOML: %v\n%s", err, pyData)
 	}
 	if !reflect.DeepEqual(goDoc, pyDoc) {
-		t.Errorf("adopted MCP server fields differ:\n--- go ---\n%#v\n--- python ---\n%#v", goDoc, pyDoc)
+		t.Errorf("adopted MCP server fields differ:\n--- go ---\n%#v\n--- golden (python) ---\n%#v", goDoc, pyDoc)
 	}
 
 	// Re-running adopt on an already-adopted, untouched workspace must be a
-	// clean no-op on both sides (second run's exit code + no new files).
-	goRes2 := runGo(t, goHome, "adopt")
-	pyRes2 := runPython(t, pythonSrc, pyHome, "adopt")
-	if goRes2.ExitCode != 0 {
-		t.Errorf("go: re-running adopt should be a clean no-op, got exit %d: %s", goRes2.ExitCode, goRes2.Stdout)
-	}
-	if pyRes2.ExitCode != 0 {
-		t.Errorf("python: re-running adopt should be a clean no-op, got exit %d: %s", pyRes2.ExitCode, pyRes2.Stdout)
+	// clean no-op (this is a self-referential property of the Go tool, not
+	// something that needs a Python-derived golden).
+	res2 := runGo(t, home, "adopt")
+	if res2.ExitCode != 0 {
+		t.Errorf("go: re-running adopt should be a clean no-op, got exit %d: %s", res2.ExitCode, res2.Stdout)
 	}
 }

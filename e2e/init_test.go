@@ -5,50 +5,31 @@ package e2e
 import "testing"
 
 func TestE2EInitWorkspace(t *testing.T) {
-	pythonSrc := requirePython(t)
+	home := t.TempDir()
+	withMarkerDir(t, home, ".claude")
 
-	goHome := t.TempDir()
-	pyHome := t.TempDir()
-	withMarkerDir(t, goHome, ".claude")
-	withMarkerDir(t, pyHome, ".claude")
-
-	goRes := runGo(t, goHome, "init", "workspace")
-	if goRes.ExitCode != 0 {
-		t.Fatalf("go init workspace failed (exit %d): %s", goRes.ExitCode, goRes.Stderr)
-	}
-	pyRes := runPython(t, pythonSrc, pyHome, "init", "workspace")
-	if pyRes.ExitCode != 0 {
-		t.Fatalf("python init workspace failed (exit %d): %s", pyRes.ExitCode, pyRes.Stderr)
+	res := runGo(t, home, "init", "workspace")
+	if res.ExitCode != 0 {
+		t.Fatalf("go init workspace failed (exit %d): %s", res.ExitCode, res.Stderr)
 	}
 
-	compareTrees(t, "init workspace", goHome, goHome+"/aikito", pyHome, pyHome+"/aikito")
+	compareAgainstGolden(t, "init workspace", home+"/aikito", home, "init_workspace")
 }
 
 func TestE2EInitProject(t *testing.T) {
-	pythonSrc := requirePython(t)
+	home := t.TempDir()
+	withMarkerDir(t, home, ".claude")
+	proj := t.TempDir()
 
-	goHome := t.TempDir()
-	pyHome := t.TempDir()
-	goProj := t.TempDir()
-	pyProj := t.TempDir()
-
-	if r := runGo(t, goHome, "init", "workspace"); r.ExitCode != 0 {
+	if r := runGo(t, home, "init", "workspace"); r.ExitCode != 0 {
 		t.Fatalf("go init workspace: %s", r.Stderr)
 	}
-	if r := runPython(t, pythonSrc, pyHome, "init", "workspace"); r.ExitCode != 0 {
-		t.Fatalf("python init workspace: %s", r.Stderr)
+
+	res := runGo(t, home, "init", "project", "myproj", proj)
+	if res.ExitCode != 0 {
+		t.Fatalf("go init project failed (exit %d): %s", res.ExitCode, res.Stderr)
 	}
 
-	goRes := runGo(t, goHome, "init", "project", "myproj", goProj)
-	if goRes.ExitCode != 0 {
-		t.Fatalf("go init project failed (exit %d): %s", goRes.ExitCode, goRes.Stderr)
-	}
-	pyRes := runPython(t, pythonSrc, pyHome, "init", "project", "myproj", pyProj)
-	if pyRes.ExitCode != 0 {
-		t.Fatalf("python init project failed (exit %d): %s", pyRes.ExitCode, pyRes.Stderr)
-	}
-
-	compareTreesRedacting(t, "init project (workspace side)",
-		goHome, goHome+"/aikito/projects/myproj", pyHome, pyHome+"/aikito/projects/myproj",
-		[]string{goProj}, []string{pyProj})
+	compareAgainstGoldenRedacting(t, "init project (workspace side)",
+		home+"/aikito/projects/myproj", home, "init_project", []string{proj})
 }

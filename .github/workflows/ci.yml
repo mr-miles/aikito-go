@@ -44,6 +44,9 @@ jobs:
       - name: Test
         run: go test ./...
 
+      - name: E2E tests (against committed golden fixtures, no Python needed)
+        run: go test -tags e2e ./e2e/...
+
       - name: Build CLI binary
         run: go build -o aikito${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/aikito
 
@@ -68,32 +71,9 @@ jobs:
       - name: Test with race detector
         run: CGO_ENABLED=1 go test -race ./...
 
-  e2e-vs-python:
-    name: E2E vs. reference Python implementation
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Go port
-        uses: actions/checkout@v4
-        with:
-          path: code
-
-      - name: Checkout reference Python implementation
-        uses: actions/checkout@v4
-        with:
-          repository: lsaint/aikito
-          path: aikito-python
-
-      - uses: actions/setup-go@v5
-        with:
-          go-version: "1.26"
-          cache: true
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Run e2e comparison suite
-        working-directory: code
-        env:
-          AIKITO_PYTHON_SRC: ${{ github.workspace }}/aikito-python/src
-        run: go test -tags e2e ./e2e/...
+# Note: the e2e suite (./e2e, tag "e2e") compares the Go binary against
+# golden fixtures captured from the reference Python implementation
+# (lsaint/aikito). Those fixtures are committed under e2e/testdata/ and
+# regenerated manually/occasionally — CI never needs Python at all. See
+# e2e/README.md for how to regenerate them after an intentional behavior
+# change.

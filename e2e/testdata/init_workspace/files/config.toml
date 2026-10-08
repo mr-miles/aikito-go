@@ -1,0 +1,13 @@
+# Aikito Workspace Configuration
+
+[memory]
+# Number of days after which an untouched durable memory note is flagged as stale.
+stale_days = 30
+
+[inbox]
+# Staging directory for incoming distilled notes.
+path = "inbox"
+
+[update]
+# Enable or disable automatic background update checks and CLI upgrade notifications.
+check = true

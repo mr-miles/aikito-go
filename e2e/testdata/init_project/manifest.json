@@ -1,0 +1,14 @@
+{
+  "AGENTS.md": {
+    "kind": "file"
+  },
+  "agent.toml": {
+    "kind": "file"
+  },
+  "memory": {
+    "kind": "dir"
+  },
+  "memory/notes": {
+    "kind": "dir"
+  }
+}

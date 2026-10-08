@@ -1,0 +1,3 @@
+agents = ["claude-code"]
+url = "https://existing.example.com/mcp"
+transport = "remote"
