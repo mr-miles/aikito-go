@@ -193,6 +193,32 @@ func BuildSubagentPlan(aikitoDir, home string, opts BuildSubagentPlanOptions) ([
 	if err != nil {
 		return nil, err
 	}
+	// load_subagent_definitions validates every platform table that names a
+	// known agent while loading, so one bad field fails the whole plan.
+	for _, subName := range sortedSubagentNames(subagentDefs) {
+		def := subagentDefs[subName]
+		platforms := make([]string, 0, len(def.PlatformConfigs))
+		for p := range def.PlatformConfigs {
+			platforms = append(platforms, p)
+		}
+		sort.Strings(platforms)
+		for _, p := range platforms {
+			agentDef, known := allDefs[p]
+			if !known {
+				continue
+			}
+			if agentDef.Subagents == nil {
+				return nil, subagentErrorf("Subagent '%s' platform '%s' has no defined subagents capability", subName, p)
+			}
+			adapter, aerr := subagent.GetSubagentAdapter(agentDef.Subagents.ConfigFormat)
+			if aerr != nil {
+				return nil, aerr
+			}
+			if _, verr := adapter.ValidateOptions(p, subName, def.PlatformConfigs[p]); verr != nil {
+				return nil, verr
+			}
+		}
+	}
 
 	// Hard error (not a skip) if any subagent targets a registered-or-not
 	// agent with no [agents.<name>.subagents] section at all.

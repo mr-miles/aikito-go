@@ -392,6 +392,18 @@ scenario("diff_project_conflict", init(".claude") + project("q1")
 scenario("diff_no_workspace", [run("diff"), run("diff", "project"), run("diff", "--all"), run("diff", "project", "x")])
 
 
+# --- fixes visible outside the new options ---
+scenario("sync_subagents_unknown_field", init(".claude")
+         + [w("aikito/subagents/x.md", '---\ndescription: "X"\nagents: ["claude-code"]\nclaude-code: {"bogus": 1}\n---\nBody\n'),
+            run("sync", "subagents")])
+scenario("add_mcp_url_userinfo", init(".claude")
+         + [run("add", "mcp", "u1", "--url", "https://user:" + FAKE + "@Mixed.Example.COM:8443/p?x=1"),
+            run("add", "mcp", "u2", "--url", "https://:@Mixed.Example.COM/p"),
+            w("aikito/mcps/hdr.toml", 'transport = "remote"\nurl = "https://h.example.com"\nagents = ["codex"]\n'
+                                     'headers = { Authorization = "a", Cookie = "c", X-Api-Key = "k", Token = "t" }\n'),
+            run("add", "mcp", "hdr", "--url", "https://h.example.com", "--force"), WTREE])
+
+
 def main():
     vectors = {name: {"steps": steps, "expect": run_scenario(steps)} for name, steps in SCENARIOS.items()}
     with open(os.path.join(HERE, "options_vectors.json"), "w") as f:
