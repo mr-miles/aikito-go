@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"os"
+
+	"github.com/mr-miles/aikito-rs/internal/registry"
 )
 
 // MCPConfigError mirrors Python's MCPConfigError: an MCP definition or
@@ -47,6 +49,11 @@ type AgentSpec struct {
 	ContainsSecret       bool
 	MissingCredentialEnv string
 	Home                 string
+	// Definition is the resolved agent definition this spec was built
+	// against (registry.LoadAgentDefinitions' output for spec.Agent), used
+	// by _agent_detected's availability check. nil only in ad-hoc specs that
+	// bypass the loader (e.g. a unit test constructing a bare AgentSpec).
+	Definition *registry.AgentDefinition
 	// Adapter is the semantic adapter key; defaults to ConfigFormat when
 	// empty (model.py's __post_init__). The only built-in case where it
 	// legitimately differs is Grok: ConfigFormat="toml", Adapter="grok_toml".
@@ -175,4 +182,6 @@ type MCPConfigTarget struct {
 	Path            string
 	LogicalIdentity string
 	TargetName      string
+	Format          string
+	Sensitive       bool
 }
