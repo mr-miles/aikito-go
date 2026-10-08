@@ -66,7 +66,9 @@ func TestInitWorkspaceMatchesPython(t *testing.T) {
 					Run([]string{"init", "workspace"}, nil, &out, &errOut, env)
 				}
 			}
-			norm := func(s string) string { return ts.ReplaceAllString(strings.ReplaceAll(s, h, "{H}"), "bundled-skills_{TS}") }
+			norm := func(s string) string {
+				return ts.ReplaceAllString(strings.ReplaceAll(s, h, "{H}"), "bundled-skills_{TS}")
+			}
 			for _, st := range sc.Steps {
 				out.Reset()
 				errOut.Reset()

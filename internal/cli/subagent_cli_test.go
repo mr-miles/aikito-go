@@ -10,12 +10,12 @@ import (
 	"testing"
 )
 
-// subagent_symlink_vectors.json comes from the reference CLI
-// (testdata/gen_subagent_symlink_vectors.py): agent subagent files that are
+// subagent_cli_vectors.json comes from the reference CLI
+// (testdata/gen_subagent_cli_vectors.py): agent subagent files that are
 // symlinks are listed like regular files, so an unmanaged one is adopted and
 // a managed one is reported as an orphan and pruned.
-func TestSubagentSymlinkedFilesMatchPython(t *testing.T) {
-	data, err := os.ReadFile("testdata/subagent_symlink_vectors.json")
+func TestSubagentCLIScenariosMatchPython(t *testing.T) {
+	data, err := os.ReadFile("testdata/subagent_cli_vectors.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -95,5 +95,19 @@ func TestSubagentSymlinkedFilesMatchPython(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+// add/rm subagent --sync are implemented, so --help must not mark them.
+func TestSubagentSyncHelpHasNoNotImplementedNote(t *testing.T) {
+	env := testEnv(t)
+	for _, cmd := range [][]string{{"add", "subagent"}, {"add", "subagents"}, {"rm", "subagent"}, {"remove", "subagents"}} {
+		var out, errOut bytes.Buffer
+		Run(append(cmd, "--help"), nil, &out, &errOut, env)
+		for _, line := range strings.Split(out.String(), "\n") {
+			if strings.HasPrefix(strings.TrimSpace(line), "--sync") && strings.Contains(line, "not implemented") {
+				t.Errorf("aikito %s --help: %q", strings.Join(cmd, " "), line)
+			}
+		}
 	}
 }

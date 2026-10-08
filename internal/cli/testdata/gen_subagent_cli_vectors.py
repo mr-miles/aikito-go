@@ -1,7 +1,7 @@
-"""Generate subagent_symlink_vectors.json from the reference CLI.
+"""Generate subagent_cli_vectors.json from the reference CLI.
 
 Run from the repo root (AIKITO_PYTHON_SRC defaults to ../aikito/src):
-    python3 internal/cli/testdata/gen_subagent_symlink_vectors.py
+    python3 internal/cli/testdata/gen_subagent_cli_vectors.py
 
 Subagent files that are symlinks are listed like regular files (Python's
 Path.is_file() follows links): an unmanaged one is adopted, a managed one
@@ -44,6 +44,30 @@ SCENARIOS = {
         ["exists", ".claude/agents/old.md"],
         ["exists", "elsewhere/old.md"],
     ],
+    "add_then_rm_with_sync": [
+        ["mkdir", ".claude"],
+        ["run", "init", "workspace"],
+        ["run", "add", "subagent", "helper", "--description", "Helps out", "--agents", "claude-code", "--sync"],
+        ["read", ".claude/agents/helper.md"],
+        ["run", "add", "subagent", "helper", "--description", "Helps more", "--agents", "claude-code", "--sync"],
+        ["read", ".claude/agents/helper.md"],
+        ["run", "rm", "subagent", "helper", "--sync"],
+        ["exists", ".claude/agents/helper.md"],
+    ],
+    "rm_without_sync_keeps_agent_file": [
+        ["mkdir", ".claude"],
+        ["run", "init", "workspace"],
+        ["run", "add", "subagent", "helper", "--agents", "claude-code", "--sync"],
+        ["run", "rm", "subagent", "helper"],
+        ["exists", ".claude/agents/helper.md"],
+    ],
+    "add_sync_blocked_by_conflict": [
+        ["mkdir", ".claude"],
+        ["write", ".claude/agents/helper.md", "my own helper\n"],
+        ["run", "init", "workspace"],
+        ["run", "add", "subagent", "helper", "--agents", "claude-code", "--sync"],
+        ["read", ".claude/agents/helper.md"],
+    ],
 }
 
 
@@ -82,4 +106,4 @@ for name, steps in SCENARIOS.items():
             results.append({"step": st, "exists": os.path.lexists(home / st[1])})
     out[name] = {"steps": steps, "results": results}
 
-(Path(__file__).parent / "subagent_symlink_vectors.json").write_text(json.dumps(out, indent=1, sort_keys=True) + "\n")
+(Path(__file__).parent / "subagent_cli_vectors.json").write_text(json.dumps(out, indent=1, sort_keys=True) + "\n")
