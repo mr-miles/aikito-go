@@ -89,6 +89,15 @@ time it was applied.
   same home path (recreated between runs) to compare state files byte for
   byte. Python must also run with `PYTHONUNBUFFERED=1` if stdout and stderr
   share a pipe.
+- **JSON error text.** Python prints `json.loads` errors to users
+  ("Expecting ',' delimiter: line 3 column 8 (char 19)"). Go's decoder
+  wording differs; use `mcp.PythonJSONDecodeError(text)` after a failed
+  parse.
+- **Generators reading files back.** `Path.read_text()` turns `\r\n` into
+  `\n`; open with `newline=""` when snapshotting trees for goldens.
+- **Python `str()`/`repr()` in messages.** Values interpolated with `{x!r}`
+  or `str(list)` render Python-style (`'a'`, `['a', 'b']`, `True`);
+  `cli.pyRepr`/`pyStr` (adopt.go) reproduce that.
 - **`Path / raw_link`** keeps `..` components; `filepath.Join` cleans them.
   Messages that show a symlink's destination use `linkplan`'s
   `pathlibJoin`.
@@ -164,8 +173,13 @@ debugged locally; expect path-separator and `PATH` issues there first.
   `add skill --sync` to deactivate copied-skill state) is not ported, so
   removing a skill in Go leaves its project state record active until the
   next `sync project`.
-- `adopt`/`import workspace` compare against current templates only, with no
-  `TEMPLATE_HISTORY`.
+- `import workspace` compares against current templates only, with no
+  `TEMPLATE_HISTORY` (Python's `adopt` doesn't use it either).
+- `init workspace` initialises over a non-empty directory that isn't a
+  workspace; Python refuses ("Target directory is not empty and is not a
+  recognized Aikito workspace").
+- `add.go` still has its own simplified frontmatter parser;
+  `workspace.ParseMarkdownFrontmatter` is the faithful port.
 - `doctor --fix` applies nothing yet (needs `registry.py` schema migration).
   The LocalState section is a stub.
 - `atomicUnlink` and `PendingKinds` have no callers in the write path yet. A

@@ -301,6 +301,10 @@ func LoadDocument(configFormat, text string) (any, error) {
 		configName := jsonConfigDisplayNames[configFormat]
 		doc, err := ParseJSONOrdered(text)
 		if err != nil {
+			// Report the error the way json.loads does, where it can be.
+			if msg := PythonJSONDecodeError(text); msg != "" {
+				return nil, configErrorf("Invalid %s JSON config: %s", configName, msg)
+			}
 			return nil, configErrorf("Invalid %s JSON config: %v", configName, err)
 		}
 		if _, ok := doc.(*OrderedObject); !ok {

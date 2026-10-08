@@ -586,9 +586,30 @@ func TestCheckAdoptionReportsAdoptableMCPEntry(t *testing.T) {
 	writeFile(t, filepath.Join(env.Home, ".claude.json"),
 		`{"mcpServers": {"preexisting": {"type": "http", "url": "https://pre.example.com/mcp"}}}`)
 	got := findingsText(checkAdoption(dir, env.Home))
-	assertContains(t, got, "WARN|1 local Agent resource(s) are available to adopt|aikito adopt --dry-run --verbose")
+	// Python's adopt.pending finding carries actions, not a fix hint.
+	if got != "WARN|1 local Agent resource(s) are available to adopt|\n" {
+		t.Errorf("got:\n%s", got)
+	}
 	if strings.Contains(got, "OK|") {
 		t.Errorf("OK line must only appear when nothing is reported:\n%s", got)
+	}
+}
+
+// check_adoption reports adopt's blocking findings as warnings, with adopt's
+// own wording.
+func TestCheckAdoptionReportsInstructionConflict(t *testing.T) {
+	env := setupAdoptWorkspace(t)
+	dir, err := env.AikitoDir()
+	if err != nil {
+		t.Fatal(err)
+	}
+	writeFile(t, filepath.Join(env.Home, ".claude", "CLAUDE.md"), "# A\n")
+	mustMkdirAll(t, filepath.Join(env.Home, ".codex"))
+	writeFile(t, filepath.Join(env.Home, ".codex", "AGENTS.md"), "# B\n")
+	want := "WARN|Global instructions cannot be adopted automatically|Review and merge the sources into " +
+		filepath.Join(dir, "global", "AGENTS.md") + "\n"
+	if got := findingsText(checkAdoption(dir, env.Home)); got != want {
+		t.Errorf("got:\n%s\nwant:\n%s", got, want)
 	}
 }
 

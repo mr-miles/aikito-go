@@ -1,0 +1,8 @@
+{
+  ".claude": {
+    "kind": "dir"
+  },
+  ".claude/CLAUDE.md": {
+    "kind": "file"
+  }
+}

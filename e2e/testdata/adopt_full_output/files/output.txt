@@ -1,0 +1,29 @@
+exit 0
+--- stdout
+Adoption plan
+
+  Instructions: 1 update(s)
+  MCP servers:  2 import(s)
+  Subagents:    0 import(s)
+  Conflicts:    0
+  Errors:       0
+  Skipped:      0
+
+Safe to apply
+
+[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS
+
+--- Global Instructions Adoption ---
+[MERGE] Instructions from claude-code match perfectly.
+[SOURCE] claude-code: H/.claude/CLAUDE.md
+[WRITE FILE] Updated H/aikito/global/AGENTS.md
+
+--- MCP Servers Adoption ---
+[ADOPT MCP] Server 'stdio-s' (agents: [claude-code])
+[WRITE FILE] Created H/aikito/mcps/stdio-s.toml
+[ADOPT MCP] Server 'http-s' (agents: [claude-code])
+[WRITE FILE] Created H/aikito/mcps/http-s.toml
+
+[SUCCESS] Adoption executed successfully!
+Next step: Run 'aikito sync' to check and apply runtime changes.
+--- stderr
