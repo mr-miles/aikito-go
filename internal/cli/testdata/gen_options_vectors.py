@@ -8,6 +8,7 @@ gen_syncglobal_vectors.py, plus:
 
   {"op": "run", "args": [...], "cwd": "rel/dir", "env": {...}}
       run from a directory under HOME; env values "H/..." are under HOME
+  {"op": "readglob", "path": glob}   contents of matching files, sorted by path
   {"op": "wtree"}   snapshot of the workspace (<home>/aikito, minus .git):
                     every file's content, except bundled skills (listed only)
 
@@ -98,6 +99,11 @@ def run_scenario(steps):
                 out.append({"wtree": wtree(home)})
             elif op == "read":
                 out.append({"read": step["path"], "content": normalize(Path(path).read_text(), home)})
+            elif op == "readglob":
+                import glob
+                files = sorted(glob.glob(os.path.join(home, step["path"])))
+                out.append({"read": step["path"],
+                            "content": "\n---\n".join(normalize(Path(f).read_text(), home) for f in files)})
             else:
                 raise ValueError(op)
     finally:
@@ -285,6 +291,28 @@ scenario("add_subagent_from", init(".claude", ".codex")
             run("add", "subagent", "x", "--force"),
             w("src/reviewer.md", SUB_FULL.replace("Review it.", "Review it twice.")),
             run("add", "subagent", "--from", "src/reviewer.md", "--force"), WTREE])
+
+
+# --- rm skill --project and copied-state deactivation ---
+STATE = {"op": "readglob", "path": ".local/state/aikito/project-skills/*.json"}
+RM_BASE = (init(".claude") + project("p1", skills=("cs",), sync_mode="copy") + project("p2", skills=("cs", "ls"))
+           + [w("aikito/skills/cs/SKILL.md", "---\nname: cs\ndescription: c\n---\nC\n"),
+              w("aikito/skills/ls/SKILL.md", "---\nname: ls\ndescription: l\n---\nL\n"),
+              run("sync", "project", "p1"), run("sync", "project", "p2")])
+scenario("rm_skill_project", RM_BASE
+         + [STATE, run("rm", "skill", "cs", "--project", "p1"), STATE, TREE, WTREE,
+            run("rm", "skill", "cs", "--project", "p1"),
+            run("rm", "skill", "cs", "--project", "p1,p2,nope"),
+            run("rm", "skill", "cs", "--project", "p1, p2"),
+            run("rm", "skill", "ls", "--project", "p1,p2", "--sync"), TREE, WTREE])
+scenario("rm_skill_global_force", RM_BASE
+         + [run("rm", "skill", "cs"), run("rm", "skill", "cs", "--force"), STATE, TREE, WTREE,
+            run("rm", "skill", "cs"), run("rm", "skill", "aikito"), run("rm", "skill"), run("rm", "skill", "Bad_Name")])
+scenario("rm_skill_global_sync", RM_BASE
+         + [w("aikito/skills.toml", 'skills = ["aikito", "durable-memory", "cs"]\n'), run("sync", "global"),
+            run("rm", "skill", "cs", "--force", "--sync"), STATE, TREE, WTREE])
+scenario("rm_skill_aikito_project", RM_BASE
+         + [run("add", "skill", "aikito", "--project", "p1"), run("rm", "skill", "aikito", "--project", "p1"), WTREE])
 
 
 def main():

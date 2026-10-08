@@ -202,6 +202,18 @@ func replayCLIVectors(t *testing.T, vectorsPath string) {
 						t.Fatal(err)
 					}
 					got = append(got, syncGlobalExpect{Read: st.Path, Content: normalizeHome(string(content), home)})
+				case "readglob":
+					files, _ := filepath.Glob(path)
+					sort.Strings(files)
+					var parts []string
+					for _, f := range files {
+						content, err := os.ReadFile(f)
+						if err != nil {
+							t.Fatal(err)
+						}
+						parts = append(parts, normalizeHome(string(content), home))
+					}
+					got = append(got, syncGlobalExpect{Read: st.Path, Content: strings.Join(parts, "\n---\n")})
 				default:
 					t.Fatalf("unknown step %q", st.Op)
 				}
