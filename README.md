@@ -85,7 +85,7 @@ to this port.
 | `status`, `show …`, `diff …` | Done, with option gaps below |
 | `edit …`, `rm …`, `rename memory` | Done |
 | `maintain memory`, `auth mcp` | Done |
-| `doctor` | All checks except LocalState (remote-sync state) |
+| `doctor` | Done (output matches Python apart from its Python-interpreter check) |
 | `completion bash/zsh/fish/powershell` | Done |
 | `migrate workspace-resources` | Done |
 | `import workspace` | Done |
@@ -104,7 +104,8 @@ Each of these says so when used, rather than being silently ignored:
 - `diff project`.
 - `maintain memory .` (current-directory project detection); pass a project
   name or `global`.
-- `doctor --fix` runs but has no automatic fixes yet.
+- `doctor --fix` removes stale local skill state but does not backfill
+  missing agent-registry fields.
 
 `--help` on any command prints the same text as the Python version, with
 "(not implemented in this build)" after each of the options above.

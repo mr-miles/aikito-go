@@ -281,7 +281,7 @@ def capture(name, cli):
     home = Path(tempfile.mkdtemp(prefix="aikrep-")).resolve()
     try:
         apply_setup(home, SCENARIOS[name], PY_CLI)
-        return {" ".join(c): drop_python_only(run(cli, home, c)) for c in COMMON + EXTRA.get(name, [])}
+        return [{"args": c, **drop_python_only(run(cli, home, c))} for c in COMMON + EXTRA.get(name, [])]
     finally:
         shutil.rmtree(home, ignore_errors=True)
 

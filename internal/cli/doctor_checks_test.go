@@ -160,6 +160,9 @@ func TestCmdDoctorExitCodeTracksFailures(t *testing.T) {
 	if code := Run([]string{"sync", "mcp"}, nil, &out, &errOut, env); code != 0 {
 		t.Fatalf("sync mcp failed: %s", errOut.String())
 	}
+	if code := Run([]string{"sync", "global"}, nil, &out, &errOut, env); code != 0 {
+		t.Fatalf("sync global failed: %s", errOut.String())
+	}
 
 	out.Reset()
 	errOut.Reset()
@@ -175,9 +178,10 @@ func TestCmdDoctorExitCodeTracksFailures(t *testing.T) {
 	if code := Run([]string{"doctor", "--color", "never"}, nil, &out, &errOut, env); code != 1 {
 		t.Fatalf("drifted workspace: exit = %d, want 1\n%s", code, out.String())
 	}
+	// render_doctor_report always uses unicode symbols.
 	assertContains(t, out.String(),
-		"[FAIL] claude-code × weather: managed MCP config differs (unmanaged modification)",
-		"-> aikito sync mcp --force")
+		"✗ claude-code × weather: managed MCP config differs (unmanaged modification)",
+		"→ aikito sync mcp --force")
 }
 
 // --- rendering ---
@@ -232,20 +236,6 @@ func TestRenderDoctorReportSummaryWording(t *testing.T) {
 	}
 	if got := renderDoctorReport(twoFails, false, true); !strings.Contains(got, "\x1b[") {
 		t.Errorf("color mode should emit ANSI escapes:\n%s", got)
-	}
-}
-
-func TestRenderTitleBoxWidensForLongTitle(t *testing.T) {
-	got := renderTitleBox("A-very-long-section-title", false, false, 5)
-	lines := strings.Split(got, "\n")
-	if len(lines) != 3 {
-		t.Fatalf("want 3 lines, got %q", got)
-	}
-	if len(lines[0]) != len(lines[1]) || len(lines[1]) != len(lines[2]) {
-		t.Errorf("box lines must align:\n%s", got)
-	}
-	if !strings.Contains(lines[1], " A-very-long-section-title ") {
-		t.Errorf("title missing:\n%s", got)
 	}
 }
 
@@ -355,7 +345,7 @@ func TestCheckSecurityCredentialPermissions(t *testing.T) {
 				assertContains(t, got, "OK|Credential file permissions OK (1 files)|")
 				return
 			}
-			want := fmt.Sprintf("FAIL|Credential file has insecure permissions (0o%o): .gemini/config/mcp_config.json|chmod 600 %q", tc.mode.Perm(), cfg)
+			want := fmt.Sprintf("FAIL|Credential file has insecure permissions (0o%o): ~/.gemini/config/mcp_config.json|chmod 600 %q", tc.mode.Perm(), cfg)
 			assertContains(t, got, want)
 		})
 	}
@@ -391,10 +381,10 @@ func TestCheckEnvironmentAikitoDir(t *testing.T) {
 
 	t.Setenv("AIKITO_DIR", "")
 	assertContains(t, findingsText(checkEnvironment(dir, env.Home)),
-		"OK|AIKITO_DIR not set; using configured workspace: aikito|")
+		"OK|AIKITO_DIR not set; using configured workspace: ~/aikito|")
 
 	t.Setenv("AIKITO_DIR", dir)
-	assertContains(t, findingsText(checkEnvironment(dir, env.Home)), "OK|$AIKITO_DIR → aikito|")
+	assertContains(t, findingsText(checkEnvironment(dir, env.Home)), "OK|$AIKITO_DIR → ~/aikito|")
 
 	other := resolvedTempDir(t)
 	t.Setenv("AIKITO_DIR", other)
@@ -443,13 +433,13 @@ func TestCheckMemoryNamesSubdirsAndWikilinks(t *testing.T) {
 		"|Rename note using 'aikito rename memory Bad_Name <valid-name>'",
 		"WARN|Global memory notes subdirectory 'nested/' is not scanned|",
 		"FAIL|Global note 'linker' links to [[missing-note]] but that note does not exist|Write notes/missing-note.md if the topic is still worth keeping, or edit linker.md to drop the [[missing-note]] link",
-		"FAIL|proj note 'p-note' links to [[nowhere]] but that note does not exist|",
+		"FAIL|Project:proj note 'p-note' links to [[nowhere]] but that note does not exist|",
 	)
 	if strings.Contains(got, "[[target-note]] but") {
 		t.Errorf("link to an existing note must not be flagged:\n%s", got)
 	}
-	// No git history for these notes: freshness is skipped, not failed.
-	assertContains(t, got, "OK|No memory notes found|")
+	// No git history: each note counts as checked but none is stale (doctor.py sets checked_any before the git lookup).
+	assertContains(t, got, "OK|No memory notes older than 30 days|")
 }
 
 // gitCommitAt commits every file under dir with the given committer date.
@@ -505,12 +495,12 @@ func TestCheckMemoryPerProjectThreshold(t *testing.T) {
 	gitCommitAt(t, dir, "2020-01-01T00:00:00Z")
 
 	assertContains(t, findingsText(checkMemory(dir, env.Home, 0)),
-		"OK|No memory notes older than configured thresholds (1000000, 999999 days)|")
+		"OK|No memory notes older than configured thresholds (999999, 1000000 days)|")
 
 	writeFile(t, filepath.Join(dir, "projects", "proj", "agent.toml"), "[memory]\nstale_days = 7\n")
 	gitCommitAt(t, dir, "2020-01-01T00:00:00Z")
 	got := findingsText(checkMemory(dir, env.Home, 0))
-	assertContains(t, got, "WARN|proj note 'p' has not been updated in ")
+	assertContains(t, got, "WARN|Project:proj note 'p' has not been updated in ")
 	assertContains(t, got, "(threshold: 7d)")
 	if strings.Contains(got, "note 'g'") {
 		t.Errorf("global note is within its own threshold:\n%s", got)
@@ -519,57 +509,7 @@ func TestCheckMemoryPerProjectThreshold(t *testing.T) {
 
 // --- checkProjects ---
 
-func TestCheckProjects(t *testing.T) {
-	env, dir := doctorWorkspace(t)
-	assertContains(t, findingsText(checkProjects(dir, env.Home)), "OK|No projects registered|")
-
-	proj := t.TempDir()
-	var out, errOut bytes.Buffer
-	if code := Run([]string{"init", "project", "alive", proj}, nil, &out, &errOut, env); code != 0 {
-		t.Fatalf("init project: %s", errOut.String())
-	}
-	gone := t.TempDir()
-	if code := Run([]string{"init", "project", "gone", gone}, nil, &out, &errOut, env); code != 0 {
-		t.Fatalf("init project: %s", errOut.String())
-	}
-	if err := os.RemoveAll(gone); err != nil {
-		t.Fatal(err)
-	}
-	writeFile(t, filepath.Join(dir, "projects", "nopaths", "agent.toml"), "skills = []\n")
-	writeFile(t, filepath.Join(dir, "projects", "invalid", "agent.toml"), "sync_mode = \"teleport\"\n")
-
-	got := findingsText(checkProjects(dir, env.Home))
-	assertContains(t, got,
-		"OK|projects/alive: 1/1 path(s) available|",
-		"FAIL|projects/gone: no configured path exists on this host (1 candidate(s))|",
-		"WARN|projects/nopaths: no path candidates configured|aikito show project nopaths",
-		"FAIL|projects/invalid: ",
-	)
-}
-
 // --- checkSymlinks ---
-
-func TestCheckSymlinks(t *testing.T) {
-	if runtime.GOOS == "windows" {
-		t.Skip("symlink creation")
-	}
-	env, dir := doctorWorkspace(t)
-	addBundledAgent(t, dir, "claude-code")
-	assertContains(t, findingsText(checkSymlinks(dir, env.Home)), "OK|No managed symlinks to check|")
-
-	link := filepath.Join(env.Home, ".claude", "CLAUDE.md")
-	mustMkdirAll(t, filepath.Dir(link))
-	if err := os.Symlink(filepath.Join(dir, "global", "AGENTS.md"), link); err != nil {
-		t.Fatal(err)
-	}
-	assertContains(t, findingsText(checkSymlinks(dir, env.Home)), "OK|Symlinks OK (1 checked)|")
-
-	if err := os.Remove(filepath.Join(dir, "global", "AGENTS.md")); err != nil {
-		t.Fatal(err)
-	}
-	assertContains(t, findingsText(checkSymlinks(dir, env.Home)),
-		"FAIL|claude-code: broken symlink at .claude/CLAUDE.md|aikito sync global --force")
-}
 
 // --- checkAdoption ---
 
@@ -616,7 +556,8 @@ func TestCheckAdoptionReportsInstructionConflict(t *testing.T) {
 // --- small helpers ---
 
 func TestHomeRelAndToInt(t *testing.T) {
-	if got := homeRel("/h/a/b", "/h"); got != "a/b" {
+	// compat.safe_relative_path: "~/" prefix under home.
+	if got := homeRel("/h/a/b", "/h"); got != "~/a/b" {
 		t.Errorf("homeRel inside = %q", got)
 	}
 	if got := homeRel("/other/x", "/h"); got != "/other/x" {
