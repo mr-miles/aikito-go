@@ -1,13 +1,18 @@
 package cli
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"os"
+	"path"
+	"path/filepath"
 	"sort"
 	"strings"
 
 	"github.com/mr-miles/aikito-go/internal/mcp"
+	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/registry"
 	"github.com/mr-miles/aikito-go/internal/subagent"
 	"github.com/mr-miles/aikito-go/internal/workspace"
@@ -16,14 +21,23 @@ import (
 // driftDiff mirrors diff_model.py's DriftDiff: a structured, machine-
 // filterable identity plus a pre-rendered unified-diff string.
 type driftDiff struct {
-	kind  string // "mcp" | "subagent" | "project_skill" (not yet populated)
-	name  string
-	agent string
-	diff  string
+	kind     string // "mcp" | "subagent" | "project_skill"
+	name     string
+	agent    string
+	diff     string
+	project  string
+	file     string
+	checkout string
 }
 
 func (d driftDiff) displayLabel() string {
 	switch d.kind {
+	case "project_skill":
+		label := fmt.Sprintf("Project %s/skill %s — %s", d.project, d.name, d.file)
+		if d.checkout != "" {
+			return label + " (" + d.checkout + ")"
+		}
+		return label
 	case "mcp":
 		return fmt.Sprintf("MCP %s/%s", d.agent, d.name)
 	case "subagent":
@@ -33,25 +47,55 @@ func (d driftDiff) displayLabel() string {
 	}
 }
 
-// cmdDiff mirrors cli.py's cmd_diff.
-//
-// Scope note: ports the "mcp" and "subagent" diff targets in full (they
-// only need resources already built: the MCP planner and the subagent
-// per-platform renderers). The "project" target (project-skill copy-mode
-// drift, collect_project_skill_diffs in project.py) needs project_sync.py's
-// skill-materialization machinery, not yet ported in this Go build (a
-// parallel, not-yet-landed "sync project" effort would be the natural home
-// for it) — it prints a clear not-yet-implemented notice instead of
-// guessing at a different semantic.
+// cmdDiff ports cli.py's cmd_diff: the drift index, --all, and the
+// project / mcp / subagent drill-downs.
 func cmdDiff(args []string, stdout, stderr io.Writer, env Environment) int {
+	// Parent options come before the subcommand, as with argparse.
 	all := false
-	var rest []string
-	for _, a := range args {
-		if a == "--all" {
+	i := 0
+	var parentExtras []string
+	for ; i < len(args); i++ {
+		a := args[i]
+		if a == "project" || a == "mcp" || a == "subagent" {
+			break
+		}
+		if a == "--all" || (strings.HasPrefix(a, "--a") && strings.HasPrefix("--all", a)) {
 			all = true
 			continue
 		}
-		rest = append(rest, a)
+		parentExtras = append(parentExtras, a)
+	}
+	target, rest := "", []string(nil)
+	if i < len(args) {
+		target, rest = args[i], args[i+1:]
+	}
+	if len(parentExtras) > 0 {
+		if !strings.HasPrefix(parentExtras[0], "-") {
+			fmt.Fprintf(stderr, "%saikito diff: error: argument diff_target: invalid choice: '%s' (choose from project, mcp, subagent)\n", subcommandUsage("diff"), parentExtras[0])
+			return 2
+		}
+		fmt.Fprintf(stderr, "%saikito: error: unrecognized arguments: %s\n", rootUsage(), strings.Join(parentExtras, " "))
+		return 2
+	}
+	var positionals []string
+	if target != "" {
+		maxPos, required := 3, []string(nil)
+		switch target {
+		case "mcp":
+			maxPos, required = 2, []string{"agent", "server"}
+		case "subagent":
+			maxPos, required = 2, []string{"agent", "name"}
+		}
+		parsed, ok := parseArgparseOpts("diff "+target, rest, nil, nil, nil, maxPos, stderr)
+		if !ok {
+			return 2
+		}
+		positionals = parsed.positionals
+		if len(positionals) < len(required) {
+			fmt.Fprintf(stderr, "%saikito diff %s: error: the following arguments are required: %s\n",
+				subcommandUsage("diff "+target), target, strings.Join(required[len(positionals):], ", "))
+			return 2
+		}
 	}
 
 	aikitoDir, err := env.AikitoDir()
@@ -59,62 +103,102 @@ func cmdDiff(args []string, stdout, stderr io.Writer, env Environment) int {
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
 	}
-	if err := workspace.RequireCurrentLayout(aikitoDir); err != nil {
+	if err := requireLayoutLikePython(aikitoDir); err != nil {
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
 	}
 
+	collect := func(kind string, projectFilter *string) ([]driftDiff, bool) {
+		diffs, err := collectDriftDiffs(aikitoDir, env.Home, kind, projectFilter)
+		if err != nil {
+			fmt.Fprintf(stderr, "[ERROR] %v\n", err)
+			return nil, false
+		}
+		return diffs, true
+	}
 	if all {
-		diffs := collectDriftDiffs(aikitoDir, env.Home, "")
+		diffs, ok := collect("", nil)
+		if !ok {
+			return 1
+		}
 		fmt.Fprintln(stdout, renderDriftDiffs(diffs, "No drift detected."))
 		return 0
 	}
-
-	if len(rest) > 0 {
-		switch rest[0] {
-		case "project":
-			fmt.Fprintln(stderr, "[ERROR] 'aikito diff project' is not yet implemented in this Go build "+
-				"(needs project skill copy-mode sync, not yet ported). Use 'aikito diff mcp'/'aikito diff subagent' for now.")
-			return 2
-		case "mcp":
-			if len(rest) < 3 {
-				fmt.Fprintln(stderr, "[ERROR] Usage: aikito diff mcp <agent> <server>")
-				return 2
-			}
-			diffs := collectDriftDiffs(aikitoDir, env.Home, "mcp")
-			matching := filterDriftDiffs(diffs, "mcp", rest[1], rest[2])
-			fmt.Fprintln(stdout, renderDriftDiffs(matching, "No matching drift detected."))
-			return 0
-		case "subagent":
-			if len(rest) < 3 {
-				fmt.Fprintln(stderr, "[ERROR] Usage: aikito diff subagent <agent> <name>")
-				return 2
-			}
-			diffs := collectDriftDiffs(aikitoDir, env.Home, "subagent")
-			matching := filterDriftDiffs(diffs, "subagent", rest[1], rest[2])
-			fmt.Fprintln(stdout, renderDriftDiffs(matching, "No matching drift detected."))
-			return 0
-		default:
-			fmt.Fprintf(stderr, "[ERROR] Unknown diff target: %s\n", rest[0])
-			return 2
+	switch target {
+	case "project":
+		projectName := ""
+		if len(positionals) > 0 {
+			projectName = positionals[0]
 		}
+		if projectName == "" {
+			detected, derr := project.DetectCurrentProject(aikitoDir, env.Cwd, env.Home)
+			var conflict *project.ContextConflictError
+			if errors.As(derr, &conflict) {
+				fmt.Fprintf(stderr, "[CONFLICT] Multiple projects match current directory '%s': %s\n", conflict.Path, strings.Join(conflict.Projects, ", "))
+				return 1
+			}
+			if detected == "" {
+				fmt.Fprintln(stderr, "[ERROR] No project specified and current directory is not inside any registered project.\n"+
+					"Usage: aikito diff project <project> [skill] [file]")
+				return 1
+			}
+			fmt.Fprintf(stdout, "[aikito] Target project: '%s' (detected from cwd)\n", detected)
+			projectName = detected
+		}
+		diffs, ok := collect("project_skill", &projectName)
+		if !ok {
+			return 1
+		}
+		switch {
+		case len(positionals) > 2:
+			skill := positionals[1]
+			matching := filterDriftDiffs(diffs, driftFilter{kind: "project_skill", project: &projectName, name: &skill, file: &positionals[2]})
+			fmt.Fprintln(stdout, renderDriftDiffs(matching, "No matching drift detected."))
+		case len(positionals) > 1:
+			matching := filterDriftDiffs(diffs, driftFilter{kind: "project_skill", project: &projectName, name: &positionals[1]})
+			fmt.Fprintln(stdout, renderDriftDiffs(matching, "No matching drift detected."))
+		default:
+			fmt.Fprintln(stdout, renderProjectDriftIndex(projectName, diffs))
+		}
+		return 0
+	case "mcp", "subagent":
+		diffs, ok := collect(target, nil)
+		if !ok {
+			return 1
+		}
+		matching := filterDriftDiffs(diffs, driftFilter{kind: target, agent: &positionals[0], name: &positionals[1]})
+		fmt.Fprintln(stdout, renderDriftDiffs(matching, "No matching drift detected."))
+		return 0
 	}
-
-	diffs := collectDriftDiffs(aikitoDir, env.Home, "")
+	diffs, ok := collect("", nil)
+	if !ok {
+		return 1
+	}
 	fmt.Fprintln(stdout, renderDriftIndex(diffs))
 	return 0
 }
 
-func filterDriftDiffs(diffs []driftDiff, kind, agent, name string) []driftDiff {
+// driftFilter holds filter_drift_diffs' keyword arguments (nil = unset).
+type driftFilter struct {
+	kind                       string
+	project, name, file, agent *string
+}
+
+// filterDriftDiffs is diff.py's filter_drift_diffs.
+func filterDriftDiffs(diffs []driftDiff, f driftFilter) []driftDiff {
+	var file *string
+	if f.file != nil {
+		norm := path.Clean(strings.ReplaceAll(*f.file, "\\", "/"))
+		file = &norm
+	}
 	var out []driftDiff
 	for _, d := range diffs {
-		if d.kind != kind {
-			continue
-		}
-		if agent != "" && d.agent != agent {
-			continue
-		}
-		if name != "" && d.name != name {
+		switch {
+		case f.kind != "" && d.kind != f.kind,
+			f.project != nil && d.project != *f.project,
+			f.name != nil && d.name != *f.name,
+			file != nil && d.file != *file,
+			f.agent != nil && d.agent != *f.agent:
 			continue
 		}
 		out = append(out, d)
@@ -122,16 +206,122 @@ func filterDriftDiffs(diffs []driftDiff, kind, agent, name string) []driftDiff {
 	return out
 }
 
-// collectDriftDiffs mirrors diff.py's collect_drift_diffs for the "mcp" and
-// "subagent" kinds (kind == "" collects both; project_skill is out of
-// scope, see cmdDiff's doc comment).
-func collectDriftDiffs(aikitoDir, home, kind string) []driftDiff {
+// collectDriftDiffs is diff.py's collect_drift_diffs; kind "" collects all
+// kinds, projectFilter limits project skills.
+func collectDriftDiffs(aikitoDir, home, kind string, projectFilter *string) ([]driftDiff, error) {
 	var results []driftDiff
 	if kind == "" || kind == "mcp" {
-		results = append(results, collectMCPDriftDiffs(aikitoDir, home)...)
+		mcpDiffs, err := collectMCPDriftDiffs(aikitoDir, home)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, mcpDiffs...)
 	}
 	if kind == "" || kind == "subagent" {
 		results = append(results, collectSubagentDriftDiffs(aikitoDir, home)...)
+	}
+	if kind == "" || kind == "project_skill" {
+		results = append(results, collectProjectSkillDiffs(aikitoDir, home, projectFilter)...)
+	}
+	return results, nil
+}
+
+// collectProjectSkillDiffs is project.py's collect_project_skill_diffs:
+// per-file diffs for every drifted copied project skill.
+func collectProjectSkillDiffs(aikitoDir, home string, projectFilter *string) []driftDiff {
+	var results []driftDiff
+	projectsDir := filepath.Join(aikitoDir, "projects")
+	for _, name := range sortedDirEntries(projectsDir) {
+		dir := filepath.Join(projectsDir, name)
+		cfgPath := filepath.Join(dir, "agent.toml")
+		if !isDir(dir) || !isRegularFile(cfgPath) {
+			continue
+		}
+		raw, err := os.ReadFile(cfgPath)
+		if err != nil {
+			continue
+		}
+		cfg, err := workspace.DecodeTOML(raw)
+		if err != nil || lowerStr(cfg["sync_mode"], "link") != "copy" {
+			continue
+		}
+		binding := project.ResolveProjectBinding(cfg, home)
+		var skills []string
+		switch v := cfg["skills"].(type) {
+		case []any:
+			skills = listStrings(v)
+		case string:
+			for _, r := range v {
+				skills = append(skills, string(r))
+			}
+		}
+		sort.Strings(skills)
+		for _, entry := range binding.ActiveEntries() {
+			if projectFilter != nil && name != *projectFilter {
+				continue
+			}
+			for _, skill := range skills {
+				status, _ := copiedSkillState(aikitoDir, home, name, entry.ResolvedPath, skill)
+				if status != "DRIFT" {
+					continue
+				}
+				canonicalPath := filepath.Join(aikitoDir, "skills", skill)
+				runtimePath := filepath.Join(entry.ResolvedPath, ".agents", "skills", skill)
+				canonicalFiles, cerr := fileInventory(canonicalPath)
+				runtimeFiles, rerr := fileInventory(runtimePath)
+				if cerr != "" || rerr != "" {
+					continue
+				}
+				keys := map[string]bool{}
+				for k := range canonicalFiles {
+					keys[k] = true
+				}
+				for k := range runtimeFiles {
+					keys[k] = true
+				}
+				rels := make([]string, 0, len(keys))
+				for k := range keys {
+					rels = append(rels, k)
+				}
+				sort.Strings(rels)
+				for _, rel := range rels {
+					actualPath, hasActual := runtimeFiles[rel]
+					expectedPath, hasExpected := canonicalFiles[rel]
+					var actual, expected []byte
+					if hasActual {
+						if actual, err = os.ReadFile(actualPath); err != nil {
+							continue
+						}
+					}
+					if hasExpected {
+						if expected, err = os.ReadFile(expectedPath); err != nil {
+							continue
+						}
+					}
+					if bytes.Equal(actual, expected) {
+						continue
+					}
+					actualLabel, expectedLabel := "/dev/null", "/dev/null"
+					if hasActual {
+						actualLabel = actualPath
+					}
+					if hasExpected {
+						expectedLabel = expectedPath
+					}
+					var diffText string
+					if bytes.IndexByte(actual, 0) >= 0 || bytes.IndexByte(expected, 0) >= 0 {
+						diffText = fmt.Sprintf("Binary files differ: %s and %s", actualLabel, expectedLabel)
+					} else {
+						diffText = unifiedDiff(
+							splitKeepEnds(strings.ToValidUTF8(string(actual), "\uFFFD")),
+							splitKeepEnds(strings.ToValidUTF8(string(expected), "\uFFFD")),
+							"actual: "+actualLabel, "expected: "+expectedLabel)
+					}
+					results = append(results, driftDiff{kind: "project_skill", name: skill, diff: diffText,
+						project: name, file: rel, checkout: entry.ResolvedPath})
+				}
+			}
+		}
 	}
 	return results
 }
@@ -144,10 +334,15 @@ func collectDriftDiffs(aikitoDir, home, kind string) []driftDiff {
 // "CONFLICT" (mirrors evaluate_spec_status mapping both to "UPDATE"/"DRIFT")
 // and it has an existing observed entry (diff.py skips a server whose
 // current config entry is None — nothing to diff against yet).
-func collectMCPDriftDiffs(aikitoDir, home string) []driftDiff {
+func collectMCPDriftDiffs(aikitoDir, home string) ([]driftDiff, error) {
 	plan, err := mcp.BuildMCPPlan(aikitoDir, home, mcp.BuildMCPPlanOptions{})
 	if err != nil {
-		return nil
+		// diff.py retries load_agent_specs, whose error (e.g. no mcps/
+		// directory) is what the user sees.
+		if _, specErr := mcp.LoadAgentSpecs(aikitoDir, home); specErr != nil {
+			return nil, specErr
+		}
+		return nil, nil
 	}
 	var results []driftDiff
 	for _, op := range plan.Operations {
@@ -169,7 +364,7 @@ func collectMCPDriftDiffs(aikitoDir, home string) []driftDiff {
 			kind: "mcp", name: op.Target.LogicalIdentity, agent: op.Target.Agent, diff: diffText,
 		})
 	}
-	return results
+	return results, nil
 }
 
 // mcpOrderedJSONSortedLines mirrors diff.py's _json_lines: sorted-key,
@@ -407,13 +602,15 @@ func renderDriftIndex(diffs []driftDiff) string {
 	var lines []string
 	lines = append(lines, "Drift detected:")
 
-	var mcpItems, subagentItems []driftDiff
+	var mcpItems, subagentItems, projectItems []driftDiff
 	for _, d := range diffs {
-		switch d.kind {
-		case "mcp":
+		switch {
+		case d.kind == "mcp":
 			mcpItems = append(mcpItems, d)
-		case "subagent":
+		case d.kind == "subagent":
 			subagentItems = append(subagentItems, d)
+		case d.kind == "project_skill" && d.project != "":
+			projectItems = append(projectItems, d)
 		}
 	}
 
@@ -436,7 +633,45 @@ func renderDriftIndex(diffs []driftDiff) string {
 		}
 	}
 
+	if len(projectItems) > 0 {
+		lines = append(lines, "", "Projects")
+		counts := map[string]map[string]map[string]int{}
+		for _, d := range projectItems {
+			if counts[d.project] == nil {
+				counts[d.project] = map[string]map[string]int{}
+			}
+			if counts[d.project][d.checkout] == nil {
+				counts[d.project][d.checkout] = map[string]int{}
+			}
+			counts[d.project][d.checkout][d.name]++
+		}
+		for n, proj := range sortedKeys3(counts) {
+			if n > 0 {
+				lines = append(lines, "")
+			}
+			lines = append(lines, "  "+proj)
+			for _, checkout := range sortedKeys2(counts[proj]) {
+				indent := "    "
+				if checkout != "" {
+					lines = append(lines, "    Checkout: "+checkout)
+					indent = "      "
+				}
+				skills := counts[proj][checkout]
+				for _, skill := range sortedKeys1(skills) {
+					plural := "files"
+					if skills[skill] == 1 {
+						plural = "file"
+					}
+					lines = append(lines, fmt.Sprintf("%s%-14s %d %s changed", indent, skill, skills[skill], plural))
+				}
+			}
+		}
+	}
+
 	var hints []string
+	if len(projectItems) > 0 {
+		hints = append(hints, "aikito diff project <project> <skill>")
+	}
 	if len(mcpItems) > 0 {
 		hints = append(hints, "aikito diff mcp <agent> <server>")
 	}
@@ -449,5 +684,80 @@ func renderDriftIndex(diffs []driftDiff) string {
 			lines = append(lines, "  "+h)
 		}
 	}
+	return strings.Join(lines, "\n")
+}
+
+func sortedKeys1(m map[string]int) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	sort.Strings(out)
+	return out
+}
+
+func sortedKeys2(m map[string]map[string]int) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	sort.Strings(out)
+	return out
+}
+
+func sortedKeys3(m map[string]map[string]map[string]int) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	sort.Strings(out)
+	return out
+}
+
+// renderProjectDriftIndex is diff.py's render_project_drift_index.
+func renderProjectDriftIndex(projectName string, diffs []driftDiff) string {
+	checkouts := map[string]map[string][]string{}
+	matched := false
+	for _, d := range diffs {
+		if d.kind != "project_skill" || d.project != projectName {
+			continue
+		}
+		matched = true
+		if d.file == "" {
+			continue
+		}
+		if checkouts[d.checkout] == nil {
+			checkouts[d.checkout] = map[string][]string{}
+		}
+		checkouts[d.checkout][d.name] = append(checkouts[d.checkout][d.name], d.file)
+	}
+	if !matched {
+		return "No matching drift detected."
+	}
+	lines := []string{"Project " + projectName}
+	cos := make([]string, 0, len(checkouts))
+	for c := range checkouts {
+		cos = append(cos, c)
+	}
+	sort.Strings(cos)
+	for _, c := range cos {
+		if c != "" {
+			lines = append(lines, "", "Checkout: "+c)
+		}
+		skills := make([]string, 0, len(checkouts[c]))
+		for k := range checkouts[c] {
+			skills = append(skills, k)
+		}
+		sort.Strings(skills)
+		for _, skill := range skills {
+			lines = append(lines, "", skill)
+			files := append([]string{}, checkouts[c][skill]...)
+			sort.Strings(files)
+			for _, f := range files {
+				lines = append(lines, "  "+f)
+			}
+		}
+	}
+	lines = append(lines, "", "Review details:", "  aikito diff project "+projectName+" <skill>")
 	return strings.Join(lines, "\n")
 }

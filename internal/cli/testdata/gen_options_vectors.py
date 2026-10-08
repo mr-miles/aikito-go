@@ -364,6 +364,34 @@ scenario("edit_instructions_conflict", init(".claude") + project("q1")
             run("edit", "instructions", cwd="q1", env=EDIT)])
 
 
+# --- diff project (and project skills in the drift index) ---
+DIFF_BASE = (init(".claude") + project("p1", skills=("cs", "ds"), sync_mode="copy") + project("p2", skills=("cs",))
+             + [w("aikito/skills/cs/SKILL.md", "---\nname: cs\ndescription: c\n---\nline one\nline two\n"),
+                w("aikito/skills/cs/ref/a.md", "ref a\n"),
+                w("aikito/skills/ds/SKILL.md", "---\nname: ds\ndescription: d\n---\nD\n"),
+                {"op": "mkdir", "path": "p1/sub"}, {"op": "mkdir", "path": "outside"},
+                run("sync", "project", "p1"), run("sync", "project", "p2")])
+scenario("diff_project", DIFF_BASE
+         + [run("diff"), run("diff", "project", "p1"),
+            {"op": "replace", "path": "p1/.agents/skills/cs/SKILL.md", "old": "line two", "new": "line 2 edited"},
+            w("p1/.agents/skills/cs/new.md", "extra\n"), {"op": "rm", "path": "p1/.agents/skills/cs/ref/a.md"},
+            w("p1/.agents/skills/ds/blob.bin", "a\x00b"),
+            run("diff"), run("diff", "--all"), run("diff", "--al"),
+            run("diff", "project", "p1"), run("diff", "project", cwd="p1/sub"),
+            run("diff", "project", cwd="outside"), run("diff", "project", "p2"),
+            run("diff", "project", "p1", "cs"), run("diff", "project", "p1", "cs", "SKILL.md"),
+            run("diff", "project", "p1", "cs", "./ref/../SKILL.md"), run("diff", "project", "p1", "cs", "ref\\a.md"),
+            run("diff", "project", "p1", "ds"), run("diff", "project", "p1", "nope"),
+            run("diff", "project", "nope"), run("diff", "project", "p1", "cs", "SKILL.md", "extra"),
+            run("diff", "project", "--all"), run("diff", "--all", "project", "p1"),
+            run("diff", "mcp"), run("diff", "mcp", "claude-code"), run("diff", "subagent", "a"),
+            run("diff", "mcp", "claude-code", "x"), run("diff", "bogus"), run("diff", "--bogus")])
+scenario("diff_project_conflict", init(".claude") + project("q1")
+         + [w("aikito/projects/q2/agent.toml", 'name = "q2"\npath = "~/q1"\n'),
+            run("diff", "project", cwd="q1")])
+scenario("diff_no_workspace", [run("diff"), run("diff", "project"), run("diff", "--all"), run("diff", "project", "x")])
+
+
 def main():
     vectors = {name: {"steps": steps, "expect": run_scenario(steps)} for name, steps in SCENARIOS.items()}
     with open(os.path.join(HERE, "options_vectors.json"), "w") as f:

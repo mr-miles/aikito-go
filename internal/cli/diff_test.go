@@ -220,28 +220,8 @@ func TestCmdDiffSubagentDrift(t *testing.T) {
 	}
 }
 
-func TestCmdDiffArgumentErrors(t *testing.T) {
-	env := setupMCPWorkspace(t)
-	cases := []struct {
-		args []string
-		want string
-	}{
-		{[]string{"diff", "project"}, "'aikito diff project' is not yet implemented"},
-		{[]string{"diff", "mcp"}, "Usage: aikito diff mcp <agent> <server>"},
-		{[]string{"diff", "mcp", "claude-code"}, "Usage: aikito diff mcp <agent> <server>"},
-		{[]string{"diff", "subagent", "claude-code"}, "Usage: aikito diff subagent <agent> <name>"},
-		{[]string{"diff", "bogus"}, "Unknown diff target: bogus"},
-	}
-	for _, c := range cases {
-		_, errOut, code := runCmd(t, env, c.args...)
-		if code != 2 {
-			t.Errorf("%v exit = %d, want 2", c.args, code)
-		}
-		if !strings.Contains(errOut, c.want) {
-			t.Errorf("%v stderr = %q, want %q", c.args, errOut, c.want)
-		}
-	}
-}
+// Argument errors (argparse wording) are checked against Python by
+// options_vectors.json (diff_project scenario).
 
 func TestCmdDiffWithoutWorkspace(t *testing.T) {
 	env := testEnv(t)

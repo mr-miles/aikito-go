@@ -3370,6 +3370,715 @@
    }
   ]
  },
+ "diff_no_workspace": {
+  "expect": [
+   {
+    "args": [
+     "diff"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] MCP config directory not found: H/aikito/mcps\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "project"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] No project specified and current directory is not inside any registered project.\nUsage: aikito diff project <project> [skill] [file]\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "--all"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] MCP config directory not found: H/aikito/mcps\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "x"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "No matching drift detected.\n"
+   }
+  ],
+  "steps": [
+   {
+    "args": [
+     "diff"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "--all"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "x"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "diff_project": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p1' (mode: copy)\n[COPY DIR] H/aikito/skills/cs -> H/p1/.agents/skills/cs\n[COPY DIR] H/aikito/skills/ds -> H/p1/.agents/skills/ds\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[SUCCESS] Project 'p1' synced successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p2' (mode: link)\n[LINK] H/p2/.agents/skills/cs -> H/aikito/skills/cs\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n[SUCCESS] Project 'p2' synced successfully.\n"
+   },
+   {
+    "args": [
+     "diff"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "No drift detected.\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "No matching drift detected.\n"
+   },
+   {
+    "args": [
+     "diff"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Drift detected:\n\nProjects\n  p1\n    Checkout: H/p1\n      cs             3 files changed\n      ds             1 file changed\n\nReview details:\n  aikito diff project <project> <skill>\n"
+   },
+   {
+    "args": [
+     "diff",
+     "--all"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[Project p1/skill cs — SKILL.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/SKILL.md\n+++ expected: H/aikito/skills/cs/SKILL.md\n@@ -3,4 +3,4 @@\n description: c\n ---\n line one\n-line 2 edited\n+line two\n\n[Project p1/skill cs — new.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/new.md\n+++ expected: /dev/null\n@@ -1 +0,0 @@\n-extra\n\n[Project p1/skill cs — ref/a.md (H/p1)]\n--- actual: /dev/null\n+++ expected: H/aikito/skills/cs/ref/a.md\n@@ -0,0 +1 @@\n+ref a\n\n[Project p1/skill ds — blob.bin (H/p1)]\nBinary files differ: H/p1/.agents/skills/ds/blob.bin and /dev/null\n"
+   },
+   {
+    "args": [
+     "diff",
+     "--al"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[Project p1/skill cs — SKILL.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/SKILL.md\n+++ expected: H/aikito/skills/cs/SKILL.md\n@@ -3,4 +3,4 @@\n description: c\n ---\n line one\n-line 2 edited\n+line two\n\n[Project p1/skill cs — new.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/new.md\n+++ expected: /dev/null\n@@ -1 +0,0 @@\n-extra\n\n[Project p1/skill cs — ref/a.md (H/p1)]\n--- actual: /dev/null\n+++ expected: H/aikito/skills/cs/ref/a.md\n@@ -0,0 +1 @@\n+ref a\n\n[Project p1/skill ds — blob.bin (H/p1)]\nBinary files differ: H/p1/.agents/skills/ds/blob.bin and /dev/null\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Project p1\n\nCheckout: H/p1\n\ncs\n  SKILL.md\n  new.md\n  ref/a.md\n\nds\n  blob.bin\n\nReview details:\n  aikito diff project p1 <skill>\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[aikito] Target project: 'p1' (detected from cwd)\nProject p1\n\nCheckout: H/p1\n\ncs\n  SKILL.md\n  new.md\n  ref/a.md\n\nds\n  blob.bin\n\nReview details:\n  aikito diff project p1 <skill>\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] No project specified and current directory is not inside any registered project.\nUsage: aikito diff project <project> [skill] [file]\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "No matching drift detected.\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[Project p1/skill cs — SKILL.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/SKILL.md\n+++ expected: H/aikito/skills/cs/SKILL.md\n@@ -3,4 +3,4 @@\n description: c\n ---\n line one\n-line 2 edited\n+line two\n\n[Project p1/skill cs — new.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/new.md\n+++ expected: /dev/null\n@@ -1 +0,0 @@\n-extra\n\n[Project p1/skill cs — ref/a.md (H/p1)]\n--- actual: /dev/null\n+++ expected: H/aikito/skills/cs/ref/a.md\n@@ -0,0 +1 @@\n+ref a\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs",
+     "SKILL.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[Project p1/skill cs — SKILL.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/SKILL.md\n+++ expected: H/aikito/skills/cs/SKILL.md\n@@ -3,4 +3,4 @@\n description: c\n ---\n line one\n-line 2 edited\n+line two\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs",
+     "./ref/../SKILL.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[Project p1/skill cs — SKILL.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/SKILL.md\n+++ expected: H/aikito/skills/cs/SKILL.md\n@@ -3,4 +3,4 @@\n description: c\n ---\n line one\n-line 2 edited\n+line two\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs",
+     "ref\\a.md"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[Project p1/skill cs — ref/a.md (H/p1)]\n--- actual: /dev/null\n+++ expected: H/aikito/skills/cs/ref/a.md\n@@ -0,0 +1 @@\n+ref a\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "ds"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[Project p1/skill ds — blob.bin (H/p1)]\nBinary files differ: H/p1/.agents/skills/ds/blob.bin and /dev/null\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "nope"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "No matching drift detected.\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "nope"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "No matching drift detected.\n"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs",
+     "SKILL.md",
+     "extra"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: extra\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "--all"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --all\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "--all",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[Project p1/skill cs — SKILL.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/SKILL.md\n+++ expected: H/aikito/skills/cs/SKILL.md\n@@ -3,4 +3,4 @@\n description: c\n ---\n line one\n-line 2 edited\n+line two\n\n[Project p1/skill cs — new.md (H/p1)]\n--- actual: H/p1/.agents/skills/cs/new.md\n+++ expected: /dev/null\n@@ -1 +0,0 @@\n-extra\n\n[Project p1/skill cs — ref/a.md (H/p1)]\n--- actual: /dev/null\n+++ expected: H/aikito/skills/cs/ref/a.md\n@@ -0,0 +1 @@\n+ref a\n\n[Project p1/skill ds — blob.bin (H/p1)]\nBinary files differ: H/p1/.agents/skills/ds/blob.bin and /dev/null\n"
+   },
+   {
+    "args": [
+     "diff",
+     "mcp"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito diff mcp [-h] agent server\naikito diff mcp: error: the following arguments are required: agent, server\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "mcp",
+     "claude-code"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito diff mcp [-h] agent server\naikito diff mcp: error: the following arguments are required: server\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "subagent",
+     "a"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito diff subagent [-h] agent name\naikito diff subagent: error: the following arguments are required: name\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "mcp",
+     "claude-code",
+     "x"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "No matching drift detected.\n"
+   },
+   {
+    "args": [
+     "diff",
+     "bogus"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito diff [-h] [--all] {project,mcp,subagent} ...\naikito diff: error: argument diff_target: invalid choice: 'bogus' (choose from project, mcp, subagent)\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "diff",
+     "--bogus"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --bogus\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"copy\"\nskills = [\"cs\", \"ds\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"link\"\nskills = [\"cs\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "content": "---\nname: cs\ndescription: c\n---\nline one\nline two\n",
+    "op": "write",
+    "path": "aikito/skills/cs/SKILL.md"
+   },
+   {
+    "content": "ref a\n",
+    "op": "write",
+    "path": "aikito/skills/cs/ref/a.md"
+   },
+   {
+    "content": "---\nname: ds\ndescription: d\n---\nD\n",
+    "op": "write",
+    "path": "aikito/skills/ds/SKILL.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1/sub"
+   },
+   {
+    "op": "mkdir",
+    "path": "outside"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "new": "line 2 edited",
+    "old": "line two",
+    "op": "replace",
+    "path": "p1/.agents/skills/cs/SKILL.md"
+   },
+   {
+    "content": "extra\n",
+    "op": "write",
+    "path": "p1/.agents/skills/cs/new.md"
+   },
+   {
+    "op": "rm",
+    "path": "p1/.agents/skills/cs/ref/a.md"
+   },
+   {
+    "content": "a\u0000b",
+    "op": "write",
+    "path": "p1/.agents/skills/ds/blob.bin"
+   },
+   {
+    "args": [
+     "diff"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "--all"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "--al"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project"
+    ],
+    "cwd": "p1/sub",
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project"
+    ],
+    "cwd": "outside",
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p2"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs",
+     "SKILL.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs",
+     "./ref/../SKILL.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs",
+     "ref\\a.md"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "ds"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "nope"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "nope"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "p1",
+     "cs",
+     "SKILL.md",
+     "extra"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "project",
+     "--all"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "--all",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "mcp"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "mcp",
+     "claude-code"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "subagent",
+     "a"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "mcp",
+     "claude-code",
+     "x"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "bogus"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "diff",
+     "--bogus"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "diff_project_conflict": {
+  "expect": [
+   {
+    "args": [
+     "diff",
+     "project"
+    ],
+    "exit": 1,
+    "stderr": "[CONFLICT] Multiple projects match current directory 'H/q1': q1, q2\n",
+    "stdout": ""
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "op": "mkdir",
+    "path": "q1"
+   },
+   {
+    "content": "name = \"q1\"\npath = \"~/q1\"\nsync_mode = \"link\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/q1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/q1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/q1/memory/notes"
+   },
+   {
+    "content": "name = \"q2\"\npath = \"~/q1\"\n",
+    "op": "write",
+    "path": "aikito/projects/q2/agent.toml"
+   },
+   {
+    "args": [
+     "diff",
+     "project"
+    ],
+    "cwd": "q1",
+    "op": "run"
+   }
+  ]
+ },
  "edit_instructions_conflict": {
   "expect": [
    {
@@ -4427,7 +5136,7 @@
      "D p2/.agents",
      "D p2/.agents/memory",
      "D p2/.agents/skills",
-     "F .local/state/aikito/project-skills/df0674cdb2ac5215b635bc929c4867d1e8a2ba7bfaf2c71eec9905884f37fd65.json 600",
+     "F .local/state/aikito/project-skills/29616dbf82df77da2cf9fcd57c600f3713f399bf4c12672d9034e52819cff48d.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/cs/SKILL.md",
      "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
@@ -4712,7 +5421,7 @@
      "D p2/.agents",
      "D p2/.agents/memory",
      "D p2/.agents/skills",
-     "F .local/state/aikito/project-skills/0b7e395673f9b6335e9a61fa7484a8f842bd032fbea0c9f49002fc951fa89cc5.json 600",
+     "F .local/state/aikito/project-skills/d6fbfa46bf47be780eef8ecc70349769167831a30aa048ba309d725c15f109cc.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/cs/SKILL.md",
      "L .agents/skills/aikito -> H/aikito/skills/aikito",
@@ -4928,7 +5637,7 @@
      "D p2/.agents",
      "D p2/.agents/memory",
      "D p2/.agents/skills",
-     "F .local/state/aikito/project-skills/c239095dd629f92bbec0fe3d2ff489faaa8a6fee300f9310b0514704cc2a545d.json 600",
+     "F .local/state/aikito/project-skills/566eae987b61eb49fa30b6c0f499ec1c5e17f56d64808e5e60747f17f161ee0c.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/cs/SKILL.md",
      "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
@@ -5044,7 +5753,7 @@
      "D p2/.agents",
      "D p2/.agents/memory",
      "D p2/.agents/skills",
-     "F .local/state/aikito/project-skills/c239095dd629f92bbec0fe3d2ff489faaa8a6fee300f9310b0514704cc2a545d.json 600",
+     "F .local/state/aikito/project-skills/566eae987b61eb49fa30b6c0f499ec1c5e17f56d64808e5e60747f17f161ee0c.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/cs/SKILL.md",
      "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
