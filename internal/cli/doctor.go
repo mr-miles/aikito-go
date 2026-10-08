@@ -18,9 +18,7 @@
 //
 // NOT implemented (each still appears in the report as a stub section
 // saying so, matching run_doctor's section list so `--json` output shape
-// stays recognizable): Adoption (needs adopt.py's full plan builder; this
-// Go port's `aikito adopt` is itself a reduced global-instructions-only
-// slice, see adopt.go), LocalState (needs local_state.py's remote-sync
+// stays recognizable): LocalState (needs local_state.py's remote-sync
 // bookkeeping — phase 2 territory), the Python-interpreter-consistency
 // check within Environment (meaningless for a compiled Go binary, dropped
 // rather than stubbed), and --fix's registry-field-backfill behavior
@@ -582,11 +580,14 @@ func checkSecurity(aikitoDir, home string) DoctorSection {
 				continue
 			}
 			checkedN++
-			if !compat.IsWindows() && info.Mode().Perm()&0o077 != 0 {
+			// compat.py's check_credential_permissions: secure iff the mode is
+			// exactly 0600 (so 0700 and 0400 are flagged too), described as
+			// Python's oct() renders it.
+			if mode := info.Mode().Perm(); !compat.IsWindows() && mode != 0o600 {
 				issues++
 				findings = append(findings, fail(
-					fmt.Sprintf("Credential file has insecure permissions (mode %o): %s", info.Mode().Perm(), homeRel(spec.ConfigPath, home)),
-					fmt.Sprintf("chmod 600 %s", spec.ConfigPath)))
+					fmt.Sprintf("Credential file has insecure permissions (0o%o): %s", mode, homeRel(spec.ConfigPath, home)),
+					`chmod 600 "`+spec.ConfigPath+`"`)) // compat.py: f'chmod 600 "{path}"', no escaping
 			}
 		}
 		if checkedN > 0 && issues == 0 {
@@ -621,7 +622,7 @@ func checkEnvironment(aikitoDir, home string) DoctorSection {
 		} else if _, serr := os.Stat(resolved); serr != nil {
 			findings = append(findings, fail(fmt.Sprintf("$AIKITO_DIR points to non-existent path: %s", envDir), ""))
 		} else {
-			findings = append(findings, ok(fmt.Sprintf("$AIKITO_DIR -> %s", homeRel(resolved, home))))
+			findings = append(findings, ok(fmt.Sprintf("$AIKITO_DIR → %s", homeRel(resolved, home))))
 		}
 	} else {
 		findings = append(findings, ok(fmt.Sprintf("AIKITO_DIR not set; using configured workspace: %s", homeRel(aikitoDir, home))))
@@ -1157,19 +1158,23 @@ func checkAdoption(aikitoDir, home string) DoctorSection {
 	if plan.Instructions != nil && plan.Instructions.Action == "CREATE" {
 		adoptable++
 	}
+	// Mirrors doctor.py's check_adoption: per-resource blockers first, then
+	// the pending-count summary, and the OK line only when there is nothing
+	// at all to report.
 	var findings []Finding
-	if adoptable == 0 {
-		findings = append(findings, ok("No agent-native resources pending adoption"))
-	} else {
-		findings = append(findings, warn(
-			fmt.Sprintf("%d resource(s) adoptable into the canonical workspace", adoptable),
-			"aikito adopt --dry-run"))
-	}
 	if plan.Instructions != nil && plan.Instructions.Action == "CONFLICT" {
 		findings = append(findings, warn("Global instructions: canonical content diverges from agent-native source(s)", "aikito adopt --verbose"))
 	}
 	for _, c := range plan.MCPConflicts {
 		findings = append(findings, warn(fmt.Sprintf("MCP server '%s': %s", c.Name, c.Reason), "aikito adopt --skip "+c.Name))
+	}
+	if adoptable > 0 {
+		findings = append(findings, warn(
+			fmt.Sprintf("%d local Agent resource(s) are available to adopt", adoptable),
+			"aikito adopt --dry-run --verbose"))
+	}
+	if len(findings) == 0 {
+		findings = append(findings, ok("No external Agent configuration needs adoption"))
 	}
 	return DoctorSection{Name: "Adoption", Findings: findings}
 }

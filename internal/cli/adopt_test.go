@@ -189,7 +189,7 @@ func TestCheckAdoptionDoctorSection(t *testing.T) {
 	section = checkAdoption(aikitoDir, env.Home)
 	found := false
 	for _, f := range section.Findings {
-		if f.Status == "WARN" && strings.Contains(f.Message, "adoptable") {
+		if f.Status == "WARN" && strings.Contains(f.Message, "available to adopt") {
 			found = true
 		}
 	}
