@@ -1,0 +1,90 @@
+$ () aikito init project p1 {H}/p1
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p1/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' initialized in Aikito workspace.
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] <HOME>/p1/.agents/memory/notes -> <HOME>/aikito/projects/p1/memory/notes
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: copy)
+[COPY DIR] <HOME>/aikito/skills/alpha -> <HOME>/p1/.agents/skills/alpha
+[COPY DIR] <HOME>/aikito/skills/beta -> <HOME>/p1/.agents/skills/beta
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: copy)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+--- stderr
+[CONFLICT] Copied project skill 'alpha' drifted from workspace skill
+[ERROR] Project synchronization aborted.
+--- exit 1
+$ () aikito sync project p1 --dry-run
+--- stdout
+--- stderr
+[CONFLICT] Copied project skill 'alpha' drifted from workspace skill
+[ERROR] Project synchronization aborted.
+--- exit 1
+$ () aikito sync project p1 --force
+--- stdout
+[INFO] Syncing project 'p1' (mode: copy)
+[AUTH] AUTH: [UPDATE/overwrite_drift] project='p1' skill='alpha' path='<HOME>/p1/.agents/skills/alpha' rep='copy->copy' fp='v1:ef050b94bc6042b052241b99edd65c126b55196466fcbf7ade0e0ad8d9f1f13d->v1:080d48892f0cbfd6b793a319e0f41b5d075bef285ff697f92a40395068f2a40c' state_revision='2->active'
+[COPY DIR] <HOME>/aikito/skills/alpha -> <HOME>/p1/.agents/skills/alpha
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: copy)
+[COPY DIR] <HOME>/aikito/skills/beta -> <HOME>/p1/.agents/skills/beta
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: copy)
+[INFO] Preserving project-owned skill: <HOME>/p1/.agents/skills/beta
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: copy)
+[INFO] Skill 'beta' at <HOME>/p1/.agents/skills/beta is registered but inactive (matches canonical). Run 'aikito sync project p1 <HOME>/p1 --force' to reactivate management.
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1 --force
+--- stdout
+[INFO] Syncing project 'p1' (mode: copy)
+[AUTH] AUTH: [REACTIVATE_STATE/reactivate_state] project='p1' skill='beta' path='<HOME>/p1/.agents/skills/beta' rep='copy->copy' fp='v1:fabb416384b1b9b9cf18ef582263c34dd324752c63e166bee7168bc174b96486->v1:fabb416384b1b9b9cf18ef582263c34dd324752c63e166bee7168bc174b96486' state_revision='5->active'
+[INFO] Reactivate state for inactive copied skill 'beta'
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: link)
+[LINK] <HOME>/p1/.agents/skills/alpha -> <HOME>/aikito/skills/alpha
+[LINK] <HOME>/p1/.agents/skills/beta -> <HOME>/aikito/skills/beta
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0

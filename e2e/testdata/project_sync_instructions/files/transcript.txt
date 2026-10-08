@@ -1,0 +1,44 @@
+$ () aikito init project p1 {H}/p1
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p1/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' initialized in Aikito workspace.
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] <HOME>/p1/.agents/memory/notes -> <HOME>/aikito/projects/p1/memory/notes
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+--- stderr
+[ERROR] Unmanaged project instructions for Claude Code already exist: <HOME>/p1/.claude/CLAUDE.md
+[CONFLICT] Claude Code instructions: Target preserved: <HOME>/p1/.claude/CLAUDE.md. Target is a regular file; Aikito does not overwrite existing instruction files. Move or remove it manually, then run sync again.
+[ERROR] Project synchronization aborted.
+--- exit 1
+$ () aikito sync project p1 --dry-run
+--- stdout
+[INFO] Previewing sync for project 'p1' (mode: link)
+[DRY RUN LINK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' sync preview completed.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: link)
+[LINK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: link)
+[CLEANUP] Removed stale managed item: <HOME>/p1/.claude/CLAUDE.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito init project p2 {H}/p2
+--- stdout
+--- stderr
+[ERROR] Unmanaged project instructions for Claude Code already exist: <HOME>/p2/.claude/CLAUDE.md
+--- exit 1

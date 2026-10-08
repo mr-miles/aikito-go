@@ -1,0 +1,38 @@
+$ () aikito init project p1 {H}/p1
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p1/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' initialized in Aikito workspace.
+[INFO] Syncing project 'p1' (mode: link)
+[INFO] Preserving project-owned skill: <HOME>/p1/.agents/skills/alpha
+[INFO] Preserving project-owned skill: <HOME>/p1/.agents/skills/own
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] <HOME>/p1/.agents/memory/notes -> <HOME>/aikito/projects/p1/memory/notes
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: copy)
+[INFO] Skill 'alpha' at <HOME>/p1/.agents/skills/alpha is registered but unmanaged (matches canonical without state). Run 'aikito sync project p1 <HOME>/p1 --force' to claim management.
+[INFO] Preserving project-owned skill: <HOME>/p1/.agents/skills/own
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1 --force
+--- stdout
+[INFO] Syncing project 'p1' (mode: copy)
+[AUTH] AUTH: [CLAIM_STATE/claim_state] project='p1' skill='alpha' path='<HOME>/p1/.agents/skills/alpha' rep='copy->copy' fp='v1:080d48892f0cbfd6b793a319e0f41b5d075bef285ff697f92a40395068f2a40c->v1:080d48892f0cbfd6b793a319e0f41b5d075bef285ff697f92a40395068f2a40c' state_revision='0->active'
+[INFO] Claim management state for skill 'alpha'
+[INFO] Preserving project-owned skill: <HOME>/p1/.agents/skills/own
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+--- stderr
+[CONFLICT] Cannot switch copy to link for skill 'alpha': directory is drifted, unmanaged, or inactive
+[ERROR] Project synchronization aborted.
+--- exit 1

@@ -7,13 +7,11 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"sort"
 	"strings"
-
-	"github.com/pelletier/go-toml/v2"
 
 	"github.com/mr-miles/aikito-go/internal/compat"
 	"github.com/mr-miles/aikito-go/internal/project"
+	"github.com/mr-miles/aikito-go/internal/projectsync"
 	"github.com/mr-miles/aikito-go/internal/registry"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
@@ -501,101 +499,16 @@ func cmdInitProject(args []string, stdout, stderr io.Writer, env Environment) in
 
 	// As in Python's cmd_init_project, finish with a project sync so the
 	// checkout's .agents/ runtime exists straight away.
-	return cmdSyncProject([]string{resolvedName}, stdout, stderr, env)
+	// Python passes the unresolved project path through; sync_project
+	// resolves it and reports the resolved path.
+	return runProjectSync(resolvedName, projectPath, false, false, stdout, stderr, env)
 }
 
-// validateInitProject ports init.py's _project_validation_error with
-// reject_unexpected_entries=True (project_validation_error). Returns "" if
-// valid, else a user-facing error message.
-//
-// Not yet ported: the "Unmanaged project instructions ... already exist"
-// check, which needs agents.resolve_targets("project_instructions")
-// (internal/registry/targets_todo.go).
+// validateInitProject is init.py's project_validation_error (registration
+// validation, where every pre-existing runtime entry is foreign). Returns
+// "" if valid, else a user-facing error message.
 func validateInitProject(aikitoDir, home, projectName, projectPath string) string {
-	if !project.ValidProjectName(projectName) {
-		return "Project name must start with a letter or digit and contain only " +
-			"letters, digits, dots, underscores, or hyphens."
-	}
-	info, err := os.Stat(projectPath)
-	if err != nil {
-		return fmt.Sprintf("Project path does not exist: %s", projectPath)
-	}
-	if !info.IsDir() {
-		return fmt.Sprintf("Project path is not a directory: %s", projectPath)
-	}
-	if st, err := os.Stat(filepath.Join(aikitoDir, "layout.toml")); err != nil || !st.Mode().IsRegular() {
-		return fmt.Sprintf("Aikito workspace is not initialized: %s", aikitoDir)
-	}
-
-	configPath := filepath.Join(aikitoDir, "projects", projectName, "agent.toml")
-	var configData map[string]any
-	if _, err := os.Lstat(configPath); err == nil {
-		data, err := os.ReadFile(configPath)
-		if err == nil {
-			err = toml.Unmarshal(data, &configData)
-		}
-		if err != nil {
-			return fmt.Sprintf("Failed to read existing project config %s: %v", configPath, err)
-		}
-		binding := project.ResolveProjectBinding(configData, home)
-		if len(binding.Entries) > 0 {
-			matched := false
-			var registered []string
-			for _, e := range binding.Entries {
-				if e.ResolvedPath == projectPath {
-					matched = true
-				}
-				registered = append(registered, e.ResolvedPath)
-			}
-			if !matched {
-				return fmt.Sprintf("Project '%s' is already registered to %s, not %s.",
-					projectName, strings.Join(registered, ", "), projectPath)
-			}
-		}
-	}
-
-	// Only memory is checked for foreign entries; skills only has to be a
-	// directory (as in Python).
-	allowedMemory := map[string]bool{}
-	if configData != nil {
-		if list, ok := configData["memory"].([]any); ok {
-			for _, v := range list {
-				if s, ok := v.(string); ok {
-					allowedMemory[s] = true
-				}
-			}
-		}
-		entries, _ := os.ReadDir(filepath.Join(aikitoDir, "projects", projectName, "memory"))
-		for _, e := range entries {
-			allowedMemory[e.Name()] = true
-		}
-	}
-	for _, name := range []string{"skills", "memory"} {
-		managed := filepath.Join(projectPath, ".agents", name)
-		li, err := os.Lstat(managed)
-		if err != nil || li.Mode()&os.ModeSymlink != 0 {
-			continue
-		}
-		if !li.IsDir() {
-			return fmt.Sprintf("Unmanaged project resources already exist: %s", managed)
-		}
-		if name == "skills" {
-			continue
-		}
-		entries, _ := os.ReadDir(managed)
-		var unexpected []string
-		for _, e := range entries {
-			if !allowedMemory[e.Name()] {
-				unexpected = append(unexpected, e.Name())
-			}
-		}
-		if len(unexpected) > 0 {
-			sort.Strings(unexpected)
-			return fmt.Sprintf("Unmanaged project resources already exist in %s: %s",
-				managed, strings.Join(unexpected, ", "))
-		}
-	}
-	return ""
+	return projectsync.ValidationError(aikitoDir, projectName, projectPath, home, true)
 }
 
 // displayPathRelativeToHome is a simplified stand-in for compat.py's

@@ -208,9 +208,14 @@ func TestCmdInitProjectRejectsLikePython(t *testing.T) {
 	if code, e := run("init", "project", "p1", p1); code != 0 {
 		t.Fatalf("first init: exit %d: %s", code, e)
 	}
-	// init project finishes with a project sync, as in Python.
-	if !strings.Contains(out.String(), "[SUCCESS] Synced project") {
-		t.Errorf("init project did not sync the checkout:\n%s", out.String())
+	// init project finishes with a project sync, as in Python: the
+	// project's memory notes are linked into the checkout.
+	notes := filepath.Join(p1, ".agents", "memory", "notes")
+	if dest, err := os.Readlink(notes); err != nil || dest != filepath.Join(env.Home, "aikito", "projects", "p1", "memory", "notes") {
+		t.Errorf("init project did not link %s (readlink %q, %v):\n%s", notes, dest, err, out.String())
+	}
+	if !strings.Contains(out.String(), "[SUCCESS] Project 'p1' synced successfully at "+p1+".") {
+		t.Errorf("init project did not report the sync:\n%s", out.String())
 	}
 	if code, e := run("init", "project", "p1", p2); code != 1 ||
 		e != "[ERROR] Project 'p1' is already registered to "+p1+", not "+p2+".\n" {

@@ -1,0 +1,117 @@
+{
+  ".claude": {
+    "kind": "dir"
+  },
+  ".local": {
+    "kind": "dir"
+  },
+  ".local/state": {
+    "kind": "dir"
+  },
+  ".local/state/aikito": {
+    "kind": "dir"
+  },
+  ".local/state/aikito/project-skills": {
+    "kind": "dir"
+  },
+  ".local/state/aikito/project-skills/writer.lock": {
+    "kind": "file"
+  },
+  "aikito": {
+    "kind": "dir"
+  },
+  "aikito/.gitignore": {
+    "kind": "file"
+  },
+  "aikito/agents": {
+    "kind": "dir"
+  },
+  "aikito/agents/claude-code.toml": {
+    "kind": "file"
+  },
+  "aikito/config.toml": {
+    "kind": "file"
+  },
+  "aikito/global": {
+    "kind": "dir"
+  },
+  "aikito/global/AGENTS.md": {
+    "kind": "file"
+  },
+  "aikito/layout.toml": {
+    "kind": "file"
+  },
+  "aikito/mcps": {
+    "kind": "dir"
+  },
+  "aikito/memory": {
+    "kind": "dir"
+  },
+  "aikito/memory/notes": {
+    "kind": "dir"
+  },
+  "aikito/projects": {
+    "kind": "dir"
+  },
+  "aikito/projects/p1": {
+    "kind": "dir"
+  },
+  "aikito/projects/p1/AGENTS.md": {
+    "kind": "file"
+  },
+  "aikito/projects/p1/agent.toml": {
+    "kind": "file"
+  },
+  "aikito/projects/p1/memory": {
+    "kind": "dir"
+  },
+  "aikito/projects/p1/memory/notes": {
+    "kind": "dir"
+  },
+  "aikito/projects/p2": {
+    "kind": "dir"
+  },
+  "aikito/projects/p2/AGENTS.md": {
+    "kind": "file"
+  },
+  "aikito/projects/p2/agent.toml": {
+    "kind": "file"
+  },
+  "aikito/skills": {
+    "kind": "dir"
+  },
+  "aikito/skills.toml": {
+    "kind": "file"
+  },
+  "aikito/subagents": {
+    "kind": "dir"
+  },
+  "p1": {
+    "kind": "dir"
+  },
+  "p1/.agents": {
+    "kind": "dir"
+  },
+  "p1/.agents/memory": {
+    "kind": "dir"
+  },
+  "p1/.agents/memory/notes": {
+    "kind": "symlink",
+    "target": "aikito/projects/p1/memory/notes"
+  },
+  "p1/.claude": {
+    "kind": "dir"
+  },
+  "p2": {
+    "kind": "dir"
+  },
+  "p2/.claude": {
+    "kind": "dir"
+  },
+  "p2/.claude/CLAUDE.md": {
+    "kind": "file"
+  },
+  "transcript.txt": {
+    "kind": "file"
+  }
+}

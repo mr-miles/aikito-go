@@ -107,9 +107,8 @@ Each of these says so when used, rather than being silently ignored:
 
 ### Behaviour that differs from the Python version
 
-- **`sync project` copy mode** tracks drift in a small local state file
-  rather than Python's full revision-tracking engine. It still detects a
-  hand-edited copy and refuses to overwrite it without `--force`.
+- **TOML parse errors** (for example a broken `agent.toml`) are reported
+  with Go's TOML library's wording rather than Python's `tomllib` wording.
 - **`diff subagent`** reports drift for an agent-native subagent file that
   was written by hand and never synced. Python only compares files it synced.
 
@@ -168,7 +167,10 @@ internal/sync/       transaction engine, sync and import planning
 internal/registry/   agent definitions and the 8 bundled templates
 internal/mcp/        MCP config formats, sync planner, probing, redaction
 internal/subagent/   subagent formats for each agent
-internal/project/    project configuration
+internal/project/    project configuration, current-project detection
+internal/projectsync/ sync project: skill state, transactions, memory
+internal/linkplan/   symlink planning, global skills and instructions
+internal/writerlock/ the workspace writer lock
 internal/compat/     OS-specific helpers
 e2e/                 end-to-end tests and captured snapshots
 docs/                documentation from the original project
