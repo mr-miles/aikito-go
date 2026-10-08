@@ -1,0 +1,17 @@
+{
+  "physical_checkout": "<HOME>/p2",
+  "project_name": "p2",
+  "records": {
+    "pskill": {
+      "baseline_fingerprint": "v1:ec408d6b9d9399a724b32299c64e2627e1d517c0202d3ea8707edae0e47e82ff",
+      "baseline_origin": "write",
+      "last_observed_selected": true,
+      "lifecycle": "active",
+      "representation": "copy",
+      "skill_name": "pskill"
+    }
+  },
+  "revision": 2,
+  "version": 1,
+  "workspace_root": "<HOME>/aikito"
+}

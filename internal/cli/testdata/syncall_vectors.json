@@ -1,0 +1,3553 @@
+{
+ "agents_dir_env": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Preflight failed: canonical source does not exist: H/.agents/skills (stale plan)\n",
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [CREATE] H/aikito/skills -> H/altagents/skills\n  [CREATE] H/aikito/skills/aikito -> H/altagents/skills/aikito\n  [CREATE] H/aikito/skills/durable-memory -> H/altagents/skills/durable-memory\n  [CREATE] H/.agents/skills -> H/.claude/skills\n  [CREATE] H/aikito/global/AGENTS.md -> H/.claude/CLAUDE.md\n[LINK] H/altagents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/altagents/skills/durable-memory -> H/aikito/skills/durable-memory\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D altagents",
+     "D altagents/skills",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L altagents/skills/aikito -> H/aikito/skills/aikito",
+     "L altagents/skills/durable-memory -> H/aikito/skills/durable-memory"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": "altagents"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "env": {
+     "AIKITO_AGENTS_DIR": "H/altagents"
+    },
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "bundled_drift_no_projects": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   1\n  Unchanged: 6\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [REFRESH] bundled skill 'aikito'\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   1\n  Unchanged: 6\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[BACKUP] Bundled skill 'aikito': H/.aikito/backups/bundled-skills_TS/aikito\n[REFRESH] Bundled skill 'aikito' updated from installed Aikito\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 7\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .aikito",
+     "D .aikito/backups",
+     "D .aikito/backups/bundled-skills_TS",
+     "D .aikito/backups/bundled-skills_TS/aikito",
+     "D .aikito/backups/bundled-skills_TS/aikito/references",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .aikito/backups/bundled-skills_TS/aikito/SKILL.md",
+     "F .aikito/backups/bundled-skills_TS/aikito/references/adoption.md",
+     "F .aikito/backups/bundled-skills_TS/aikito/references/installation.md",
+     "F .aikito/backups/bundled-skills_TS/aikito/references/projects.md",
+     "F .local/state/aikito/mcp-state.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "tweak\n",
+    "op": "append",
+    "path": "aikito/skills/aikito/SKILL.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "bundled_drift_replan": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   2\n  Unchanged: 18\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [REFRESH] bundled skill 'aikito'\n  [REFRESH] bundled skill 'durable-memory'\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Bundled skills refreshed or canonical skills changed during global sync; workspace sync plan invalidated. Please re-run 'aikito sync'.\n",
+    "stdout": "Sync plan\n\n  Changes:   2\n  Unchanged: 18\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[REFRESH] Bundled skill 'aikito' updated from installed Aikito\n[BACKUP] Bundled skill 'durable-memory': H/.aikito/backups/bundled-skills_TS/durable-memory\n[REFRESH] Bundled skill 'durable-memory' updated from installed Aikito\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 20\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .aikito",
+     "D .aikito/backups",
+     "D .aikito/backups/bundled-skills_TS",
+     "D .aikito/backups/bundled-skills_TS/durable-memory",
+     "D .claude",
+     "D .claude/agents",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .aikito/backups/bundled-skills_TS/durable-memory/SKILL.md",
+     "F .claude.json",
+     "F .claude/agents/verifier.md",
+     "F .codex/config.toml",
+     "F .local/state/aikito/mcp-state.json 600",
+     "F .local/state/aikito/project-skills/2cd0e1d15e149181cfedb2031e130192f62595496b74bad9ad3e6279eb32ef19.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .agents/skills/gskill -> H/aikito/skills/gskill",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p1/.agents/skills/pskill -> H/aikito/skills/pskill",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "tweak\n",
+    "op": "append",
+    "path": "aikito/skills/durable-memory/SKILL.md"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/skills/aikito"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "canonical_changes_applied": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   2\n  Unchanged: 18\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [UPDATE] claude-code/verifier -> H/.claude/agents/verifier.md\n  [UPDATE] p2/pskill -> H/p2/.agents/skills/pskill\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   2\n  Unchanged: 18\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .claude/agents",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/backups 755",
+     "D .local/state/aikito/backups/claude-code 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .claude.json",
+     "F .claude/agents/verifier.md",
+     "F .codex/config.toml",
+     "F .local/state/aikito/backups/claude-code/20261008T201743245676Z-verifier.md 644",
+     "F .local/state/aikito/mcp-state.json 600",
+     "F .local/state/aikito/project-skills/6c90048c95ac346b6c9f0dc30bda49a16d6405d51a8af2ba1acd355d0101c71d.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .agents/skills/gskill -> H/aikito/skills/gskill",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p1/.agents/skills/pskill -> H/aikito/skills/pskill",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\ncanonical edit\n",
+    "read": "p2/.agents/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: \"verifier\"\ndescription: \"Verifies things\"\n---\n<!-- generated by aikito from subagents/verifier.md - edits will be overwritten -->\n\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\nmore\n",
+    "read": ".claude/agents/verifier.md"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "canonical edit\n",
+    "op": "append",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "more\n",
+    "op": "append",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "op": "read",
+    "path": "p2/.agents/skills/pskill/SKILL.md"
+   },
+   {
+    "op": "read",
+    "path": ".claude/agents/verifier.md"
+   }
+  ]
+ },
+ "checkout_goes_offline": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 16\n  Offline:   2\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  Project 'p1': offline on this host (~/p1), skipping.\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "p1"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "drifted_copied_skill": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    0\n\nNeeds attention:\n  Project skill 'pskill' drifted at H/p2/.agents/skills/pskill\n\nBlocked; no changes were made\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CONFLICT] p2/pskill -> H/p2/.agents/skills/pskill\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    0\n\nNeeds attention:\n  Project skill 'pskill' drifted at H/p2/.agents/skills/pskill\n\nBlocked; no changes were made\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "local edit\n",
+    "op": "append",
+    "path": "p2/.agents/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "canonical edit\n",
+    "op": "append",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "drifted_mcp_config": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    0\n\nNeeds attention:\n  claude-code/remote-s: Existing config was not last written by aikito; review it or rerun with --force\n\nBlocked; no changes were made\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CONFLICT] claude-code/remote-s (Existing config was not last written by aikito; review it or rerun with --force)\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    0\n\nNeeds attention:\n  claude-code/remote-s: Existing config was not last written by aikito; review it or rerun with --force\n\nBlocked; no changes were made\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "new": "https://changed.example.com/mcp",
+    "old": "https://example.com/mcp",
+    "op": "replace",
+    "path": ".claude.json"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "fresh_claude_codex": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   6\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   6\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [CREATE] H/aikito/skills -> H/.agents/skills\n  [CREATE] H/aikito/skills/aikito -> H/.agents/skills/aikito\n  [CREATE] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CREATE] H/.agents/skills -> H/.claude/skills\n  [CREATE] H/aikito/global/AGENTS.md -> H/.claude/CLAUDE.md\n  [CREATE] H/aikito/global/AGENTS.md -> H/.codex/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   6\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 8\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 8\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/mcp-state.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "mcp_config_error": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   8\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  MCP configuration error: Server 'stdio-s' must use remote transport\n\nBlocked; no changes were made\n\nDetails\n\n  [CREATE] H/aikito/skills -> H/.agents/skills\n  [CREATE] H/aikito/skills/aikito -> H/.agents/skills/aikito\n  [CREATE] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n  [CREATE] H/aikito/skills/gskill -> H/.agents/skills/gskill\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CREATE] H/.agents/skills -> H/.claude/skills\n  [CREATE] H/aikito/global/AGENTS.md -> H/.claude/CLAUDE.md\n  [CREATE] H/aikito/global/AGENTS.md -> H/.codex/AGENTS.md\n  [CREATE] claude-code/verifier -> H/.claude/agents/verifier.md\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   8\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  MCP configuration error: Server 'stdio-s' must use remote transport\n\nBlocked; no changes were made\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "content": "command = \"npx\"\nargs = []\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/stdio-s.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "missing_global_instructions": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 18\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    2\n\nNeeds attention:\n  Missing instruction source: H/aikito/global/AGENTS.md\n  Conflicts detected in global plan.\n  Global instruction file not found: H/aikito/global/AGENTS.md\n\nBlocked; no changes were made\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CONFLICT] H/aikito/global/AGENTS.md -> H/.claude/CLAUDE.md\n  [CONFLICT] H/aikito/global/AGENTS.md -> H/.codex/AGENTS.md\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/global/AGENTS.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "missing_project_skill_source": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    1\n\nNeeds attention:\n  Canonical skill source missing or unreadable: Canonical skill source does not exist: H/aikito/skills/missing\n  Project skill source does not exist: H/aikito/skills/missing\n\nBlocked; no changes were made\n\nDetails\n\n  [CREATE] H/aikito/skills -> H/.agents/skills\n  [CREATE] H/aikito/skills/aikito -> H/.agents/skills/aikito\n  [CREATE] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n  [CREATE] H/aikito/skills/gskill -> H/.agents/skills/gskill\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CREATE] H/.agents/skills -> H/.claude/skills\n  [CREATE] H/aikito/global/AGENTS.md -> H/.claude/CLAUDE.md\n  [CREATE] H/aikito/global/AGENTS.md -> H/.codex/AGENTS.md\n  [CREATE] claude-code/verifier -> H/.claude/agents/verifier.md\n  [CREATE] claude-code/remote-s (New server entry)\n  [CREATE] codex/remote-s (New server entry)\n  [CONFLICT] p1/missing -> H/p1/.agents/skills/missing\n  [CREATE] p1/pskill -> H/p1/.agents/skills/pskill\n  [CREATE] p2/pskill -> H/p2/.agents/skills/pskill\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    1\n\nNeeds attention:\n  Canonical skill source missing or unreadable: Canonical skill source does not exist: H/aikito/skills/missing\n  Project skill source does not exist: H/aikito/skills/missing\n\nBlocked; no changes were made\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\", \"missing\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "missing_skills_toml": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 11\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Global skills configuration not found.\n\nBlocked; no changes were made\n\nDetails\n\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "no_workspace": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 0\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    2\n\nNeeds attention:\n  Global skills configuration not found.\n  Subagent configuration error: Aikito workspace directory not found: H/aikito. Run 'aikito init workspace' to initialize.\n\nBlocked; no changes were made\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 0\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    2\n\nNeeds attention:\n  Global skills configuration not found.\n  Subagent configuration error: Aikito workspace directory not found: H/aikito. Run 'aikito init workspace' to initialize.\n\nBlocked; no changes were made\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "orphaned_subagent": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  1\n  Conflicts: 0\n  Errors:    0\n\nNeeds attention:\n  claude-code/verifier: Managed subagent is no longer defined in subagents/<name>.toml\n\nSafe to apply\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [ORPHAN] claude-code/verifier -> H/.claude/agents/verifier.md\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  1\n  Conflicts: 0\n  Errors:    0\n\nNeeds attention:\n  claude-code/verifier: Managed subagent is no longer defined in subagents/<name>.toml\n\nSafe to apply\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .claude/agents",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .claude.json",
+     "F .claude/agents/verifier.md",
+     "F .codex/config.toml",
+     "F .local/state/aikito/mcp-state.json 600",
+     "F .local/state/aikito/project-skills/6f59cbb0566f075ab3449e4552c99094015afe279f7f403398d8b94ff3804aa3.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .agents/skills/gskill -> H/aikito/skills/gskill",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p1/.agents/skills/pskill -> H/aikito/skills/pskill",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "parent_flags": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[DRY RUN LINK] H/aikito/skills/aikito -> H/.agents/skills/aikito\n[DRY RUN LINK] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n[DRY RUN LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[DRY RUN LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry",
+     "--verb"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [CREATE] H/aikito/skills -> H/.agents/skills\n  [CREATE] H/aikito/skills/aikito -> H/.agents/skills/aikito\n  [CREATE] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n  [CREATE] H/.agents/skills -> H/.claude/skills\n  [CREATE] H/aikito/global/AGENTS.md -> H/.claude/CLAUDE.md\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   5\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--bogus"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --bogus\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "sync",
+     "extra"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito sync [-h] [--dry-run] [--verbose]\n                   {global,project,mcp,subagents,subagent} ...\naikito sync: error: argument sync_target: invalid choice: 'extra' (choose from global, project, mcp, subagents, subagent)\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "project",
+     "nosuch"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Project 'nosuch' not found at H/aikito/projects/nosuch.\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose",
+     "global"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[SUCCESS] Global resources synced successfully (2 skills, 1 instruction source, 1 Agent skill entries across 1 consumers).\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry",
+     "--verb"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "--bogus"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "extra"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "project",
+     "nosuch"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose",
+     "global"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "prepopulated_claude_skills": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    1\n\nNeeds attention:\n  Cannot switch copy to link for skill 'Claude Code': H/.claude/skills is not an unchanged active copy\n  Conflicts detected in global plan.\n\nBlocked; no changes were made\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    1\n\nNeeds attention:\n  Cannot switch copy to link for skill 'Claude Code': H/.claude/skills is not an unchanged active copy\n  Conflicts detected in global plan.\n\nBlocked; no changes were made\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CONFLICT] H/.agents/skills -> H/.claude/skills\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .claude/agents",
+     "D .claude/skills",
+     "D .claude/skills/mine",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .claude.json",
+     "F .claude/agents/verifier.md",
+     "F .claude/skills/mine/SKILL.md",
+     "F .codex/config.toml",
+     "F .local/state/aikito/mcp-state.json 600",
+     "F .local/state/aikito/project-skills/d338e15cf1704b3b43aefc22826085ae622d975ec22a4e5c5e3307872313e217.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .agents/skills/gskill -> H/aikito/skills/gskill",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p1/.agents/skills/pskill -> H/aikito/skills/pskill",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": ".claude/skills"
+   },
+   {
+    "content": "hi\n",
+    "op": "write",
+    "path": ".claude/skills/mine/SKILL.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "rich": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [CREATE] H/aikito/skills -> H/.agents/skills\n  [CREATE] H/aikito/skills/aikito -> H/.agents/skills/aikito\n  [CREATE] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n  [CREATE] H/aikito/skills/gskill -> H/.agents/skills/gskill\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CREATE] H/.agents/skills -> H/.claude/skills\n  [CREATE] H/aikito/global/AGENTS.md -> H/.claude/CLAUDE.md\n  [CREATE] H/aikito/global/AGENTS.md -> H/.codex/AGENTS.md\n  [CREATE] claude-code/verifier -> H/.claude/agents/verifier.md\n  [CREATE] claude-code/remote-s (New server entry)\n  [CREATE] codex/remote-s (New server entry)\n  [CREATE] p1/pskill -> H/p1/.agents/skills/pskill\n  [CREATE] p2/pskill -> H/p2/.agents/skills/pskill\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .claude/agents",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .claude.json",
+     "F .claude/agents/verifier.md",
+     "F .codex/config.toml",
+     "F .local/state/aikito/mcp-state.json 600",
+     "F .local/state/aikito/project-skills/c1dba23f993b2d3dae42209c315ef0566841b390b58b72784d642a44fb14c731.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .agents/skills/gskill -> H/aikito/skills/gskill",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p1/.agents/skills/pskill -> H/aikito/skills/pskill",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   },
+   {
+    "content": "{\n  \"mcpServers\": {\n    \"remote-s\": {\n      \"type\": \"http\",\n      \"url\": \"https://example.com/mcp\"\n    }\n  }\n}\n",
+    "read": ".claude.json"
+   },
+   {
+    "content": "[mcp_servers.remote_s]\nurl = \"https://example.com/mcp\"\n",
+    "read": ".codex/config.toml"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "read": "p2/.agents/skills/pskill/SKILL.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 20\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "op": "read",
+    "path": ".claude.json"
+   },
+   {
+    "op": "read",
+    "path": ".codex/config.toml"
+   },
+   {
+    "op": "read",
+    "path": "p2/.agents/skills/pskill/SKILL.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "skills_not_a_list": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 11\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    2\n\nNeeds attention:\n  Global skills configuration is malformed.\n  Global skills configuration is malformed (expected a list of skill names).\n\nBlocked; no changes were made\n\nDetails\n\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "skills = \"x\"\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "skills_toml_conflict_marker": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 11\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    2\n\nNeeds attention:\n  Conflict markers detected in skills.toml.\n  ~/aikito/skills.toml:2: Git conflict marker detected\n\nBlocked; no changes were made\n\nDetails\n\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "<<<<<<< HEAD\n",
+    "op": "append",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "--verbose"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "stale_hub_entry": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   1\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n\nDetails\n\n  [UNLINK] H/aikito/skills/gskill -> H/.agents/skills/gskill\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   1\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[CLEANUP] Removed stale managed item: H/.agents/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[OK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[OK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[OK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .claude/agents",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .claude.json",
+     "F .claude/agents/verifier.md",
+     "F .codex/config.toml",
+     "F .local/state/aikito/mcp-state.json 600",
+     "F .local/state/aikito/project-skills/4bcd4e50244ce8917d766cc06ac5091541223c94370a1b2e09b4416a5cffd03c.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .claude/CLAUDE.md -> H/aikito/global/AGENTS.md",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p1/.agents/skills/pskill -> H/aikito/skills/pskill",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "subagent_config_error": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   7\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Subagent 'verifier' targets agent 'agy', but 'agy' has no [agents.agy.subagents] configuration in agents/<name>.toml\n\nBlocked; no changes were made\n\nDetails\n\n  [CREATE] H/aikito/skills -> H/.agents/skills\n  [CREATE] H/aikito/skills/aikito -> H/.agents/skills/aikito\n  [CREATE] H/aikito/skills/durable-memory -> H/.agents/skills/durable-memory\n  [CREATE] H/aikito/skills/gskill -> H/.agents/skills/gskill\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CREATE] H/.agents/skills -> H/.claude/skills\n  [CREATE] H/aikito/global/AGENTS.md -> H/.claude/CLAUDE.md\n  [CREATE] H/aikito/global/AGENTS.md -> H/.codex/AGENTS.md\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   7\n  Unchanged: 2\n  Offline:   0\n  Warnings:  0\n  Conflicts: 0\n  Errors:    1\n\nNeeds attention:\n  Subagent configuration error: Subagent 'verifier' targets agent 'agy', but 'agy' has no [agents.agy.subagents] configuration in agents/<name>.toml\n\nBlocked; no changes were made\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"agy\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   }
+  ]
+ },
+ "subagents_orphan": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Subagent synchronization plan (dry_run=False):\n  [CREATE] claude-code/verifier -> H/.claude/agents/verifier.md\n[SUCCESS] Subagent synchronization completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Subagent synchronization plan (dry_run=False):\n  [ORPHAN] claude-code/verifier -> H/.claude/agents/verifier.md (Managed subagent is no longer defined in subagents/<name>.toml. Use --prune to remove)\n[SUCCESS] Subagent synchronization completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "subagents",
+     "--prune"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Subagent synchronization plan (dry_run=False):\n  [PRUNE] claude-code/verifier -> H/.claude/agents/verifier.md\n[SUCCESS] Subagent synchronization completed successfully.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .claude/agents",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/backups 755",
+     "D .local/state/aikito/backups/claude-code 755",
+     "F .local/state/aikito/backups/claude-code/20261008T201759439531Z-verifier.md 644"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "subagents",
+     "--prune"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "subagents_update_backup": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Subagent synchronization plan (dry_run=False):\n  [CREATE] claude-code/verifier -> H/.claude/agents/verifier.md\n[SUCCESS] Subagent synchronization completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Subagent synchronization plan (dry_run=False):\n  [UPDATE] claude-code/verifier -> H/.claude/agents/verifier.md\n[SUCCESS] Subagent synchronization completed successfully.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .claude/agents",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/backups 755",
+     "D .local/state/aikito/backups/claude-code 755",
+     "F .claude/agents/verifier.md",
+     "F .local/state/aikito/backups/claude-code/20261008T201758286515Z-verifier.md 644"
+    ]
+   },
+   {
+    "content": "---\nname: \"verifier\"\ndescription: \"Verifies things\"\n---\n<!-- generated by aikito from subagents/verifier.md - edits will be overwritten -->\n\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\nmore\n",
+    "read": ".claude/agents/verifier.md"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "more\n",
+    "op": "append",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "args": [
+     "sync",
+     "subagents"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "op": "read",
+    "path": ".claude/agents/verifier.md"
+   }
+  ]
+ },
+ "unmanaged_claude_md": {
+  "expect": [
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   14\n  Unchanged: 6\n  Offline:   1\n  Warnings:  0\n  Conflicts: 0\n  Errors:    0\n\nSafe to apply\n[LINK] H/.agents/skills/aikito -> H/aikito/skills/aikito\n[LINK] H/.agents/skills/durable-memory -> H/aikito/skills/durable-memory\n[LINK] H/.agents/skills/gskill -> H/aikito/skills/gskill\n[OK] Codex skills: shared path H/.agents/skills\n[LINK] Claude Code skills: H/.claude/skills -> H/.agents/skills\n[LINK] Claude Code instructions: H/.claude/CLAUDE.md -> H/aikito/global/AGENTS.md\n[LINK] Codex instructions: H/.codex/AGENTS.md -> H/aikito/global/AGENTS.md\n[SYNC] claude-code/remote-s: created H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: created H/.codex/config.toml\n[AUTH] aikito auth mcp codex remote-s\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[OK] Codex instructions: H/p1/AGENTS.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[OK] Codex instructions: H/p2/AGENTS.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n\n[SUCCESS] Full workspace sync completed successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    1\n\nNeeds attention:\n  Pre-existing regular instruction file: H/.claude/CLAUDE.md\n  Conflicts detected in global plan.\n\nBlocked; no changes were made\n\nDetails\n\n  [SHARED_PATH] H/.agents/skills -> H/.agents/skills\n  [CONFLICT] H/aikito/global/AGENTS.md -> H/.claude/CLAUDE.md\n  Project 'p3': offline on this host (~/p3), skipping.\n  Project 'p4': no configured paths (unbound), skipping.\n"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "Sync plan\n\n  Changes:   0\n  Unchanged: 19\n  Offline:   1\n  Warnings:  0\n  Conflicts: 1\n  Errors:    1\n\nNeeds attention:\n  Pre-existing regular instruction file: H/.claude/CLAUDE.md\n  Conflicts detected in global plan.\n\nBlocked; no changes were made\n"
+   },
+   {
+    "tree": [
+     "D .agents",
+     "D .agents/skills",
+     "D .claude",
+     "D .claude/agents",
+     "D .codex",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .claude.json",
+     "F .claude/CLAUDE.md",
+     "F .claude/agents/verifier.md",
+     "F .codex/config.toml",
+     "F .local/state/aikito/mcp-state.json 600",
+     "F .local/state/aikito/project-skills/17ab5b1a0a58cbbc6982e5e4b73e9f657b86348c3c1d508917a9640e0295bfbf.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L .agents/skills/aikito -> H/aikito/skills/aikito",
+     "L .agents/skills/durable-memory -> H/aikito/skills/durable-memory",
+     "L .agents/skills/gskill -> H/aikito/skills/gskill",
+     "L .claude/skills -> H/.agents/skills",
+     "L .codex/AGENTS.md -> H/aikito/global/AGENTS.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p1/.agents/skills/pskill -> H/aikito/skills/pskill",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "mkdir",
+    "path": ".codex"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: gskill\ndescription: A gskill skill\n---\n\n# gskill\n",
+    "op": "write",
+    "path": "aikito/skills/gskill/SKILL.md"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "content": "skills = [\"aikito\", \"durable-memory\", \"gskill\"]\n",
+    "op": "write",
+    "path": "aikito/skills.toml"
+   },
+   {
+    "content": "transport = \"remote\"\nurl = \"https://example.com/mcp\"\nagents = [\"claude-code\", \"codex\"]\n",
+    "op": "write",
+    "path": "aikito/mcps/remote-s.toml"
+   },
+   {
+    "content": "---\ndescription: \"Verifies things\"\nagents: [\"claude-code\"]\n---\n# Verifier\n\nAdd developer instructions for the verifier subagent here.\n",
+    "op": "write",
+    "path": "aikito/subagents/verifier.md"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p3\"\npath = \"~/p3\"\nsync_mode = \"link\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p3/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p3/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p3/memory/notes"
+   },
+   {
+    "content": "name = \"p4\"\nskills = []\n",
+    "op": "write",
+    "path": "aikito/projects/p4/agent.toml"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/.hidden"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/noconfig"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": ".claude/CLAUDE.md"
+   },
+   {
+    "content": "# mine\n",
+    "op": "write",
+    "path": ".claude/CLAUDE.md"
+   },
+   {
+    "args": [
+     "sync",
+     "--dry-run",
+     "--verbose"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ }
+}

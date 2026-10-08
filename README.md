@@ -50,10 +50,14 @@ aikito version
 aikito init workspace ~/aikito   # create the workspace (default: ~/aikito)
 aikito adopt --dry-run           # preview importing your existing agent config
 aikito adopt
-aikito sync global               # link skills and global instructions into each agent
-aikito sync mcp                  # write MCP servers into each agent's config
+aikito sync --dry-run --verbose  # preview everything: skills, instructions, MCP, subagents, projects
+aikito sync                      # apply it all
 aikito status
 ```
+
+`aikito sync` plans every domain at once and changes nothing if any part is
+blocked. `sync global`, `sync mcp`, `sync subagents` and `sync project` run
+one domain at a time.
 
 `adopt` and every `sync` command build a complete plan before writing
 anything, and refuse to overwrite a file you've edited by hand unless you pass
@@ -77,7 +81,7 @@ to this port.
 | `init workspace`, `init project` | Done |
 | `add skill`, `add subagent`, `add mcp` | Done, with option gaps below |
 | `adopt` | Done |
-| `sync global`, `sync mcp`, `sync subagents`, `sync project` | Done, with the differences below |
+| `sync` (whole workspace), `sync global`, `sync mcp`, `sync subagents`, `sync project` | Done, with the differences below |
 | `status`, `show …`, `diff …` | Done, with option gaps below |
 | `edit …`, `rm …`, `rename memory` | Done |
 | `maintain memory`, `auth mcp` | Done |

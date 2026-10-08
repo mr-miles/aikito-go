@@ -122,13 +122,9 @@ func cmdSyncSubagents(args []string, stdout, stderr io.Writer, env Environment) 
 		return 0
 	}
 
-	for _, op := range ops {
-		if op.Action == sync.SACreate || op.Action == sync.SAUpdate || op.Action == sync.SARemove {
-			if err := sync.ApplySubagentOperation(op); err != nil {
-				fmt.Fprintf(stderr, "[ERROR] Subagent synchronization failed: %v\n", err)
-				return 1
-			}
-		}
+	if msg, err := sync.ApplySubagentPlan(ops, env.Home); err != nil {
+		fmt.Fprintf(stderr, "[ERROR] Subagent synchronization failed: %s\n", msg)
+		return 1
 	}
 
 	fmt.Fprintln(stdout, "[SUCCESS] Subagent synchronization completed successfully.")

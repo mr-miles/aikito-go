@@ -10,6 +10,8 @@ import (
 	"sort"
 	"strings"
 	"testing"
+
+	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
 // syncglobal_vectors.json is generated from the reference CLI by
@@ -18,11 +20,14 @@ import (
 // tree. This replays the same steps against the Go CLI.
 
 type syncGlobalStep struct {
-	Op      string   `json:"op"`
-	Path    string   `json:"path"`
-	Content string   `json:"content"`
-	Target  string   `json:"target"`
-	Args    []string `json:"args"`
+	Op      string            `json:"op"`
+	Path    string            `json:"path"`
+	Content string            `json:"content"`
+	Target  string            `json:"target"`
+	Args    []string          `json:"args"`
+	Old     string            `json:"old"`
+	New     string            `json:"new"`
+	Env     map[string]string `json:"env"`
 }
 
 type syncGlobalExpect struct {
@@ -36,6 +41,11 @@ type syncGlobalExpect struct {
 }
 
 var backupTimestampRe = regexp.MustCompile(`bundled-skills_\d{8}_\d{6}_\d{6}`)
+
+var (
+	stateHashRe      = regexp.MustCompile(`[0-9a-f]{64}`)
+	subagentBackupRe = regexp.MustCompile(`\d{8}T\d{12}Z-`)
+)
 
 func normalizeHome(s, home string) string {
 	return backupTimestampRe.ReplaceAllString(strings.ReplaceAll(s, home, "H"), "bundled-skills_TS")
@@ -85,7 +95,14 @@ func homeTree(t *testing.T, home string) []string {
 }
 
 func TestSyncGlobalMatchesPython(t *testing.T) {
-	data, err := os.ReadFile("testdata/syncglobal_vectors.json")
+	replayCLIVectors(t, "testdata/syncglobal_vectors.json")
+}
+
+// replayCLIVectors replays a generator's scenarios (step format in
+// testdata/gen_syncglobal_vectors.py and gen_syncall_vectors.py) against
+// the Go CLI and compares every recorded result.
+func replayCLIVectors(t *testing.T, vectorsPath string) {
+	data, err := os.ReadFile(vectorsPath)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -137,6 +154,14 @@ func TestSyncGlobalMatchesPython(t *testing.T) {
 					if err := os.Symlink(target, path); err != nil {
 						t.Fatal(err)
 					}
+				case "replace":
+					content, err := os.ReadFile(path)
+					if err != nil || !strings.Contains(string(content), st.Old) {
+						t.Fatalf("replace in %s: %q not found (%v)", st.Path, st.Old, err)
+					}
+					if err := os.WriteFile(path, []byte(strings.ReplaceAll(string(content), st.Old, st.New)), 0o644); err != nil {
+						t.Fatal(err)
+					}
 				case "rm":
 					if err := os.RemoveAll(path); err != nil {
 						t.Fatal(err)
@@ -147,8 +172,19 @@ func TestSyncGlobalMatchesPython(t *testing.T) {
 						t.Fatalf("init workspace: %d %s", code, errb.String())
 					}
 				case "run":
+					runEnv := env
+					if len(st.Env) > 0 {
+						vars := workspace.MapEnv{}
+						for k, v := range st.Env {
+							if strings.HasPrefix(v, "H/") {
+								v = home + v[1:]
+							}
+							vars[k] = v
+						}
+						runEnv.Env = vars
+					}
 					var out, errb bytes.Buffer
-					code := Run(st.Args, nil, &out, &errb, env)
+					code := Run(st.Args, nil, &out, &errb, runEnv)
 					got = append(got, syncGlobalExpect{Args: st.Args, Exit: &code,
 						Stdout: normalizeHome(out.String(), home), Stderr: normalizeHome(errb.String(), home)})
 				case "tree":
@@ -158,7 +194,7 @@ func TestSyncGlobalMatchesPython(t *testing.T) {
 					if err != nil {
 						t.Fatal(err)
 					}
-					got = append(got, syncGlobalExpect{Read: st.Path, Content: string(content)})
+					got = append(got, syncGlobalExpect{Read: st.Path, Content: normalizeHome(string(content), home)})
 				default:
 					t.Fatalf("unknown step %q", st.Op)
 				}
@@ -175,8 +211,17 @@ func TestSyncGlobalMatchesPython(t *testing.T) {
 							i, strings.Join(want.Args, " "), *g.Exit, g.Stdout, g.Stderr, *want.Exit, want.Stdout, want.Stderr)
 					}
 				case want.Tree != nil:
-					if strings.Join(g.Tree, "\n") != strings.Join(want.Tree, "\n") {
-						t.Errorf("step %d tree:\n--- got\n%s\n--- want\n%s", i, strings.Join(g.Tree, "\n"), strings.Join(want.Tree, "\n"))
+					// Project skill state files are named by a hash of
+					// absolute paths, which differ between generator and
+					// replay homes.
+					// Subagent backups are named by UTC timestamp.
+					norm := func(tree []string) string {
+						s := stateHashRe.ReplaceAllString(strings.Join(tree, "\n"), "HASH")
+						return subagentBackupRe.ReplaceAllString(s, "TS-")
+					}
+					gotTree, wantTree := norm(g.Tree), norm(want.Tree)
+					if gotTree != wantTree {
+						t.Errorf("step %d tree:\n--- got\n%s\n--- want\n%s", i, gotTree, wantTree)
 					}
 				default:
 					if g.Content != want.Content {

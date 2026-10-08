@@ -105,6 +105,15 @@ time it was applied.
 - **`Path / raw_link`** keeps `..` components; `filepath.Join` cleans them.
   Messages that show a symlink's destination use `linkplan`'s
   `pathlibJoin`.
+- **argparse parent flags.** `aikito sync --dry-run global` is a dry run:
+  the parent parser's `--dry-run` stays set on the shared namespace. Flags
+  are matched by unique prefix (`--dry`), and an unknown parent flag is a
+  root-level "unrecognized arguments" error.
+- **Same domain, two entry points.** Python's whole-workspace sync calls the
+  same planners as the per-domain commands but with different defaults
+  (e.g. `build_global_sync_plan` without `outdated_bundled_skills`, and
+  `AIKITO_AGENTS_DIR` for the hub). Port the shared function once with the
+  options, not two copies.
 
 ## Architecture notes
 
@@ -112,6 +121,11 @@ time it was applied.
   the reverse. That's why the transaction engine and the resource-write
   pipeline live in `sync`, not `workspace` as in Python, and why the read-only
   journal scan is duplicated in `workspace/pending.go`.
+- **Plan observation.** Every sync plan has an `Observe()` returning a
+  `sync.PlanObservation` (operation views + findings), as Python's
+  `observe()`. The bare `aikito sync` summary, "Needs attention" list and
+  `--verbose` details are computed only from these, so a new plan kind or
+  action needs its effect/finding mapping ported too.
 - **Two fingerprint functions on purpose.** `workspace.FingerprintResource`
   hashes raw bytes; `InspectResourceContent` hashes parsed values (for
   agent/mcp/subagent). Both are used in different call paths, as in Python.
