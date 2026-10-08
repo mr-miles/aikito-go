@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/mr-miles/aikito-go/internal/workspace"
@@ -176,6 +177,54 @@ func TestCmdInitProjectInvalidName(t *testing.T) {
 	code := Run([]string{"init", "project", "Bad Name!", env.Cwd}, nil, &out, &errOut, env)
 	if code == 0 {
 		t.Fatal("expected a non-zero exit code for an invalid project name")
+	}
+}
+
+// Expected messages are the reference CLI's (init.py _project_validation_error).
+func TestCmdInitProjectRejectsLikePython(t *testing.T) {
+	env := testEnv(t)
+	var out, errOut bytes.Buffer
+	if code := Run([]string{"init", "workspace"}, nil, &out, &errOut, env); code != 0 {
+		t.Fatalf("init workspace failed: %d", code)
+	}
+	p1 := filepath.Join(env.Home, "p1")
+	p2 := filepath.Join(env.Home, "p2")
+	p3 := filepath.Join(env.Home, "p3")
+	for _, d := range []string{p1, p2, filepath.Join(p3, ".agents", "memory")} {
+		if err := os.MkdirAll(d, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := os.WriteFile(filepath.Join(p3, ".agents", "memory", "foreign.md"), []byte("x\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	run := func(args ...string) (int, string) {
+		out.Reset()
+		errOut.Reset()
+		code := Run(args, nil, &out, &errOut, env)
+		return code, errOut.String()
+	}
+	if code, e := run("init", "project", "p1", p1); code != 0 {
+		t.Fatalf("first init: exit %d: %s", code, e)
+	}
+	// init project finishes with a project sync, as in Python.
+	if !strings.Contains(out.String(), "[SUCCESS] Synced project") {
+		t.Errorf("init project did not sync the checkout:\n%s", out.String())
+	}
+	if code, e := run("init", "project", "p1", p2); code != 1 ||
+		e != "[ERROR] Project 'p1' is already registered to "+p1+", not "+p2+".\n" {
+		t.Errorf("reused name, other path: exit %d, stderr %q", code, e)
+	}
+	if code, e := run("init", "project", "p1", p1); code != 0 {
+		t.Errorf("re-init same path: exit %d: %s", code, e)
+	}
+	if code, e := run("init", "project", "p3", p3); code != 1 ||
+		e != "[ERROR] Unmanaged project resources already exist in "+filepath.Join(p3, ".agents", "memory")+": foreign.md\n" {
+		t.Errorf("foreign memory entry: exit %d, stderr %q", code, e)
+	}
+	if _, err := os.Stat(filepath.Join(env.Home, "aikito", "projects", "p3")); err == nil {
+		t.Error("rejected init still registered p3")
 	}
 }
 
