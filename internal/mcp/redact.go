@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"unicode"
 )
 
 // SensitiveURLParameters mirrors redact.py's SENSITIVE_URL_PARAMETERS.
@@ -192,25 +193,16 @@ func partition(s, sep string) (string, string, string) {
 	return s[:i], sep, s[i+len(sep):]
 }
 
-// isPrintable approximates Python's str.isprintable() for the common case:
-// a character is printable unless it's a control character or separator
-// (Python's definition excludes category Cc, Cf, Cs, Co, Cn, Zl, Zp, and Zs
-// other than the ASCII space). This covers the realistic input space for
-// probe-error text (subprocess/HTTP error strings).
+// isPrintable mirrors Python's str.isprintable() for a single character.
+// Python treats categories Cc, Cf, Cs, Co, Cn, Zl, Zp, and Zs (except the
+// ASCII space) as non-printable, which is exactly unicode.IsPrint's
+// definition. Verified exhaustively over all code points against Python
+// 3.14: no character is printable in Go but not in Python. The only
+// mismatches are ~5.8k characters newly assigned in Unicode 16.0 (Python's
+// tables) but absent from Go's 15.0 tables; Go treats them as unassigned
+// and replaces them with a space, which is the conservative direction.
 func isPrintable(r rune) bool {
-	if r == ' ' {
-		return true
-	}
-	if r < 0x20 || r == 0x7f {
-		return false
-	}
-	if r >= 0x80 && r <= 0xa0 {
-		return false
-	}
-	if r == 0x2028 || r == 0x2029 || r == 0xfeff {
-		return false
-	}
-	return true
+	return unicode.IsPrint(r)
 }
 
 var sensitiveKeyFragments = []string{
