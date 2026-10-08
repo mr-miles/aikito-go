@@ -127,8 +127,9 @@ Python to run. To recapture the snapshots after an intentional change, see
 [e2e/README.md](e2e/README.md).
 
 CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) builds, vets and
-tests on Linux, macOS and Windows, runs the end-to-end suite on each, and runs
-the tests with the race detector on Linux.
+tests on Linux, including the end-to-end suite, on every push and pull request.
+macOS, Windows and a race-detector run are started by hand from the Actions tab
+(CI > Run workflow), with a checkbox for each.
 
 ### Layout
 
