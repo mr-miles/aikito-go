@@ -4,11 +4,42 @@ package e2e
 
 import (
 	"os"
+	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
+
+// TestE2EAdoptMatchesPython adopts custom instructions and MCP servers with
+// an env secret and an Authorization header. Output, the adopted mcps/
+// files, the merged global instructions and the backup must all match
+// Python byte for byte, and no plaintext secret may reach the workspace.
+func TestE2EAdoptMatchesPython(t *testing.T) {
+	home := initWorkspace(t)
+	writeAdoptSources(t, home)
+
+	res := runGo(t, home, "adopt", "--verbose")
+	compareManifests(t, "adopt (output)", adoptOutputGolden(res, home), loadGolden(t, "adopt_full_output"))
+	compareAgainstGolden(t, "adopt (mcps)", home+"/aikito/mcps", home, "adopt_full_mcps")
+	compareAgainstGolden(t, "adopt (instructions)", home+"/aikito/global/AGENTS.md", home, "adopt_full_instructions")
+	compareAgainstGolden(t, "adopt (backup)", adoptBackupDir(t, home), home, "adopt_full_backup")
+
+	err := filepath.WalkDir(home+"/aikito", func(path string, d os.DirEntry, err error) error {
+		if err != nil || d.IsDir() {
+			return err
+		}
+		data, rerr := os.ReadFile(path)
+		if rerr == nil && strings.Contains(string(data), "fake-value-for-tests") {
+			t.Errorf("plaintext secret written to %s", path)
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
 
 // TestE2EAdoptDiscoversExistingMCPServer confirms `aikito adopt` discovers
 // a pre-existing agent-native MCP server entry and writes an equivalent

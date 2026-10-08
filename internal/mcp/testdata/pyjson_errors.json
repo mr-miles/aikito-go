@@ -1,0 +1,2650 @@
+[
+[
+"",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"  ",
+"Expecting value: line 1 column 3 (char 2)"
+],
+[
+"{not json",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"[",
+"Expecting value: line 1 column 2 (char 1)"
+],
+[
+"{\"a\"",
+"Expecting ':' delimiter: line 1 column 5 (char 4)"
+],
+[
+"{\"a\":",
+"Expecting value: line 1 column 6 (char 5)"
+],
+[
+"{\"a\":1",
+"Expecting ',' delimiter: line 1 column 7 (char 6)"
+],
+[
+"[1",
+"Expecting ',' delimiter: line 1 column 3 (char 2)"
+],
+[
+"[1,",
+"Expecting value: line 1 column 4 (char 3)"
+],
+[
+"{\"a\":1,}",
+"Illegal trailing comma before end of object: line 1 column 7 (char 6)"
+],
+[
+"[1,]",
+"Illegal trailing comma before end of array: line 1 column 3 (char 2)"
+],
+[
+"{\"a\" 1}",
+"Expecting ':' delimiter: line 1 column 6 (char 5)"
+],
+[
+"{\"a\":1 \"b\":2}",
+"Expecting ',' delimiter: line 1 column 8 (char 7)"
+],
+[
+"[1 2]",
+"Expecting ',' delimiter: line 1 column 4 (char 3)"
+],
+[
+"\"abc",
+"Unterminated string starting at: line 1 column 1 (char 0)"
+],
+[
+"\"a\u0001\"",
+"Invalid control character at: line 1 column 3 (char 2)"
+],
+[
+"\"a\\q\"",
+"Invalid \\escape: line 1 column 3 (char 2)"
+],
+[
+"\"\\u12\"",
+"Invalid \\uXXXX escape: line 1 column 3 (char 2)"
+],
+[
+"\"\\u12zz\"",
+"Invalid \\uXXXX escape: line 1 column 3 (char 2)"
+],
+[
+"\"\\ud800\\u12\"",
+"Invalid \\uXXXX escape: line 1 column 9 (char 8)"
+],
+[
+"\"\\ud800\\uzzzz\"",
+"Invalid \\uXXXX escape: line 1 column 9 (char 8)"
+],
+[
+"\"\\ud800x\"",
+""
+],
+[
+"{\"a\":}",
+"Expecting value: line 1 column 6 (char 5)"
+],
+[
+"{} x",
+"Extra data: line 1 column 4 (char 3)"
+],
+[
+"tru",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"nul",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"-",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"01",
+"Extra data: line 1 column 2 (char 1)"
+],
+[
+"1.",
+"Extra data: line 1 column 2 (char 1)"
+],
+[
+"1.e5",
+"Extra data: line 1 column 2 (char 1)"
+],
+[
+"1e",
+"Extra data: line 1 column 2 (char 1)"
+],
+[
+"1e+",
+"Extra data: line 1 column 2 (char 1)"
+],
+[
+"-0",
+""
+],
+[
+"-x",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"NaN",
+""
+],
+[
+"Infinity",
+""
+],
+[
+"-Infinity",
+""
+],
+[
+"[NaN, 1]",
+""
+],
+[
+"﻿{}",
+"Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)"
+],
+[
+"{\"é\": [1, 2,, 3]}",
+"Expecting value: line 1 column 13 (char 12)"
+],
+[
+"{\n  \"a\": 1,\n  \"b\": oops\n}",
+"Expecting value: line 3 column 8 (char 19)"
+],
+[
+"\"\\",
+"Unterminated string starting at: line 1 column 1 (char 0)"
+],
+[
+"{\"a\":1,\"a\":2}",
+""
+],
+[
+"{ , }",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"[ , ]",
+"Expecting value: line 1 column 3 (char 2)"
+],
+[
+"{\"a\":1,  }",
+"Illegal trailing comma before end of object: line 1 column 7 (char 6)"
+],
+[
+"[1,\n]",
+"Illegal trailing comma before end of array: line 1 column 3 (char 2)"
+],
+[
+"\t\n{}\n\t",
+""
+],
+[
+"{\"mcpServers\": {\"x\": {\"command\": 'y'}}}",
+"Expecting value: line 1 column 34 (char 33)"
+],
+[
+"{\"x\": \" \"}",
+""
+],
+[
+"\"\\x41\"",
+"Invalid \\escape: line 1 column 2 (char 1)"
+],
+[
+"[\"a\" \"b\"]",
+"Expecting ',' delimiter: line 1 column 6 (char 5)"
+],
+[
+"{\"a\":[}",
+"Expecting value: line 1 column 7 (char 6)"
+],
+[
+"{\"a\":{]}",
+"Expecting property name enclosed in double quotes: line 1 column 7 (char 6)"
+],
+[
+"[{]",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"1 2",
+"Extra data: line 1 column 3 (char 2)"
+],
+[
+"true false",
+"Extra data: line 1 column 6 (char 5)"
+],
+[
+"{\"a\":1}}",
+"Extra data: line 1 column 8 (char 7)"
+],
+[
+"[[[]]]]",
+"Extra data: line 1 column 7 (char 6)"
+],
+[
+"\"é\u0005\"",
+"Invalid control character at: line 1 column 3 (char 2)"
+],
+[
+"{\"\u0000\":1}",
+"Invalid control character at: line 1 column 3 (char 2)"
+],
+[
+"{\"a\" [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 6 (char 5)"
+],
+[
+"{\"x\": 1}, {\"y\": [ ]}, \"\"",
+"Extra data: line 1 column 9 (char 8)"
+],
+[
+"{\"mcpServers\": {\"srv\": \"command\": \"npx\", \"args\": [\"-y\", \"pkgE\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 33 (char 32)"
+],
+[
+"[{\"x\": 1}, {\"y\":",
+"Expecting value: line 1 column 17 (char 16)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u0e9\"}}",
+"Invalid \\uXXXX escape: line 1 column 58 (char 57)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"np\", \"args\": [\"-y\", \"pkg\"], [\"env\" {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 65 (char 64)"
+],
+[
+"{\":a\": [1, 2.5, -3e2, true false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 28 (char 27)"
+],
+[
+"{\"mcpServers\": {\"srv\"]: {\"command\": \"npx\", \"args\": [\"-y\", \"pk\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 22 (char 21)"
+],
+[
+"{\"mcpServners\": {\"srv\": {\"command\": \"npx\", \"rgs\": [\"-y\", \"pkg\"], \"e\nnv\": {\"K\": \"v\"}}}}",
+"Invalid control character at: line 1 column 68 (char 67)"
+],
+[
+"[a{\"x\": 1}, {\"2y\": [ ]}, \"s\"]",
+"Expecting value: line 1 column 2 (char 1)"
+],
+[
+"{\"a\": [1, 2.5, -3e2 true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 21 (char 20)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\"é: {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 45 (char 44)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \t\"d\\n\\u0",
+"Invalid \\uXXXX escape: line 1 column 59 (char 58)"
+],
+[
+"{\"a\": [1, 2.5, \"-3e2, tre, false, null], \"b\": {\"c\": \"d\\n3\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 43 (char 42)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, t\"rue, false",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"[{\n\"x",
+"Unterminated string starting at: line 2 column 1 (char 3)"
+],
+[
+"{\"a\": [1, -2.5, -3e2, true, false, nll], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 36 (char 35)"
+],
+[
+"{\"mcpServer5s\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false null], \"b\": {\"c\": \"d\\",
+"Expecting ',' delimiter: line 1 column 34 (char 33)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"kg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"[{\"x\": 1}, ",
+"Expecting value: line 1 column 12 (char 11)"
+],
+[
+"{\"mpServers\": {\"srv\": {\"command\": \"nx\", \"args\": [\"-",
+"Unterminated string starting at: line 1 column 50 (char 49)"
+],
+[
+"{\"a\": [1, 2.5, -e2, tue, false, null], \"b\": {\"c\": \"d\\n\\u009\"}}",
+"Expecting value: line 1 column 16 (char 15)"
+],
+[
+"{\"mcpSevers\": {\"srnv\": {\"command\": \"npx\",\"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\",\"args\":[\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, nn\\ull], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, flse null], \"b\": {\"c\"",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{\"mcpServrs\": {\"srv\": {\"command\": \"npx.\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"[{\"x\": 1}8, {\"y\": [ ], \"s\"]",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"[{\"x\" 1}, {\"y\":",
+"Expecting ':' delimiter: line 1 column 7 (char 6)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}, ",
+"Expecting value: line 1 column 24 (char 23)"
+],
+[
+"{\"a8\": [, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u0",
+"Expecting value: line 1 column 9 (char 8)"
+],
+[
+"[{\"x\": 1}4, {\"y\": [ ]}, \"",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"[{\"x\": 1}, {\"y\":2 [3 ], \"s\"]",
+"Expecting ',' delimiter: line 1 column 19 (char 18)"
+],
+[
+"[{\"x\": 1},{\"y\": [ ]}, \"s\"]",
+""
+],
+[
+"{\"a\": [1, 2.5, 3e2, true, false,",
+"Expecting value: line 1 column 33 (char 32)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\"",
+"Expecting ':' delimiter: line 1 column 51 (char 50)"
+],
+[
+"{\"mcpServe7rs\": :{\"srv\": {\"c",
+"Expecting value: line 1 column 17 (char 16)"
+],
+[
+"{\"6a\": [1, 2.5, -3e2, true, f7alse, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 29 (char 28)"
+],
+[
+"[{\"x\": 1}, {\"y\" [ ]}, \"s\"]",
+"Expecting ':' delimiter: line 1 column 17 (char 16)"
+],
+[
+"[0{\"x",
+"Expecting ',' delimiter: line 1 column 3 (char 2)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}, \"",
+"Unterminated string starting at: line 1 column 24 (char 23)"
+],
+[
+"[{\"x\": 1}, {\"y\":  ]e}, \"s\"]5",
+"Expecting value: line 1 column 19 (char 18)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args: [\"-[y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 52 (char 51)"
+],
+[
+"[{\"x\":7 }, {\"y\":",
+"Expecting value: line 1 column 17 (char 16)"
+],
+[
+"[}3{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting value: line 1 column 2 (char 1)"
+],
+[
+"{\"a7\": [1, 2.5, -3e2, true, fale, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 29 (char 28)"
+],
+[
+"[{}\"x\" 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 4 (char 3)"
+],
+[
+"[{\"x \": ]1}, {\"y\": ",
+"Expecting value: line 1 column 9 (char 8)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\":\\ \"npx\" \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"[{\"x\":1}, 3{\"y\": [ 8]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, ",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"{\"mcpServers\": {\"srv\":7 {\"commabnd\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {",
+"Expecting ',' delimiter: line 1 column 25 (char 24)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"\"c\": \"d\\n\\u00e\u00019\"}}-",
+"Expecting ':' delimiter: line 1 column 50 (char 49)"
+],
+[
+"{\"a\": [1, 2.5, -13e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {command\": \"npx\", \"args\": \"-y\", \"pkg\"], \"e",
+"Expecting property name enclosed in double quotes: line 1 column 25 (char 24)"
+],
+[
+"[{\"x\": 1}, {\"y: [ ]}E, \"s\"]",
+"Expecting ':' delimiter: line 1 column 25 (char 24)"
+],
+[
+"[{\"x\": 1}, {\"y,\": [ ]}, \"s\"]",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 43 (char 42)"
+],
+[
+"{\"mcpServers\": {\"srv: {\"ommand\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 25 (char 24)"
+],
+[
+"[]{\"x\": ",
+"Extra data: line 1 column 3 (char 2)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, 9true, false, null], \"b\": {\"c\": \"d\\\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 23 (char 22)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, nul], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"[{\"x\":1}, {\"y\": [ ",
+"Expecting value: line 1 column 19 (char 18)"
+],
+[
+"[{\"x\": 1}, {\"6y\": [ ]}, \".s\"]",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, nul], \"b\": {\"c\": \"d\\n\\u00e9\"5}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"{\"mcpServers\": {\"srv",
+"Unterminated string starting at: line 1 column 17 (char 16)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env7\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"[{\"x\": 1}, {y: [ ]}, \":s\"]",
+"Expecting property name enclosed in double quotes: line 1 column 13 (char 12)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\"",
+"Expecting ':' delimiter: line 1 column 49 (char 48)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]},",
+"Expecting value: line 1 column 23 (char 22)"
+],
+[
+"\"a\": [1",
+"Extra data: line 1 column 4 (char 3)"
+],
+[
+"[{\"x\": 1}, {y\": [ ]}, \"s\"]",
+"Expecting property name enclosed in double quotes: line 1 column 13 (char 12)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null\"], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 39 (char 38)"
+],
+[
+"{\"a\": [1, 2.5 -",
+"Expecting ',' delimiter: line 1 column 15 (char 14)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fals, null], \"b\": {\"c\": \"d\\nu00e9\"}}",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\":",
+"Expecting value: line 1 column 72 (char 71)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, ",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"co6mmand\": \"npx\", \"args\": [\"-y\", \"pkg\"], 7\"env\": {\"K\": +\"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 67 (char 66)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"comma",
+"Unterminated string starting at: line 1 column 25 (char 24)"
+],
+[
+"[{\"x\": 1}, {\"y\"+: [ ]}, \"s\"]",
+"Expecting ':' delimiter: line 1 column 16 (char 15)"
+],
+[
+"{\"\": [1, 2.5, -e2, true, falsée, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 15 (char 14)"
+],
+[
+"{\"a\": [1, 2. -3e2, true, fals",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"{\"mcpServers\": {\"srv\":{\"command\": \"npx\", \"args\"\t: [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}",
+"Expecting ',' delimiter: line 1 column 65 (char 64)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": }\"npx\", \"args\": [",
+"Expecting value: line 1 column 36 (char 35)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, nuall], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"{\"mcpSe3rvers\": {\"sr\": {\"command\": \"npx\", \"args\": [\"-y\", pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting value: line 1 column 58 (char 57)"
+],
+[
+"{3\"a\": [1, 2.5, -3e2, true, false, nul",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}4}}",
+"Expecting ',' delimiter: line 1 column 84 (char 83)"
+],
+[
+".[{\"x\": 1, {\"y\": [ }, \"s\"]",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-",
+"Unterminated string starting at: line 1 column 52 (char 51)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}+,",
+"Expecting ',' delimiter: line 1 column 22 (char 21)"
+],
+[
+"{\"a\": [1, 2.-5 -3e2, true, false, null], \"bb\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"{\"mcpServers\": {:\"srv\": {\"command\": \"npx\",\u0001 \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 17 (char 16)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\00e9\"}}",
+"Invalid \\escape: line 1 column 57 (char 56)"
+],
+[
+"[{\"x\": 1}, {\"y\": []}, \"s\"]",
+""
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]} \"s\"]",
+"Expecting ',' delimiter: line 1 column 23 (char 22)"
+],
+[
+"{\"a\"6:2 [1, 2.5, -3e2, true, false, null], \"b\": {\"c\"4: \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 5 (char 4)"
+],
+[
+"[{0\"x\": 1}, {\"y\": [ ]}, ",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"{\"a: [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 42 (char 41)"
+],
+[
+"{\"a\": [1, 25, -3e2, true, false, null], \"b\":{\"c\": \"d\\}n\\u00e9\"}}",
+"Invalid \\escape: line 1 column 53 (char 52)"
+],
+[
+" [{\"x\": 1}, \"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 16 (char 15)"
+],
+[
+"{\"mcpServers\": {srv\": {\"command\": npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 17 (char 16)"
+],
+[
+"[{.\"x\": 1}b, {\"y\": [ ]}, \"s}\"]",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"[{\"x\": 1}, {\"y\": [u ]}, \"s\"]",
+"Expecting value: line 1 column 19 (char 18)"
+],
+[
+"[{\"x\": 1}, {\"\": [ ]} , \"s\"]",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c4\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"[{\"x\" 1}, {\"y\": [ ]} \"s\"]",
+"Expecting ':' delimiter: line 1 column 7 (char 6)"
+],
+[
+"[\"x\": 1+}, {\"y\": [ ]",
+"Expecting ',' delimiter: line 1 column 5 (char 4)"
+],
+[
+"[{\"x\":4 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 9 (char 8)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"3args\":",
+"Expecting value: line 1 column 51 (char 50)"
+],
+[
+"{\"a6\": [1, 2.5, -3e2, true, flse, null], \"b\": {\"c\": \"",
+"Expecting value: line 1 column 29 (char 28)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null],\" \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 44 (char 43)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false\t, null], \"b\": {\"c\": dn\\u00e9\"}}",
+"Expecting value: line 1 column 54 (char 53)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, tr]ue, false, null], \"b\": {\"c\": \"d\\n\\00e9\"}",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"[{\"x\" ",
+"Expecting ':' delimiter: line 1 column 7 (char 6)"
+],
+[
+"{\"a\": [1, 2.5,-3e2, t",
+"Expecting value: line 1 column 21 (char 20)"
+],
+[
+"{\"mcpServers\": {\"srv\"1: {\"command\":\"npx\", \"args\": [\"-y\",\"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 22 (char 21)"
+],
+[
+"{\"a\": ][1 2.5, -3e2, true,9 false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 7 (char 6)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"n",
+"Unterminated string starting at: line 1 column 36 (char 35)"
+],
+[
+"{\"a\": 0[1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 8 (char 7)"
+],
+[
+"{\"mcpServers\": {srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 17 (char 16)"
+],
+[
+"{\"",
+"Unterminated string starting at: line 1 column 2 (char 1)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\" [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 50 (char 49)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fualse, null], \"b\": {\"c\":3 \"d",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"np\", \"args\": [\"8-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"[{\"x\"5: 1}1, {\"y\": [ ]}, \"",
+"Expecting ':' delimiter: line 1 column 6 (char 5)"
+],
+[
+"[{\"x\": 1}, {\"y\\\": [ ]}, 3\"s\"]",
+"Expecting ':' delimiter: line 1 column 27 (char 26)"
+],
+[
+"[{\"5x\": 1}, \"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 16 (char 15)"
+],
+[
+"{a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"[{\"x\": 1}, {\"y\":: [ ]}, \"s\"]",
+"Expecting value: line 1 column 17 (char 16)"
+],
+[
+"[{\"x\": 1}, é{\"y\": [ ]}, \"s\"]",
+"Expecting value: line 1 column 12 (char 11)"
+],
+[
+"{\"cpServers\": {\"srv\": {\"comm\\and\": \"npx\", \"args\": [\"-y\", \"pkg\"],\"env\": {\"K\": \"v\"}}}}",
+"Invalid \\escape: line 1 column 29 (char 28)"
+],
+[
+"[{\"x\": 1} {\"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 11 (char 10)"
+],
+[
+"[{\"x\": 1},6 {\"y\": [ []}, s\"]",
+"Expecting ',' delimiter: line 1 column 13 (char 12)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true false, null], n\"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 27 (char 26)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": }\"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 53 (char 52)"
+],
+[
+"{a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"[{\"x\": 1}, {\".y\": [ ]}, \"s\"]",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"comma[nd\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": \"-y\", \"pkg\"], \"env\": {\"K\": v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"[{\"x: 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting ':' delimiter: line 1 column 13 (char 12)"
+],
+[
+"[{\"x\": 1}, {\"y\":  ]}, \"s\"]",
+"Expecting value: line 1 column 19 (char 18)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting value: line 1 column 58 (char 57)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": b[\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting value: line 1 column 51 (char 50)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}, \"s\"6",
+"Expecting ',' delimiter: line 1 column 27 (char 26)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fealse, null],",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"[{\"\": 15}",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"{\"mcpServers\" {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 15 (char 14)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, nul2l], \"b\": {\"c\": \"d\\n\\u",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"{\"a\":\u0001 [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 6 (char 5)"
+],
+[
+"{\"mcpServers: {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 17 (char 16)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true",
+"Expecting ',' delimiter: line 1 column 26 (char 25)"
+],
+[
+"[{\"x\": 1, ",
+"Expecting property name enclosed in double quotes: line 1 column 11 (char 10)"
+],
+[
+"[{\"x\": 1}, {\"",
+"Unterminated string starting at: line 1 column 13 (char 12)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"np\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpSerers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\t\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Invalid control character at: line 1 column 54 (char 53)"
+],
+[
+"[{\"x\": 1},",
+"Expecting value: line 1 column 11 (char 10)"
+],
+[
+"{\"a\": [1, 2.5,é -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 15 (char 14)"
+],
+[
+"[{x\": 1}, {\"y\": [ ]}, \"s]",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"{\"a\": [",
+"Expecting value: line 1 column 8 (char 7)"
+],
+[
+"{\"a",
+"Unterminated string starting at: line 1 column 2 (char 1)"
+],
+[
+"{\"mcpServers\": {\"srv\": \"",
+"Unterminated string starting at: line 1 column 24 (char 23)"
+],
+[
+"{\"mcpServers\": \"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 21 (char 20)"
+],
+[
+"[{\"x\": 1n}, {\"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 9 (char 8)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"n9px\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fal\tse, null] \"b\": {\"c\": \"dé\\n\\u00e9\"}}",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", 6\"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 59 (char 58)"
+],
+[
+"{\"a\": [1, 2.5,-3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, nunll], \"b\": {\"c",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"{\"mcpServers\": {\"srv\": {command\": \"npx\", \"args\": \"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 25 (char 24)"
+],
+[
+"{\"a\": [1, 2.5, -32, true, false,E null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 33 (char 32)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null],\"b\": {\"c\" \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 51 (char 50)"
+],
+[
+"{\"\": [[1, 2.5, -3e2, true, false,null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 44 (char 43)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"rgs\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, rue, false, null], \"b\": {\"c\": \"de\\n\\u00e9\"}}",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"{\"na\": [1, 2.5, -37e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9",
+"Invalid \\uXXXX escape: line 1 column 60 (char 59)"
+],
+[
+"{\"mcperers\": {",
+"Expecting property name enclosed in double quotes: line 1 column 15 (char 14)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"co,mmand\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, nll], \"b\": {\"c\"8: \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"[{x: 1}, ",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y, \"pk7g\"], \"env\": {\"K\": ",
+"Expecting ',' delimiter: line 1 column 58 (char 57)"
+],
+[
+"[\"x\": 1}, {\"y\": [ ]}, \"s\"",
+"Expecting ',' delimiter: line 1 column 5 (char 4)"
+],
+[
+"{\"a\": [1, 25, -3e2, t",
+"Expecting value: line 1 column 21 (char 20)"
+],
+[
+"{\"a\": [1, 2.5-, -3e2, true, fals",
+"Expecting ',' delimiter: line 1 column 14 (char 13)"
+],
+[
+"{\"a\": [, 2.5, -3e2, true, alse, n",
+"Expecting value: line 1 column 8 (char 7)"
+],
+[
+"{3\"a\": [1, 2.",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"[{\"x\": 1}, é{\"y\": [",
+"Expecting value: line 1 column 12 (char 11)"
+],
+[
+"[{\"x\": 1}, \"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 15 (char 14)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, nll], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"[[{\"x\\\": ",
+"Unterminated string starting at: line 1 column 4 (char 3)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null] \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 41 (char 40)"
+],
+[
+"[{x\": 1}, -{\"",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"[{\"x\": 1},2- {\"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"{\"mcpServers: {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"e",
+"Expecting ':' delimiter: line 1 column 17 (char 16)"
+],
+[
+"{\"mcpSer",
+"Unterminated string starting at: line 1 column 2 (char 1)"
+],
+[
+"{\"a\"\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9}}",
+"Expecting ':' delimiter: line 1 column 5 (char 4)"
+],
+[
+"[{\"x\": 1}, {y\" [ ]}, \"s\"]]",
+"Expecting property name enclosed in double quotes: line 1 column 13 (char 12)"
+],
+[
+"[{\"x\"",
+"Expecting ':' delimiter: line 1 column 6 (char 5)"
+],
+[
+"3[{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+"Extra data: line 1 column 2 (char 1)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e",
+"Invalid \\uXXXX escape: line 1 column 58 (char 57)"
+],
+[
+"[{\"x\": 1}, {-\"y\": [ ], \"",
+"Expecting property name enclosed in double quotes: line 1 column 13 (char 12)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}, \"s\"",
+"Expecting ',' delimiter: line 1 column 27 (char 26)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\":{\"c\":\"d\\n\\u00e9\"}}",
+""
+],
+[
+"[{\"x\": 1}, {\"é\": [ +]}, \"s\"]",
+"Expecting value: line 1 column 20 (char 19)"
+],
+[
+"{\":a\": [1,",
+"Expecting value: line 1 column 11 (char 10)"
+],
+[
+"[{\"x\": ",
+"Expecting value: line 1 column 8 (char 7)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true6,false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 26 (char 25)"
+],
+[
+"[{\"x\": 1}, 8{\"y\": []}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 13 (char 12)"
+],
+[
+"[{\"2x\": 1}, {\"y\": []} \"s\"]",
+"Expecting ',' delimiter: line 1 column 23 (char 22)"
+],
+[
+"{\"mcpServers\": {\"srv\":{\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"",
+"Expecting ',' delimiter: line 1 column 62 (char 61)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pg\"], \"env: {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 73 (char 72)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, ",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], e\"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 66 (char 65)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false,",
+"Expecting value: line 1 column 34 (char 33)"
+],
+[
+"[\t{\"x\": 1} {y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"[{\"5x\": 1}, {\"y\": [ ]}, \"s\"]",
+""
+],
+[
+"[{\"x\": 1}, {\"y\": [7 ]}, \"s\"]",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, falsen, null], \"b\": {\"]c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 33 (char 32)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"\\n\\u00e9\"}\\}",
+"Expecting ',' delimiter: line 1 column 64 (char 63)"
+],
+[
+"{\"a\": [1,2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"{\"mcpServers\": {\"bsrv\": {\"command: \"npx\", \"args\": [\"-y\", 7\"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 37 (char 36)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}",
+"Expecting ',' delimiter: line 1 column 85 (char 84)"
+],
+[
+"é[{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"{\"a\": [1, 2.5, -3e2,true, false, \nnull], \"b\": {\"c\": \"d\\",
+"Unterminated string starting at: line 2 column 19 (char 52)"
+],
+[
+"{\"a\": 1, 2.5, -3e2, true, false,\n nul,l], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting property name enclosed in double quotes: line 1 column 10 (char 9)"
+],
+[
+"[{\"x\": 1}, {\"y\": \n[ ]}, \"s\"]",
+""
+],
+[
+"[{\"x\": 1}, {y\": [ ]\"}, \"s\"]",
+"Expecting property name enclosed in double quotes: line 1 column 13 (char 12)"
+],
+[
+"{\"a\": [1, 2.5 -3e2, true, false, null], \"b\": {\"c: \"d\\n\\u00e9\"",
+"Expecting ',' delimiter: line 1 column 15 (char 14)"
+],
+[
+"[\"9x",
+"Unterminated string starting at: line 1 column 2 (char 1)"
+],
+[
+"[\"x\": 1}, {[\"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 5 (char 4)"
+],
+[
+"[{\"x\": 1}, {.\"y\": [ ]}, \"s\"]",
+"Expecting property name enclosed in double quotes: line 1 column 13 (char 12)"
+],
+[
+"{\"a\": [1, 2.5, -3e, true, false, null",
+"Expecting ',' delimiter: line 1 column 18 (char 17)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fals6e, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"p5kg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": 6[1, 2.5, -3e2, true, false null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 8 (char 7)"
+],
+[
+"{\"mcpe[rvers\": {\"srv\": {\"command\":\"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2., -3e2, true, false, null], \"b\":{\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}e",
+"Extra data: line 1 column 86 (char 85)"
+],
+[
+"{\"a\": [1, 2.5, -3",
+"Expecting ',' delimiter: line 1 column 18 (char 17)"
+],
+[
+"[{\"x\":\" 1}, {\"y\":[ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 15 (char 14)"
+],
+[
+"[{\"x\": +1}, {\"y",
+"Expecting value: line 1 column 8 (char 7)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"\"}}}}",
+"Expecting ',' delimiter: line 1 column 82 (char 81)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\"2: \"npx\", \"args\": [\"-y\", ",
+"Expecting ':' delimiter: line 1 column 34 (char 33)"
+],
+[
+"[{\"x",
+"Unterminated string starting at: line 1 column 3 (char 2)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null{], \"b\": {:\"c\": \"d\\n\\u0e9\"}}",
+"Expecting ',' delimiter: line 1 column 39 (char 38)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"argsn\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcp]Servers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"enuv\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{mcpServ",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u0",
+"Invalid \\uXXXX escape: line 1 column 58 (char 57)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, rue, false, null], \"\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"[{\"x\": 1}- {\"y\":+ [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": \"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 76 (char 75)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true fale, nul], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 27 (char 26)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fals, null], 7\"b\": {\"c\": \"d\\n\\u00e9}\"}}",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{\"mcpServers\"3: {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"en",
+"Expecting ':' delimiter: line 1 column 14 (char 13)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\",",
+"Expecting property name enclosed in double quotes: line 1 column 42 (char 41)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"argsE\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, f]alse, null], \"b\": {\"c\": \"d\\n\\u00e9\"}",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"[{\"x\": 1}, {\"y: [ ]}, \"s\"]",
+"Expecting ':' delimiter: line 1 column 24 (char 23)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \t\"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, tru8e, false, nul], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"",
+"Unterminated string starting at: line 1 column 25 (char 24)"
+],
+[
+"[{\"\": 1}, {\"y\": [ ]}, \"s\"",
+"Expecting ',' delimiter: line 1 column 26 (char 25)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]},4 \"s\"]",
+"Expecting ',' delimiter: line 1 column 25 (char 24)"
+],
+[
+"{\"a\": [1, 2.5, -3e2 t rue, fase, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 21 (char 20)"
+],
+[
+"{\"mcpServers\"",
+"Expecting ':' delimiter: line 1 column 14 (char 13)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"nupx\", \"args\": [\"-y\", \"pkg\"], \"env\":E \"K\": \"v\"}}}}",
+"Expecting value: line 1 column 73 (char 72)"
+],
+[
+",{\"a\": [1, 2.5, -3e2, true, false,. null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"{\"a\": [1, 2.5,",
+"Expecting value: line 1 column 15 (char 14)"
+],
+[
+"{\"mcpServers\": {\"sv\"\n: {\"command\": \"n",
+"Unterminated string starting at: line 2 column 15 (char 35)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\", \"en\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 69 (char 68)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fal",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fals-e, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{\"a\": [1, 2.5, -39e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"[{\"x\": 1}, {\"\": [ ]}, \"s\"]",
+""
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+""
+],
+[
+"{\"mcpervers\": {\"srv\": {\"command,\": \"npx\"\t, \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\" \"args\": [\"-y\", \"pkg\"], \"en\": {\"K\": \"v\"}9}}}",
+"Expecting ',' delimiter: line 1 column 42 (char 41)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx7\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"[K\": \"v\"}}}}",
+""
+],
+[
+"[{\"x\" 1}, {\"y\": [ ]} \"",
+"Expecting ':' delimiter: line 1 column 7 (char 6)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b:\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"[{\"x\": 1},{\"y\":  ]}, 4\"s\"]",
+"Expecting value: line 1 column 18 (char 17)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"np x\", \"args\": [\"-y\", \"p kg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServers\":1 {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 17 (char 16)"
+],
+[
+"{\"mcpServers",
+"Unterminated string starting at: line 1 column 2 (char 1)"
+],
+[
+"{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+"Extra data: line 1 column 9 (char 8)"
+],
+[
+"{\"a\":n [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 6 (char 5)"
+],
+[
+"{\"a\": [1, 25, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y, \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 58 (char 57)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n \\u00e9\"}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"\"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 38 (char 37)"
+],
+[
+"[\n{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+""
+],
+[
+"{\"a\": [1 2.5, -3e2, true, ",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"[{\"x\": }, {\"y\":[ ]}, s\"]",
+"Expecting value: line 1 column 8 (char 7)"
+],
+[
+"{\"mcp6Servers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}",
+"Expecting ',' delimiter: line 1 column 86 (char 85)"
+],
+[
+"{\"mcpServers\": {\"srv\":b {\"command\": \"npx",
+"Expecting value: line 1 column 23 (char 22)"
+],
+[
+"{\"mcpServers\" {\"srv\": {\"command\": \"npx\", \"args\": [\"-by\", \"pkg\"], \"env\": {\"K\": \"v\"}}}",
+"Expecting ':' delimiter: line 1 column 15 (char 14)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K",
+"Unterminated string starting at: line 1 column 74 (char 73)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args]: [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 53 (char 52)"
+],
+[
+"{\"a\": [1, 2..5, -3e2, true, false, nul], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"ags\": [\"-y\", \"pkg+\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"[{5:\"",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"{\"a\": [1,",
+"Expecting value: line 1 column 10 (char 9)"
+],
+[
+"{\"mcpServers\": {\"srv\":",
+"Expecting value: line 1 column 23 (char 22)"
+],
+[
+"{\"a\": [1, 25, -3e2, true, false, nu",
+"Expecting value: line 1 column 34 (char 33)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\"a: \"np\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 34 (char 33)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, n\u0001ull], \"b\": {\"c\": \"d\\9n\\u00e9\"}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"{\"mcpServ{ers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"[pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, rue, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false null],",
+"Expecting ',' delimiter: line 1 column 34 (char 33)"
+],
+[
+"[{\"x\": 1}, {\"y\": [9 ]},",
+"Expecting value: line 1 column 24 (char 23)"
+],
+[
+"{\"a\": 5[1, 2.5, -3e2, true, fal7se, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 8 (char 7)"
+],
+[
+"{\"mcpServers\": {\"s",
+"Unterminated string starting at: line 1 column 17 (char 16)"
+],
+[
+"{\"mcpServers\": {\"srv:",
+"Unterminated string starting at: line 1 column 17 (char 16)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, r\nue, false, null], \"b\": {\"c\": \"d\\n\\u00e9",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"co\"mmand\": \"np\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 29 (char 28)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\":",
+"Expecting value: line 1 column 46 (char 45)"
+],
+[
+"[{\"x\": 1, {\"y\": [ ]}, \"s\"]",
+"Expecting property name enclosed in double quotes: line 1 column 11 (char 10)"
+],
+[
+"[{\"x\":",
+"Expecting value: line 1 column 7 (char 6)"
+],
+[
+"[{\"x\": 1},  {\"y\": [ :]}, \"s\"]",
+"Expecting value: line 1 column 21 (char 20)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\",E \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 42 (char 41)"
+],
+[
+"[{\"x\": 1} ",
+"Expecting ',' delimiter: line 1 column 11 (char 10)"
+],
+[
+"[{\"x\": 1\u0001}, b{\"y",
+"Expecting ',' delimiter: line 1 column 9 (char 8)"
+],
+[
+"{\"mcpServrs\": {\"Esrv\": {\"command\": \"npx, \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 43 (char 42)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"kg\"], \"env\": {\"K\": \":v\"}}}}",
+""
+],
+[
+"[{\"x\":[ 1}, {\"y\": [\n ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"\"], \"env\": {K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 63 (char 62)"
+],
+[
+"{\"a:, [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\4u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 43 (char 42)"
+],
+[
+"[{",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"[{\"x\": 1}, .\"y\": +[ ]}, \"s\"]",
+"Expecting value: line 1 column 12 (char 11)"
+],
+[
+"{\"a\": [1, 2., -3e2, true, false, nul], \"b\": {\"c\": \"d\\nu00e9\"}}",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"[{\"x\": 1},a {\"y\": [ ]}, \"s\"]",
+"Expecting value: line 1 column 11 (char 10)"
+],
+[
+"{\"a\": [1, .5, -3e2,8 true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 11 (char 10)"
+],
+[
+"{\"a\": [1, 24.5, -3e2, true, false, null], \"b\": {\"",
+"Unterminated string starting at: line 1 column 49 (char 48)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b0\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"{a\": [1, 2.5,",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"[{\"x\": 1}, {6\"y: []}, \"s\"]",
+"Expecting property name enclosed in double quotes: line 1 column 13 (char 12)"
+],
+[
+"{\"mcpServers\": {\"srv: {\"command\"",
+"Expecting ':' delimiter: line 1 column 25 (char 24)"
+],
+[
+"[{\"x\":  1}",
+"Expecting ',' delimiter: line 1 column 11 (char 10)"
+],
+[
+"[{\"x\": 1}",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"[{\"x\":1}, {\"y\": [ 9]}, \"s\"]",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null],{ \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting property name enclosed in double quotes: line 1 column 41 (char 40)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\"3: \"npx\", \"args\": [\"-y\", \"pkg\"], \"e",
+"Expecting ':' delimiter: line 1 column 34 (char 33)"
+],
+[
+"{\"a\": [1, 2.5\t, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u0e9\"}}",
+"Invalid \\uXXXX escape: line 1 column 59 (char 58)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}",
+"Expecting ',' delimiter: line 1 column 83 (char 82)"
+],
+[
+"{\"a: [1, 2.5, -3e2, true, false, nll], \"b\": {\"c\": \"d\\\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 41 (char 40)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}, \"\"]",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-ny\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\"+: {\"c\": \"{d\\n]\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 45 (char 44)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"n[px",
+"Unterminated string starting at: line 1 column 36 (char 35)"
+],
+[
+"[{\"x\"}: 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting ':' delimiter: line 1 column 6 (char 5)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"",
+"Unterminated string starting at: line 1 column 43 (char 42)"
+],
+[
+"{\"mcpServers\": {srv\": {\"command\": \"npx\", \"args\": [\"-y, \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 17 (char 16)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"],",
+"Expecting property name enclosed in double quotes: line 1 column 65 (char 64)"
+],
+[
+"{\"mcpSrvers\": {\"srv\":: {\"command\": \"npx\", \"args\": [\"-y\", \"pkg",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"{\"a\": [1,2.5, -3e2, true, fals:e, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 27 (char 26)"
+],
+[
+"{\"mcpServers\": {\"srvu\": {\"comm",
+"Unterminated string starting at: line 1 column 26 (char 25)"
+],
+[
+"[{\"x: 1}, {\"y\":[ ], \"s\"]",
+"Expecting ':' delimiter: line 1 column 13 (char 12)"
+],
+[
+"[{\"x\": 1}, {\"y\": []} \"s]",
+"Expecting ',' delimiter: line 1 column 22 (char 21)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false null], \"b\": \u0001{\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 34 (char 33)"
+],
+[
+"{\"a: [1, 2.5,n -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 43 (char 42)"
+],
+[
+"{\"a\":7 [1, 2.5, ",
+"Expecting ',' delimiter: line 1 column 8 (char 7)"
+],
+[
+"{\"mcpServers\": {\"srv\": {[\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 25 (char 24)"
+],
+[
+"[{\"x\": 1}, {\"y: [  ]}, \"s\"]",
+"Expecting ':' delimiter: line 1 column 25 (char 24)"
+],
+[
+"-[{\"x\": 1}, {\"y\":1 [ ]}, \"s\"]",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"[{\"\": 1}, {\"y\": [ ]}, \"s\"]",
+""
+],
+[
+"{\u0001\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\\\u00e9\"}}",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}, \"s\".]",
+"Expecting ',' delimiter: line 1 column 27 (char 26)"
+],
+[
+"[{\"x\": 1},2 {\"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 13 (char 12)"
+],
+[
+"{a\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [0\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true,false, null],u \"b\": {\"c\": \"d\\n\\u0e9\"}}",
+"Expecting property name enclosed in double quotes: line 1 column 40 (char 39)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, rue, fal",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"[{\"x\": 1}, {y\": [ ]}, \"s5\"]",
+"Expecting property name enclosed in double quotes: line 1 column 13 (char 12)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\"1: \"npx\" \"args\": [\"-y\", \"p.kg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 34 (char 33)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"comm}and\": \"npx\", \"args\": [\"-y\", \"pg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"[{\"x\": 1}, {\"y\":  ]}, 9\"\"]",
+"Expecting value: line 1 column 19 (char 18)"
+],
+[
+"{\"a\": 1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting property name enclosed in double quotes: line 1 column 10 (char 9)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fa\"lse, null],8 \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"{a\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": 4[\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\":, [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting value: line 1 column 50 (char 49)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"comand\": \"npx\", \"args\": [\"-y, \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 57 (char 56)"
+],
+[
+"[{\"x\": 1}, {\"yé\": [ ]4}, \"\"]",
+"Expecting ',' delimiter: line 1 column 22 (char 21)"
+],
+[
+"{\"mcpSrvers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"bargs\": [\"-y, \"pkg\"",
+"Expecting ',' delimiter: line 1 column 59 (char 58)"
+],
+[
+"[{\"x\" : 1}, {\"y\":[ ]}, \"s\"]",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {command\": \"npx\", \"ar",
+"Expecting property name enclosed in double quotes: line 1 column 25 (char 24)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {5\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 74 (char 73)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx, \"args\"",
+"Expecting ',' delimiter: line 1 column 43 (char 42)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c",
+"Unterminated string starting at: line 1 column 48 (char 47)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, tr\\ue, false, null], \"b\": {\"",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"{\"a\": [1, 2:.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"[{\"x: 1}, {\"y\": [ }, \"s\"]",
+"Expecting ':' delimiter: line 1 column 13 (char 12)"
+],
+[
+"[{\"x\": 1}, {\"y\"\t:  ]a}, \"s\"]",
+"Expecting value: line 1 column 20 (char 19)"
+],
+[
+"[,{\"x\": 1}3, {\"y\": [",
+"Expecting value: line 1 column 2 (char 1)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\{u00e9\"}}",
+"Invalid \\escape: line 1 column 57 (char 56)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ], \"s\"]",
+"Expecting ':' delimiter: line 1 column 26 (char 25)"
+],
+[
+"[{\"x\", 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting ':' delimiter: line 1 column 6 (char 5)"
+],
+[
+"[{\"x\": 1}:, {\"y\": [ ]}, ",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"[{\"x\" 1}, {y\": [ ]}, \"+s\"]",
+"Expecting ':' delimiter: line 1 column 7 (char 6)"
+],
+[
+"2{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\":\u0001 \"d\\n\\u00e9\"}}",
+"Extra data: line 1 column 2 (char 1)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null] \"b: {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 41 (char 40)"
+],
+[
+"{\"mcp\\Servers\": ",
+"Invalid \\escape: line 1 column 6 (char 5)"
+],
+[
+"][{\"",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"[{\"x\": 1}, {\"y\": [}, \"s\"]",
+"Expecting value: line 1 column 19 (char 18)"
+],
+[
+"[{\"x\": 1}, {\"y\": []}, \"s\"]}",
+"Extra data: line 1 column 27 (char 26)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]},, \"{s\"]",
+"Expecting value: line 1 column 23 (char 22)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, énull], \"b\": {\"c\": \"d\\n\\ua00e9\"}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx",
+"Unterminated string starting at: line 1 column 36 (char 35)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {+\"c\": \"d\\n\\u00e9\"}}",
+"Expecting property name enclosed in double quotes: line 1 column 48 (char 47)"
+],
+[
+"{\"a\": [, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 8 (char 7)"
+],
+[
+"{b\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"en\": {\"K\": \"v\"",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\",\n \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"b",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"[{\"x\u0001\": 1},7 {\"y\": [ ]a}, \"s\"]",
+"Invalid control character at: line 1 column 5 (char 4)"
+],
+[
+"{\"mcpServers\": {\"rv\": {\"command\": \"npx\", \"argbs\": [\"-y\", \"pkg\"], \"e5nv\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null]é, \"b\": {\"c\":\"d\\nu00e9\"}}",
+"Expecting ',' delimiter: line 1 column 40 (char 39)"
+],
+[
+"[{\"x\": 1éé}, {\"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 9 (char 8)"
+],
+[
+"{\"mcpervers\"+: {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\"",
+"Expecting ':' delimiter: line 1 column 13 (char 12)"
+],
+[
+"{\"mcpSeervers\": {srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 18 (char 17)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, tru e, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"{\"a\": [1, 2.5",
+"Expecting ',' delimiter: line 1 column 14 (char 13)"
+],
+[
+"{[{\"x\": 1}\", {\"y\": [ ]}, \"s]",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{\"a\": [1, ",
+"Expecting value: line 1 column 11 (char 10)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args: [\"-y{\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 52 (char 51)"
+],
+[
+"{\"mcpServers\": {\"sr\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": 3{\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 73 (char 72)"
+],
+[
+"{9\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\" {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 46 (char 45)"
+],
+[
+"{\"m\\cpSerers\": {\"srv",
+"Invalid \\escape: line 1 column 4 (char 3)"
+],
+[
+"{\"mcpServers\": {\"srv\"6: {\"commad\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"en",
+"Expecting ':' delimiter: line 1 column 22 (char 21)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, nll], \"b\": {\"c\": \"d\\n\\,u00e9\"}}",
+"Expecting value: line 1 column 35 (char 34)"
+],
+[
+"{\"mcpServers\": \"srv\": {\"command\": \"npx\", \"args\":",
+"Expecting ',' delimiter: line 1 column 21 (char 20)"
+],
+[
+"{\"5a\": [ 1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"{\"mcpServers\": {\"sv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServrs\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"9[{\"x\": 1}",
+"Extra data: line 1 column 2 (char 1)"
+],
+[
+"{\"mcpSevers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": \u0001[1, 2.5, -3e2], true, false, null], \"b\"1: {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 7 (char 6)"
+],
+[
+"{\"m cpServers\": {\"srv\": {\"command\": \"npx\", ",
+"Expecting property name enclosed in double quotes: line 1 column 44 (char 43)"
+],
+[
+"{\"mcpServers\": {\"srv\": {command\": \"npx\", \"args\": [\"-y\", \"pkg\"], env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 25 (char 24)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"px\", \"args\": [\"-y\", \"pkg\"],\"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command: \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 36 (char 35)"
+],
+[
+"{\"mcpSrvers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\":E {\"K\": \"v\"}}}}",
+"Expecting value: line 1 column 71 (char 70)"
+],
+[
+"{\"Ea\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u0\"0e9\"",
+"Invalid \\uXXXX escape: line 1 column 59 (char 58)"
+],
+[
+"{\"mpServers\": {\"srv\": {\":command\": \"npx\", \"args\": [\"-y\", \"apkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServes\": {\"srv\": {\"command\": \"npx, \"args\": [\"-y\",\"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 42 (char 41)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null],\"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"[{\"x\": 1}, {\"y\": [ ",
+"Expecting value: line 1 column 20 (char 19)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\-u00e9\"}}",
+"Invalid \\escape: line 1 column 57 (char 56)"
+],
+[
+"[{\"x\"+: 1}, {\"y",
+"Expecting ':' delimiter: line 1 column 6 (char 5)"
+],
+[
+"{\"mcpServers\": {\"srv\":{\"command\": \"npx\", \"a\\rgs\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"\"mcpServers\": {\"srv\": \"command\": \"npx\", \"args\": [\"-y\",3 \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Extra data: line 1 column 13 (char 12)"
+],
+[
+"{\"mcpServers\"}: {\"srv\":a {\"command\": \"npx\", \"args\": [\"-y\", \"pg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 14 (char 13)"
+],
+[
+"{\"a\": [1, 2.5u, -3e2, rue, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 14 (char 13)"
+],
+[
+"{\"mcpServers\": {\"rv\": \"command\":\"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 32 (char 31)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 53 (char 52)"
+],
+[
+"{a\": [1, 2.",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{\"mc",
+"Unterminated string starting at: line 1 column 2 (char 1)"
+],
+[
+"[\"x\": 1}, {\"y\": [ ]}, ",
+"Expecting ',' delimiter: line 1 column 5 (char 4)"
+],
+[
+"\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"],6 \"env\": {\"\": \"v\"}}}}",
+"Extra data: line 1 column 13 (char 12)"
+],
+[
+"u{\"a\":[1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ },",
+"Expecting value: line 1 column 20 (char 19)"
+],
+[
+"[8{\"x\": 1}, {\"y",
+"Expecting ',' delimiter: line 1 column 3 (char 2)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}} ",
+""
+],
+[
+"{\"mcpServers\"[: {\"srv\": {\"",
+"Expecting ':' delimiter: line 1 column 14 (char 13)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}, \"s]",
+"Unterminated string starting at: line 1 column 24 (char 23)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}\"}}}",
+"Expecting ',' delimiter: line 1 column 83 (char 82)"
+],
+[
+"{\"m",
+"Unterminated string starting at: line 1 column 2 (char 1)"
+],
+[
+"\"a\": [1, 2.5, -3e2, true, falase, n4ull], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Extra data: line 1 column 4 (char 3)"
+],
+[
+"{\"5a\": [1,2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"[{\"x\": 1}, {\"y\": 8[ ]}, \"s]",
+"Expecting ',' delimiter: line 1 column 19 (char 18)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pk+g\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2a, true false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 20 (char 19)"
+],
+[
+"{\"a\": [1, 2.5, -3e}2, true, false, null], \"b\": {\"\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 18 (char 17)"
+],
+[
+"{\"a\": [1,2.5, -3e2, true, false, null], \"b\": {\"c\"",
+"Expecting ':' delimiter: line 1 column 50 (char 49)"
+],
+[
+"{\"a\": [1,2.5, -3e2, 6true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}[",
+"Expecting ',' delimiter: line 1 column 22 (char 21)"
+],
+[
+"[{\"x\": e1}, {\"y\": [ 6]}, \"s\"]",
+"Expecting value: line 1 column 8 (char 7)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true{, false, nu",
+"Expecting ',' delimiter: line 1 column 26 (char 25)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fal1se, null], \"b\": {\"c\": \"d\\n\\uu00e9\"}}",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"u{\"mcpSevers\": {\"srv\": {\"command\": \"npx\", \"args\": \"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"c,ommand\": \"npx\", \"ars\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"va\"}}}}",
+""
+],
+[
+"[{\"x\": 1}, {\"y\": 8[ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 19 (char 18)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true,6 fal",
+"Expecting ',' delimiter: line 1 column 29 (char 28)"
+],
+[
+"{\"mcpServers\"8: {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"kg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 14 (char 13)"
+],
+[
+"{\"a\"\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\nu00e9\"}}",
+"Expecting ':' delimiter: line 1 column 5 (char 4)"
+],
+[
+"[{\"x\": 1}, {\"y\"\t: [ ]}, \"s\"]",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command: \"npx\", \"args\": [\"-y\", \"p\\kg\"], \"nv\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 36 (char 35)"
+],
+[
+"{\"mcpServers\": {\"srv6\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\"2: \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 78 (char 77)"
+],
+[
+"{\"a\": [1,2.5, \\-3e2, true, false, null], b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 15 (char 14)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"commanEd\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpuServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 4 (char 3)"
+],
+[
+"[{2\"bx\": 1}, \"y\": [ ]}, \"s\"]",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"] \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 65 (char 64)"
+],
+[
+"[,{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting value: line 1 column 2 (char 1)"
+],
+[
+"{\"mcpServers\": {\"Esrv\": {\"command\": \"npx\", \"args\": [\"-y,",
+"Unterminated string starting at: line 1 column 53 (char 52)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\"{: {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 45 (char 44)"
+],
+[
+"[é{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting value: line 1 column 2 (char 1)"
+],
+[
+"[ {\"x\": 1}, {\"y\": [ ]}, \"s\"",
+"Expecting ',' delimiter: line 1 column 28 (char 27)"
+],
+[
+"[.{\"x\": 1}, {",
+"Expecting value: line 1 column 2 (char 1)"
+],
+[
+"{\"a\": [1, 2., -3e2, true, fa",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"{\"mcpServers\": {\"srv\": ",
+"Expecting value: line 1 column 24 (char 23)"
+],
+[
+"[{\"x\": 1}., {\"y\":  ]}",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true false, null], \"b\": {\"c\": \"d\\n\\u009\"}}",
+"Expecting ',' delimiter: line 1 column 27 (char 26)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false5, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 33 (char 32)"
+],
+[
+"{\"a\":[1, 2.5, -3e2, true, flse, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 27 (char 26)"
+],
+[
+"{\"mcpSer.vers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"a\": [1, 2.5é, -3e2, true,false, null], \"b\": {\"c\":\"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 14 (char 13)"
+],
+[
+"{\"mcpServer",
+"Unterminated string starting at: line 1 column 2 (char 1)"
+],
+[
+"{\"mcServers\": {\"srv\": {\"command\":a \\\"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting value: line 1 column 34 (char 33)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, [null], \"b\": {\"c\": \"d\\n\\u00e9\"}{}",
+"Expecting ',' delimiter: line 1 column 46 (char 45)"
+],
+[
+"[{\"x\": 31}, {\"y\": [ ]}, \"s]E",
+"Unterminated string starting at: line 1 column 25 (char 24)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\"0: {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 71 (char 70)"
+],
+[
+"[{\"x\": {1}, {\"y\": [ 2]}, \"s\"]",
+"Expecting property name enclosed in double quotes: line 1 column 9 (char 8)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"cmmand\": \"n",
+"Unterminated string starting at: line 1 column 35 (char 34)"
+],
+[
+"{\"mcpervers\": {\"srv\": {\"command\": \"npx\", args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}-",
+"Expecting property name enclosed in double quotes: line 1 column 42 (char 41)"
+],
+[
+"[{\"x\": 1}, {\"y\"",
+"Expecting ':' delimiter: line 1 column 16 (char 15)"
+],
+[
+"[\"x\"4: 1}, ",
+"Expecting ',' delimiter: line 1 column 5 (char 4)"
+],
+[
+"{\"x\": ",
+"Expecting value: line 1 column 7 (char 6)"
+],
+[
+"\u0001[{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"{\"mcpServrs\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pk4g], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 66 (char 65)"
+],
+[
+"[{\"\": 1}, {\"y\": [ ]}, \"su\"]",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\"\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 56 (char 55)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u009\"}}",
+"Invalid \\uXXXX escape: line 1 column 58 (char 57)"
+],
+[
+"{\"mcpervers\": {\"srv\": {\"c{ommand\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args: [\"-y\", \"pkg\"],",
+"Expecting ':' delimiter: line 1 column 52 (char 51)"
+],
+[
+"n[{\"x\": 1}, {\"y\": [ }, \"s\"]",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"[{\"x\": 1}, {",
+"Expecting property name enclosed in double quotes: line 1 column 13 (char 12)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [u\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting value: line 1 column 52 (char 51)"
+],
+[
+"[{\"x\": 1}, {\"y:, [ ]}, \"s\"]",
+"Expecting ':' delimiter: line 1 column 25 (char 24)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"2npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\" \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 79 (char 78)"
+],
+[
+"[{\"+x\": 1}, {\"y\": [ ]}, \"s\"]",
+""
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, fase, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 28 (char 27)"
+],
+[
+"[{\"x\": 1",
+"Expecting ',' delimiter: line 1 column 9 (char 8)"
+],
+[
+"[{\"x\": 11},+ {\"y\": [ ]},\"s\"]",
+"Expecting value: line 1 column 12 (char 11)"
+],
+[
+"{\"m[cpServers\": {\"srv\": {\"command\": \"npx\",u \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 43 (char 42)"
+],
+[
+"[{{\"x\": 1}, {\"y\": [ ]}, \"s\"]",
+"Expecting property name enclosed in double quotes: line 1 column 3 (char 2)"
+],
+[
+"{\"a\": [1, 2.5, -3e2,true, false, null] \"b\": {\"c\":+ \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 40 (char 39)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], [b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting property name enclosed in double quotes: line 1 column 42 (char 41)"
+],
+[
+"[{\"x\": 1} {\"y\":",
+"Expecting ',' delimiter: line 1 column 11 (char 10)"
+],
+[
+"[{\"x\": 1},{",
+"Expecting property name enclosed in double quotes: line 1 column 12 (char 11)"
+],
+[
+"{\"a\": [1, 2.45, -3e2, true, false, null], \"b: {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ':' delimiter: line 1 column 49 (char 48)"
+],
+[
+"{\"mcpServers\": {\"srv\" {\"command\"0: \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 23 (char 22)"
+],
+[
+"{\"mcpServers\"b: {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 14 (char 13)"
+],
+[
+"[{\"x\": [1}, {\"y\": [ ]}, \"s\"]",
+"Expecting ',' delimiter: line 1 column 10 (char 9)"
+],
+[
+"{\"mcpServers\": {",
+"Expecting property name enclosed in double quotes: line 1 column 17 (char 16)"
+],
+[
+"{\"mcpervers\".: ",
+"Expecting ':' delimiter: line 1 column 13 (char 12)"
+],
+[
+"[{\"x 1}, {\"y\": [ ]},\"s\"]",
+"Expecting ':' delimiter: line 1 column 12 (char 11)"
+],
+[
+"{\"a\": 1,2.",
+"Expecting property name enclosed in double quotes: line 1 column 9 (char 8)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\":6 \"npx\",  \"args\": [\"-y\", \"pkg\"] \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 37 (char 36)"
+],
+[
+"{\"a\": [1, 2.5, 3e, ",
+"Expecting ',' delimiter: line 1 column 17 (char 16)"
+],
+[
+"[{\"x\": 1}, {\"y",
+"Unterminated string starting at: line 1 column 13 (char 12)"
+],
+[
+"{\"mcpServers\": {\"srv: {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 25 (char 24)"
+],
+[
+"[{\"\u0001x\": }, {\"y: [ ]}, \"s\"]",
+"Invalid control character at: line 1 column 4 (char 3)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ ]}, s\"]",
+"Expecting value: line 1 column 24 (char 23)"
+],
+[
+"{\"a\": [1, 2.5, -b3e2, true, false, ul3l], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 16 (char 15)"
+],
+[
+"{\"a\": [[1, 2.5, -3e, true, :false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 19 (char 18)"
+],
+[
+"{\"a\": [1, .5, -3e2, true, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 11 (char 10)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": \"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 50 (char 49)"
+],
+[
+"{\"mcpServers\": {\"\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"],",
+"Expecting ':' delimiter: line 1 column 19 (char 18)"
+],
+[
+"{\"a\": [1, 2.5, -e2, true, false, null], \"b\": {\"c: \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 16 (char 15)"
+],
+[
+"{\"a\": [1, 2b.5, -3e2, true, false, nu}l], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 12 (char 11)"
+],
+[
+"[{\"x\": 1}, {\"y\"9: [ ]}, \"s\"]",
+"Expecting ':' delimiter: line 1 column 16 (char 15)"
+],
+[
+"[{\"x\": 1}, {\"3y\": [ ]}, \"s\"",
+"Expecting ',' delimiter: line 1 column 28 (char 27)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true,false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+""
+],
+[
+"{\"a\": [1, 42.5, -3e2, true, falsée, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 29 (char 28)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pk:\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServ\"ers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ':' delimiter: line 1 column 11 (char 10)"
+],
+[
+"{\"mc0pServers\": \"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 22 (char 21)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"comman\": \"npx\",\"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"[{\"x\": 1}, {\"y\":[ }, \"s\"]",
+"Expecting value: line 1 column 19 (char 18)"
+],
+[
+"+[{\"x\": 1}, {\"y\": [ ]}, 2\"s\"]",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true, false, null], \"b\": {\"c-,\": \"d\\n\\u0",
+"Invalid \\uXXXX escape: line 1 column 60 (char 59)"
+],
+[
+"[{\"x\": 1}, {\"y\": [u ]}, \"\"s\"]",
+"Expecting value: line 1 column 19 (char 18)"
+],
+[
+"{\"mcpServe4rs\": {é\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], ",
+"Expecting property name enclosed in double quotes: line 1 column 18 (char 17)"
+],
+[
+"{\"a\": [1,\n 2.5, -3e2, true, false, null], \"b",
+"Unterminated string starting at: line 2 column 33 (char 42)"
+],
+[
+"[{\"",
+"Unterminated string starting at: line 1 column 3 (char 2)"
+],
+[
+"[{\"x\": 1}, {\"y\": [ 8]}, s\"]",
+"Expecting value: line 1 column 25 (char 24)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"ommand\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServers\": \"s6rv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 22 (char 21)"
+],
+[
+"[{\"x\":1}, {\"y\":[ ]} \"s\"]",
+"Expecting ',' delimiter: line 1 column 21 (char 20)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\",5 \"args\": [\"-y\", \"pkg\", \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 42 (char 41)"
+],
+[
+"}",
+"Expecting value: line 1 column 1 (char 0)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, true,5 false, ",
+"Expecting ',' delimiter: line 1 column 29 (char 28)"
+],
+[
+"{\"a\": [1, 2.5, -3e2, Etrue, false, null], \"b\": {\"c\": \"d\\n\\u00e9\"}}",
+"Expecting value: line 1 column 22 (char 21)"
+],
+[
+"{\"a\": [1, 2.5,b -3e2, t-r",
+"Expecting value: line 1 column 15 (char 14)"
+],
+[
+"{\"mcpServers\": {\"rv\": {\"command\": \"2npx\", \"args\": [\"-y\", 2\"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 59 (char 58)"
+],
+[
+"[{\"x\": 1}, ]{\"y\": [ ]}, \"s\"]",
+"Illegal trailing comma before end of array: line 1 column 10 (char 9)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", é\"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}0}}",
+"Expecting property name enclosed in double quotes: line 1 column 43 (char 42)"
+],
+[
+"[{\"x\": 1, \"y\": [ ]}, \"s\"]\\",
+"Extra data: line 1 column 26 (char 25)"
+],
+[
+"{9\"mcpServers1\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{mpSerers\": {\"srv\": {\"command\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+],
+[
+"{\"mcpServers\": {\"srv\": {\"command\": \"npx\", \"ags\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+""
+],
+[
+"{\"mcpServers\": {\"srv\": {command\": \"npx\", \"args\": [\"-y\", \"pekg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting property name enclosed in double quotes: line 1 column 25 (char 24)"
+],
+[
+"{\"a\": [1, 2\t.5, -3e2, true1, false, null], \"b\": {c\": \"d\\n\\u00e9\"}}",
+"Expecting ',' delimiter: line 1 column 13 (char 12)"
+],
+[
+"{\"mcpServers\": {\"srv\": \"comand\": \"npx\", \"args\": [\"-y\", \"pkg\"], \"env\": {\"K\": \"v\"}}}}",
+"Expecting ',' delimiter: line 1 column 32 (char 31)"
+]
+]

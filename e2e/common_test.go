@@ -15,6 +15,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"testing"
@@ -416,6 +417,41 @@ func outputGolden(r runResult, home string) map[string]treeEntry {
 	text := fmt.Sprintf("exit %d\n--- stdout\n%s--- stderr\n%s", r.ExitCode,
 		strings.ReplaceAll(r.Stdout, home, "H"), strings.ReplaceAll(r.Stderr, home, "H"))
 	return map[string]treeEntry{"output.txt": {content: []byte(text)}}
+}
+
+// writeAdoptSources leaves custom Claude Code instructions and a
+// ~/.claude.json whose MCP servers carry an env secret and an
+// Authorization header, the inputs that exposed adopt's secret leak, lost
+// headers and replaced (rather than merged) instructions.
+func writeAdoptSources(t *testing.T, home string) {
+	t.Helper()
+	if err := os.WriteFile(filepath.Join(home, ".claude", "CLAUDE.md"), []byte("# My rules\n\nBe nice.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	claudeJSON := `{"mcpServers": {` +
+		`"stdio-s": {"command": "npx", "args": ["-y", "srv"], "env": {"API_KEY": "fake-value-for-tests-0000000000", "PLAIN": "x"}}, ` +
+		`"http-s": {"type": "http", "url": "https://example.com/mcp", "headers": {"Authorization": "Bearer fake-value-for-tests-0000000000", "X-Plain": "y"}}}}`
+	if err := os.WriteFile(filepath.Join(home, ".claude.json"), []byte(claudeJSON), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+var adoptBackupStamp = regexp.MustCompile(`adopt_\d{8}_\d{6}`)
+
+// adoptBackupDir returns the one adopt backup directory under home.
+func adoptBackupDir(t *testing.T, home string) string {
+	t.Helper()
+	dirs, _ := filepath.Glob(filepath.Join(home, ".aikito", "backups", "adopt_*"))
+	if len(dirs) != 1 {
+		t.Fatalf("want exactly one adopt backup dir, got %v", dirs)
+	}
+	return dirs[0]
+}
+
+// adoptOutputGolden is outputGolden with the backup timestamp redacted.
+func adoptOutputGolden(r runResult, home string) map[string]treeEntry {
+	r.Stdout = adoptBackupStamp.ReplaceAllString(r.Stdout, "adopt_TS")
+	return outputGolden(r, home)
 }
 
 // writePrepopulatedClaudeSkills leaves a hand-made skill in a real

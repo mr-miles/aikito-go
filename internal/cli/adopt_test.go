@@ -25,12 +25,13 @@ func setupAdoptWorkspace(t *testing.T) Environment {
 	return env
 }
 
-// This is the fix this fork exists for: after a normal `init workspace`,
-// global/AGENTS.md always has non-empty template content, so a naive
-// "CREATE only if missing" adopt can never fire. Template-fingerprint
-// tracking must recognize the canonical file is still pristine and adopt
-// over it once an agent has genuinely different native content.
-func TestAdoptInstructionsPostInitReconciliation(t *testing.T) {
+const adoptNothingLine = "[OK] No adoptable Agent configuration found. No files were modified."
+
+// Adopting over the pristine post-init template merges: the user's
+// instructions are kept and the template's durable-memory section is
+// appended (adopt.py _merge_adopted_instructions). Replacing instead lost
+// the memory instruction.
+func TestAdoptInstructionsMergesMemorySection(t *testing.T) {
 	env := setupAdoptWorkspace(t)
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {
@@ -38,46 +39,36 @@ func TestAdoptInstructionsPostInitReconciliation(t *testing.T) {
 	}
 
 	var out, errOut bytes.Buffer
-	code := Run([]string{"adopt"}, nil, &out, &errOut, env)
-	if code != 0 {
+	if code := Run([]string{"adopt"}, nil, &out, &errOut, env); code != 0 {
 		t.Fatalf("adopt exit = %d, stderr = %s", code, errOut.String())
 	}
-	if !strings.Contains(out.String(), "Nothing to adopt") {
-		t.Errorf("expected a clean post-init workspace to have nothing to adopt, got: %s", out.String())
+	if !strings.Contains(out.String(), adoptNothingLine) {
+		t.Errorf("a clean post-init workspace has nothing to adopt, got: %s", out.String())
 	}
 
-	// Simulate the agent having genuinely custom native instructions.
-	claudeMD := filepath.Join(env.Home, ".claude", "CLAUDE.md")
-	if err := os.WriteFile(claudeMD, []byte("# My custom instructions\n"), 0o644); err != nil {
-		t.Fatal(err)
-	}
-
+	writeFile(t, filepath.Join(env.Home, ".claude", "CLAUDE.md"), "# My custom instructions\n")
 	out.Reset()
-	errOut.Reset()
-	code = Run([]string{"adopt"}, nil, &out, &errOut, env)
-	if code != 0 {
+	if code := Run([]string{"adopt"}, nil, &out, &errOut, env); code != 0 {
 		t.Fatalf("adopt exit = %d, stderr = %s", code, errOut.String())
-	}
-	if !strings.Contains(out.String(), "CREATE") {
-		t.Errorf("expected adopt to propose adopting the customized instructions, got: %s", out.String())
 	}
 	data, err := os.ReadFile(filepath.Join(aikitoDir, "global", "AGENTS.md"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	if string(data) != "# My custom instructions\n" {
-		t.Errorf("global/AGENTS.md = %q, want the adopted custom content", data)
+	tmpl, err := loadTemplate("global/AGENTS.md")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := "# My custom instructions\n\n" + strings.TrimRight(tmpl, "\n"); string(data) != want {
+		t.Errorf("global/AGENTS.md = %q, want %q", data, want)
 	}
 
-	// Re-run: now a true no-op, not a repeated CREATE.
 	out.Reset()
-	errOut.Reset()
-	code = Run([]string{"adopt"}, nil, &out, &errOut, env)
-	if code != 0 {
+	if code := Run([]string{"adopt"}, nil, &out, &errOut, env); code != 0 {
 		t.Fatalf("re-run exit = %d, stderr = %s", code, errOut.String())
 	}
-	if !strings.Contains(out.String(), "Nothing to adopt") {
-		t.Errorf("expected re-run to be a no-op, got: %s", out.String())
+	if !strings.Contains(out.String(), adoptNothingLine) {
+		t.Errorf("re-run should have nothing to adopt, got: %s", out.String())
 	}
 }
 

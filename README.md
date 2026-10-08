@@ -76,7 +76,7 @@ to this port.
 | `version`, `path workspace`, `git` | Done |
 | `init workspace`, `init project` | Done |
 | `add skill`, `add subagent`, `add mcp` | Done, with option gaps below |
-| `adopt` | Global instructions, MCP servers and subagents. Not agent registration |
+| `adopt` | Done |
 | `sync global`, `sync mcp`, `sync subagents`, `sync project` | Done, with the differences below |
 | `status`, `show …`, `diff …` | Done, with option gaps below |
 | `edit …`, `rm …`, `rename memory` | Done |

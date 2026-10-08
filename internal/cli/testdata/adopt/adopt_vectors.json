@@ -1,0 +1,1536 @@
+{
+ "abbreviated_options": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--dry",
+     "--verb"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n--- Global Instructions Adoption ---\n[MERGE] Instructions from claude-code match perfectly.\n[SOURCE] claude-code: H/.claude/CLAUDE.md\n[DRY-RUN WRITE] Would write merged instructions to H/aikito/global/AGENTS.md\n\n[DRY-RUN] No files were modified.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip=instructions"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      1\n  [SKIP] instructions (explicitly requested)\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--sk",
+     "instructions",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      1\n  [SKIP] instructions (explicitly requested)\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "bad_args": {
+  "files": {
+   ".claude": null
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--force"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: --force\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "adopt",
+     "a",
+     "b"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito [-h] [-v] [--debug]\n              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...\naikito: error: unrecognized arguments: b\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito adopt [-h] [--dry-run] [--verbose] [--skip RESOURCE] [target]\naikito adopt: error: argument --skip: expected one argument\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "--dry-run"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito adopt [-h] [--dry-run] [--verbose] [--skip RESOURCE] [target]\naikito adopt: error: argument --skip: expected one argument\n",
+    "stdout": ""
+   },
+   {
+    "args": [
+     "adopt",
+     "--dry-run=yes"
+    ],
+    "exit": 2,
+    "stderr": "usage: aikito adopt [-h] [--dry-run] [--verbose] [--skip RESOURCE] [target]\naikito adopt: error: argument --dry-run: ignored explicit argument 'yes'\n",
+    "stdout": ""
+   }
+  ],
+  "tree": {
+   ".claude": "<dir>",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "blank_instructions": {
+  "files": {
+   ".claude/CLAUDE.md": "  \n\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude/CLAUDE.md": "  \n\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "builtin_mcp": {
+  "files": {
+   ".claude": null,
+   ".claude.json": "{\"mcpServers\": {\"builtin-one\": {\"command\": \"b\"}, \"user-one\": {\"command\": \"u\"}}}"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "__append__",
+     "aikito/agents/claude-code.toml",
+     "builtin_mcps = [\"builtin-one\"]\n"
+    ]
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  1 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n--- MCP Servers Adoption ---\n[SKIP MCP] Server 'builtin-one' is built-in to claude-code\n[ADOPT MCP] Server 'user-one' (agents: [claude-code])\n[WRITE FILE] Created H/aikito/mcps/user-one.toml\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "mcp/user-one",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      1\n  [SKIP] mcp/user-one (explicitly requested)\n\n--- MCP Servers Adoption ---\n[SKIP MCP] Server 'builtin-one' is built-in to claude-code\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude": "<dir>",
+   ".claude.json": "{\"mcpServers\": {\"builtin-one\": {\"command\": \"b\"}, \"user-one\": {\"command\": \"u\"}}}",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\nbuiltin_mcps = [\"builtin-one\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps/user-one.toml": "agents = [\"claude-code\"]\ncommand = \"u\"\n",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "canonical_customized": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "__write__",
+     "aikito/global/AGENTS.md",
+     "# Custom canonical\n"
+    ]
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] Global instructions cannot be adopted automatically\n      Resource: instructions\n      Source: H/.claude/CLAUDE.md\n      Reason: Detected instruction sources do not match\n    -> Review and merge the sources into H/aikito/global/AGENTS.md\n      Review: aikito adopt --dry-run --verbose\n      Skip: aikito adopt --skip instructions\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    1\n  Errors:       0\n  Skipped:      0\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "instructions"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      1\n  [SKIP] instructions (explicitly requested)\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "# Custom canonical\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "canonical_matches_import": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "__write__",
+     "aikito/global/AGENTS.md",
+     "# My rules\n\nBe nice."
+    ]
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "# My rules\n\nBe nice.",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "claude_codex_agree": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".codex/AGENTS.md": "# My rules\n\nBe nice.\n\n\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 2 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- Global Instructions Adoption ---\n[MERGE] Instructions from codex, claude-code match perfectly.\n[SOURCE] codex: H/.codex/AGENTS.md\n[SOURCE] claude-code: H/.claude/CLAUDE.md\n[WRITE FILE] Updated H/aikito/global/AGENTS.md\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".aikito/backups/adopt_TS/.codex/AGENTS.md": "# My rules\n\nBe nice.\n\n\n",
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".codex/AGENTS.md": "# My rules\n\nBe nice.\n\n\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/codex.toml": "# =============================================================================\n# Codex CLI\n# =============================================================================\n[agents.codex]\ndisplay_name = \"Codex\"\ninstruction_path = \".codex/AGENTS.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.codex.detect]\ncommands = [\"codex\"]\npaths = [\".codex\"]\n\n[agents.codex.runner]\ncommand = [\"codex\", \"-C\", \"{workdir}\", \"{prompt}\"]\n\n# Local runner environment overrides are omitted from open-source exports.\n# [agents.codex.runner.env]\n# EXAMPLE_VARIABLE = \"local-value\"\n[agents.codex.subagents]\nconfig_path = \".codex/agents\"\nconfig_format = \"codex_toml\"\n\n[agents.codex.mcp]\nconfig_path = \".codex/config.toml\"\nconfig_format = \"toml\"\nname_style = \"underscore\"                       # server-name -> server_name\nbuiltin_mcps = [\"openaiDeveloperDocs\"]\nlive_command = [\"codex\", \"mcp\", \"list\"]\nauth_command = [\"codex\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "# My rules\n\nBe nice.\n\n## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "claude_codex_disagree": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".codex/AGENTS.md": "# Other\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] Global instructions cannot be adopted automatically\n      Resource: instructions\n      Source: H/.codex/AGENTS.md, H/.claude/CLAUDE.md\n      Reason: Detected instruction sources do not match\n    -> Review and merge the sources into H/aikito/global/AGENTS.md\n      Review: aikito adopt --dry-run --verbose\n      Skip: aikito adopt --skip instructions\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    1\n  Errors:       0\n  Skipped:      0\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] Global instructions cannot be adopted automatically\n      Resource: instructions\n      Source: H/.codex/AGENTS.md, H/.claude/CLAUDE.md\n      Reason: Detected instruction sources do not match\n    -> Review and merge the sources into H/aikito/global/AGENTS.md\n      Review: aikito adopt --dry-run --verbose\n      Skip: aikito adopt --skip instructions\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    1\n  Errors:       0\n  Skipped:      0\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "instructions",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      1\n  [SKIP] instructions (explicitly requested)\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".codex/AGENTS.md": "# Other\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/codex.toml": "# =============================================================================\n# Codex CLI\n# =============================================================================\n[agents.codex]\ndisplay_name = \"Codex\"\ninstruction_path = \".codex/AGENTS.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.codex.detect]\ncommands = [\"codex\"]\npaths = [\".codex\"]\n\n[agents.codex.runner]\ncommand = [\"codex\", \"-C\", \"{workdir}\", \"{prompt}\"]\n\n# Local runner environment overrides are omitted from open-source exports.\n# [agents.codex.runner.env]\n# EXAMPLE_VARIABLE = \"local-value\"\n[agents.codex.subagents]\nconfig_path = \".codex/agents\"\nconfig_format = \"codex_toml\"\n\n[agents.codex.mcp]\nconfig_path = \".codex/config.toml\"\nconfig_format = \"toml\"\nname_style = \"underscore\"                       # server-name -> server_name\nbuiltin_mcps = [\"openaiDeveloperDocs\"]\nlive_command = [\"codex\", \"mcp\", \"list\"]\nauth_command = [\"codex\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "claude_desktop": {
+  "files": {
+   ".claude": null,
+   ".claude/claude_desktop_config.json": "{\"mcpServers\": {\"desk\": {\"command\": \"d\", \"env\": {\"TOKEN\": \"fake-value-for-tests-0000000000\"}}}}"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  1 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- MCP Servers Adoption ---\n[ADOPT MCP] Server 'desk' (agents: [claude-code])\n[WRITE FILE] Created H/aikito/mcps/desk.toml\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/claude_desktop_config.json": "{\"mcpServers\": {\"desk\": {\"command\": \"d\", \"env\": {\"TOKEN\": \"fake-value-for-tests-0000000000\"}}}}",
+   ".claude/claude_desktop_config.json": "{\"mcpServers\": {\"desk\": {\"command\": \"d\", \"env\": {\"TOKEN\": \"fake-value-for-tests-0000000000\"}}}}",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps/desk.toml": "agents = [\"claude-code\"]\ncommand = \"d\"\nenv = { TOKEN = \"${TOKEN}\" }\n",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "copilot_unsupported_mcp": {
+  "files": {
+   ".claude": null,
+   ".copilot": null,
+   ".copilot/mcp-config.json": "{\"mcpServers\": {\"local\": {\"type\": \"local\", \"command\": \"x\"}, \"remote\": {\"type\": \"http\", \"url\": \"https://r.example/mcp\", \"headers\": {\"X-Token\": \"abc\"}}}}"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "[WARN] Skipping unsupported local GitHub Copilot CLI MCP server 'local'\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  1 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- MCP Servers Adoption ---\n[ADOPT MCP] Server 'remote' (agents: [github-copilot])\n[WRITE FILE] Created H/aikito/mcps/remote.toml\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.copilot/mcp-config.json": "{\"mcpServers\": {\"local\": {\"type\": \"local\", \"command\": \"x\"}, \"remote\": {\"type\": \"http\", \"url\": \"https://r.example/mcp\", \"headers\": {\"X-Token\": \"abc\"}}}}",
+   ".claude": "<dir>",
+   ".copilot/mcp-config.json": "{\"mcpServers\": {\"local\": {\"type\": \"local\", \"command\": \"x\"}, \"remote\": {\"type\": \"http\", \"url\": \"https://r.example/mcp\", \"headers\": {\"X-Token\": \"abc\"}}}}",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/github-copilot.toml": "# =============================================================================\n# GitHub Copilot CLI\n# =============================================================================\n[agents.github-copilot]\ndisplay_name = \"GitHub Copilot CLI\"\ninstruction_path = \".copilot/copilot-instructions.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.github-copilot.detect]\ncommands = [\"copilot\"]\npaths = [\".copilot\"]\n\n[agents.github-copilot.runner]\ncommand = [\"copilot\", \"-C\", \"{workdir}\", \"-i\", \"{prompt}\"]\n\n[agents.github-copilot.subagents]\nconfig_path = \".copilot/agents\"\nconfig_format = \"copilot_markdown\"\n\n[agents.github-copilot.mcp]\nconfig_path = \".copilot/mcp-config.json\"\nconfig_format = \"copilot_json\"\nname_style = \"verbatim\"\nlive_command = [\"copilot\", \"mcp\", \"list\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps/remote.toml": "agents = [\"github-copilot\"]\nurl = \"https://r.example/mcp\"\ntransport = \"remote\"\nheaders = { X-Token = \"${AIKITO_REMOTE_X_TOKEN}\" }\n",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "crlf_instructions": {
+  "files": {
+   ".claude/CLAUDE.md": "# Rules\r\n\r\nLine one   \r\nLine two\r\n",
+   ".codex/AGENTS.md": "# Rules\n\nLine one\nLine two\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 2 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- Global Instructions Adoption ---\n[MERGE] Instructions from codex, claude-code match perfectly.\n[SOURCE] codex: H/.codex/AGENTS.md\n[SOURCE] claude-code: H/.claude/CLAUDE.md\n[WRITE FILE] Updated H/aikito/global/AGENTS.md\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/CLAUDE.md": "# Rules\r\n\r\nLine one   \r\nLine two\r\n",
+   ".aikito/backups/adopt_TS/.codex/AGENTS.md": "# Rules\n\nLine one\nLine two\n",
+   ".claude/CLAUDE.md": "# Rules\r\n\r\nLine one   \r\nLine two\r\n",
+   ".codex/AGENTS.md": "# Rules\n\nLine one\nLine two\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/codex.toml": "# =============================================================================\n# Codex CLI\n# =============================================================================\n[agents.codex]\ndisplay_name = \"Codex\"\ninstruction_path = \".codex/AGENTS.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.codex.detect]\ncommands = [\"codex\"]\npaths = [\".codex\"]\n\n[agents.codex.runner]\ncommand = [\"codex\", \"-C\", \"{workdir}\", \"{prompt}\"]\n\n# Local runner environment overrides are omitted from open-source exports.\n# [agents.codex.runner.env]\n# EXAMPLE_VARIABLE = \"local-value\"\n[agents.codex.subagents]\nconfig_path = \".codex/agents\"\nconfig_format = \"codex_toml\"\n\n[agents.codex.mcp]\nconfig_path = \".codex/config.toml\"\nconfig_format = \"toml\"\nname_style = \"underscore\"                       # server-name -> server_name\nbuiltin_mcps = [\"openaiDeveloperDocs\"]\nlive_command = [\"codex\", \"mcp\", \"list\"]\nauth_command = [\"codex\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "# Rules\n\nLine one\nLine two\n\n## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "dry_run": {
+  "files": {
+   ".claude.json": "{\"mcpServers\": {\"stdio-s\": {\"command\": \"npx\", \"args\": [\"-y\", \"srv\"], \"env\": {\"API_KEY\": \"fake-value-for-tests-0000000000\", \"PLAIN\": \"x\", \"REF\": \"${ALREADY}\", \"N\": 3}}, \"http-s\": {\"type\": \"http\", \"url\": \"https://example.com/mcp\", \"headers\": {\"Authorization\": \"Bearer fake-value-for-tests-0000000000\", \"X-Plain\": \"y\", \"X-Api-Key\": \"${MY_KEY}\"}}}}",
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  2 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n[DRY-RUN] No files were modified.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  2 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n--- Global Instructions Adoption ---\n[MERGE] Instructions from claude-code match perfectly.\n[SOURCE] claude-code: H/.claude/CLAUDE.md\n[DRY-RUN WRITE] Would write merged instructions to H/aikito/global/AGENTS.md\n\n--- MCP Servers Adoption ---\n[DRY-RUN MCP] Would import Server 'stdio-s' (agents: [claude-code])\n[DRY-RUN MCP] Would import Server 'http-s' (agents: [claude-code])\n\n[DRY-RUN] No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude.json": "{\"mcpServers\": {\"stdio-s\": {\"command\": \"npx\", \"args\": [\"-y\", \"srv\"], \"env\": {\"API_KEY\": \"fake-value-for-tests-0000000000\", \"PLAIN\": \"x\", \"REF\": \"${ALREADY}\", \"N\": 3}}, \"http-s\": {\"type\": \"http\", \"url\": \"https://example.com/mcp\", \"headers\": {\"Authorization\": \"Bearer fake-value-for-tests-0000000000\", \"X-Plain\": \"y\", \"X-Api-Key\": \"${MY_KEY}\"}}}}",
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "explicit_target": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "H/other-ws"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>",
+   "other-ws/global/AGENTS.md": "# My rules\n\nBe nice."
+  }
+ },
+ "instructions_already_have_memory": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n\n## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- Global Instructions Adoption ---\n[MERGE] Instructions from claude-code match perfectly.\n[SOURCE] claude-code: H/.claude/CLAUDE.md\n[WRITE FILE] Updated H/aikito/global/AGENTS.md\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/CLAUDE.md": "# My rules\n\nBe nice.\n\n## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n\n## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "# My rules\n\nBe nice.\n\n## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "invalid_agent_file": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "__write__",
+     "aikito/agents/claude-code.toml",
+     "not = [valid"
+    ]
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] Cannot inspect adoption source 'agents'\n      Resource: agents\n      Source: H/aikito/agents\n      Reason: Invalid Agent file: H/aikito/agents/claude-code.toml\n    -> Repair or remove the invalid source: H/aikito/agents\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       1\n  Skipped:      0\n"
+   }
+  ],
+  "tree": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "not = [valid",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "legacy_agy_instructions": {
+  "files": {
+   ".claude": null,
+   ".gemini/config/AGENTS.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- Global Instructions Adoption ---\n[MERGE] Instructions from agy match perfectly.\n[SOURCE] agy: H/.gemini/config/AGENTS.md\n[WRITE FILE] Updated H/aikito/global/AGENTS.md\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.gemini/config/AGENTS.md": "# My rules\n\nBe nice.\n",
+   ".claude": "<dir>",
+   ".gemini/config/AGENTS.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/agy.toml": "# =============================================================================\n# Antigravity CLI\n# =============================================================================\n[agents.agy]\ndisplay_name = \"Antigravity CLI\"\ninstruction_path = \".gemini/GEMINI.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".gemini/antigravity-cli/skills\"\n\n[agents.agy.detect]\ncommands = [\"agy\"]\npaths = [\".gemini/config\"]\n\n[agents.agy.runner]\ncommand = [\"agy\", \"--prompt-interactive\", \"{prompt}\"]\n\n[agents.agy.subagents]\nconfig_path = \".gemini/config/agents\"\nconfig_format = \"agy_markdown\"\n\n[agents.agy.mcp]\nconfig_path = \".gemini/config/mcp_config.json\"\nconfig_format = \"agy_json\"\nname_style = \"verbatim\"\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "# My rules\n\nBe nice.\n\n## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "mcp_existing_canonical": {
+  "files": {
+   ".claude": null,
+   ".claude.json": "{\"mcpServers\": {\"have-it\": {\"command\": \"a\"}, \"new-one\": {\"command\": \"b\"}}}"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "__write__",
+     "aikito/mcps/have-it.toml",
+     "agents = [\"claude-code\"]\ncommand = \"old\"\n"
+    ]
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  1 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n--- MCP Servers Adoption ---\n[SKIP MCP] Server 'have-it' already present\n[ADOPT MCP] Server 'new-one' (agents: [claude-code])\n[WRITE FILE] Created H/aikito/mcps/new-one.toml\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".claude": "<dir>",
+   ".claude.json": "{\"mcpServers\": {\"have-it\": {\"command\": \"a\"}, \"new-one\": {\"command\": \"b\"}}}",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps/have-it.toml": "agents = [\"claude-code\"]\ncommand = \"old\"\n",
+   "aikito/mcps/new-one.toml": "agents = [\"claude-code\"]\ncommand = \"b\"\n",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "mcp_invalid_name": {
+  "files": {
+   ".claude": null,
+   ".claude.json": "{\"mcpServers\": {\"bad/name\": {\"command\": \"a\"}}}"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] MCP server 'bad/name' cannot be adopted\n      Resource: mcp/bad/name\n      Source: H/.claude.json\n      Reason: [ERROR] Invalid MCP server name: 'bad/name'\n    -> Repair or remove the definition in the source file\n      Skip: aikito adopt --skip mcp/bad/name\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       1\n  Skipped:      0\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "mcp/bad/name"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      1\n  [SKIP] mcp/bad/name (explicitly requested)\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude": "<dir>",
+   ".claude.json": "{\"mcpServers\": {\"bad/name\": {\"command\": \"a\"}}}",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "mcp_malformed_source": {
+  "files": {
+   ".claude": null,
+   ".claude.json": "{not json"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] Cannot inspect adoption source 'mcp'\n      Resource: mcp\n      Source: H/.claude.json\n      Reason: Failed to parse JSON: Invalid Claude Code JSON config: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)\n    -> Repair or remove the invalid source: H/.claude.json\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       1\n  Skipped:      0\n"
+   }
+  ],
+  "tree": {
+   ".claude": "<dir>",
+   ".claude.json": "{not json",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "mcp_multi_agent": {
+  "files": {
+   ".claude": null,
+   ".claude.json": "{\"mcpServers\": {\"my-srv\": {\"command\": \"srv\", \"args\": [\"--x\"]}, \"web\": {\"type\": \"http\", \"url\": \"https://a.example/mcp\"}}}",
+   ".codex": null,
+   ".codex/config.toml": "[mcp_servers.my_srv]\ncommand = \"srv\"\nargs = [\"--x\"]\n\n[mcp_servers.only_codex]\ncommand = \"oc\"\n",
+   ".copilot/mcp-config.json": "{\"mcpServers\": {\"web\": {\"type\": \"http\", \"url\": \"https://b.example/mcp\"}}}"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] MCP server 'web' cannot be merged\n      Resource: mcp/web\n      Source: H/.claude.json, H/.copilot/mcp-config.json\n      Reason: MCP server 'web' has different URLs in claude-code and github-copilot\n    -> Align the Agent configurations or rename one MCP server\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  3 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       1\n  Skipped:      0\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "mcp/web",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] MCP server 'web' cannot be merged\n      Resource: mcp/web\n      Source: H/.claude.json, H/.copilot/mcp-config.json\n      Reason: MCP server 'web' has different URLs in claude-code and github-copilot\n    -> Align the Agent configurations or rename one MCP server\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  2 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       1\n  Skipped:      1\n  [SKIP] mcp/web (explicitly requested)\n"
+   }
+  ],
+  "tree": {
+   ".claude": "<dir>",
+   ".claude.json": "{\"mcpServers\": {\"my-srv\": {\"command\": \"srv\", \"args\": [\"--x\"]}, \"web\": {\"type\": \"http\", \"url\": \"https://a.example/mcp\"}}}",
+   ".codex/config.toml": "[mcp_servers.my_srv]\ncommand = \"srv\"\nargs = [\"--x\"]\n\n[mcp_servers.only_codex]\ncommand = \"oc\"\n",
+   ".copilot/mcp-config.json": "{\"mcpServers\": {\"web\": {\"type\": \"http\", \"url\": \"https://b.example/mcp\"}}}",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/codex.toml": "# =============================================================================\n# Codex CLI\n# =============================================================================\n[agents.codex]\ndisplay_name = \"Codex\"\ninstruction_path = \".codex/AGENTS.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.codex.detect]\ncommands = [\"codex\"]\npaths = [\".codex\"]\n\n[agents.codex.runner]\ncommand = [\"codex\", \"-C\", \"{workdir}\", \"{prompt}\"]\n\n# Local runner environment overrides are omitted from open-source exports.\n# [agents.codex.runner.env]\n# EXAMPLE_VARIABLE = \"local-value\"\n[agents.codex.subagents]\nconfig_path = \".codex/agents\"\nconfig_format = \"codex_toml\"\n\n[agents.codex.mcp]\nconfig_path = \".codex/config.toml\"\nconfig_format = \"toml\"\nname_style = \"underscore\"                       # server-name -> server_name\nbuiltin_mcps = [\"openaiDeveloperDocs\"]\nlive_command = [\"codex\", \"mcp\", \"list\"]\nauth_command = [\"codex\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/github-copilot.toml": "# =============================================================================\n# GitHub Copilot CLI\n# =============================================================================\n[agents.github-copilot]\ndisplay_name = \"GitHub Copilot CLI\"\ninstruction_path = \".copilot/copilot-instructions.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.github-copilot.detect]\ncommands = [\"copilot\"]\npaths = [\".copilot\"]\n\n[agents.github-copilot.runner]\ncommand = [\"copilot\", \"-C\", \"{workdir}\", \"-i\", \"{prompt}\"]\n\n[agents.github-copilot.subagents]\nconfig_path = \".copilot/agents\"\nconfig_format = \"copilot_markdown\"\n\n[agents.github-copilot.mcp]\nconfig_path = \".copilot/mcp-config.json\"\nconfig_format = \"copilot_json\"\nname_style = \"verbatim\"\nlive_command = [\"copilot\", \"mcp\", \"list\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "mcp_registration": {
+  "files": {
+   ".claude": null
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "__write__",
+     ".codex/config.toml",
+     "[mcp_servers.codex-only]\ncommand = \"oc\"\n"
+    ]
+   },
+   {
+    "args": [
+     "__write__",
+     ".copilot/agents/helper.agent.md",
+     "---\ndescription: helps\n---\nHelp body\n"
+    ]
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "agent/codex"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] mcp/codex-only targets unregistered Agent 'codex'\n      Resource: mcp/codex-only\n      Source: agents/codex.toml\n      Reason: Registration agent/codex was skipped\n    -> Adopt agent/codex or also skip mcp/codex-only\n      Skip: aikito adopt --skip mcp/codex-only\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Agents:       1 registration(s)\n  Instructions: 0 update(s)\n  MCP servers:  1 import(s)\n  Subagents:    1 import(s)\n  Conflicts:    0\n  Errors:       1\n  Skipped:      1\n  [SKIP] agent/codex (explicitly requested)\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Agents:       2 registration(s)\n  Instructions: 0 update(s)\n  MCP servers:  1 import(s)\n  Subagents:    1 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n--- Agent Registration ---\n[DRY-RUN AGENT] Would register Codex (mcp/codex-only)\n[DRY-RUN AGENT] Would register GitHub Copilot CLI (subagent/helper)\n\n--- MCP Servers Adoption ---\n[DRY-RUN MCP] Would import Server 'codex-only' (agents: [codex])\n\n--- Subagents Adoption ---\n[DRY-RUN SUBAGENT] Would import Subagent 'helper' from H/.copilot/agents/helper.agent.md\n\n[DRY-RUN] No files were modified.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Agents:       2 registration(s)\n  Instructions: 0 update(s)\n  MCP servers:  1 import(s)\n  Subagents:    1 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 2 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- Agent Registration ---\n[REGISTER AGENT] Codex (mcp/codex-only)\n[WRITE FILE] Created H/aikito/agents/codex.toml\n[REGISTER AGENT] GitHub Copilot CLI (subagent/helper)\n[WRITE FILE] Created H/aikito/agents/github-copilot.toml\n\n--- MCP Servers Adoption ---\n[ADOPT MCP] Server 'codex-only' (agents: [codex])\n[WRITE FILE] Created H/aikito/mcps/codex-only.toml\n\n--- Subagents Adoption ---\n[ADOPT SUBAGENT] Subagent 'helper' from H/.copilot/agents/helper.agent.md\n[WRITE FILE] Created H/aikito/subagents/helper.md\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.codex/config.toml": "[mcp_servers.codex-only]\ncommand = \"oc\"\n",
+   ".aikito/backups/adopt_TS/.copilot/agents/helper.agent.md": "---\ndescription: helps\n---\nHelp body\n",
+   ".claude": "<dir>",
+   ".codex/config.toml": "[mcp_servers.codex-only]\ncommand = \"oc\"\n",
+   ".copilot/agents/helper.agent.md": "---\ndescription: helps\n---\nHelp body\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/codex.toml": "# =============================================================================\n# Codex CLI\n# =============================================================================\n[agents.codex]\ndisplay_name = \"Codex\"\ninstruction_path = \".codex/AGENTS.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.codex.detect]\ncommands = [\"codex\"]\npaths = [\".codex\"]\n\n[agents.codex.runner]\ncommand = [\"codex\", \"-C\", \"{workdir}\", \"{prompt}\"]\n\n# Local runner environment overrides are omitted from open-source exports.\n# [agents.codex.runner.env]\n# EXAMPLE_VARIABLE = \"local-value\"\n[agents.codex.subagents]\nconfig_path = \".codex/agents\"\nconfig_format = \"codex_toml\"\n\n[agents.codex.mcp]\nconfig_path = \".codex/config.toml\"\nconfig_format = \"toml\"\nname_style = \"underscore\"                       # server-name -> server_name\nbuiltin_mcps = [\"openaiDeveloperDocs\"]\nlive_command = [\"codex\", \"mcp\", \"list\"]\nauth_command = [\"codex\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/github-copilot.toml": "# =============================================================================\n# GitHub Copilot CLI\n# =============================================================================\n[agents.github-copilot]\ndisplay_name = \"GitHub Copilot CLI\"\ninstruction_path = \".copilot/copilot-instructions.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.github-copilot.detect]\ncommands = [\"copilot\"]\npaths = [\".copilot\"]\n\n[agents.github-copilot.runner]\ncommand = [\"copilot\", \"-C\", \"{workdir}\", \"-i\", \"{prompt}\"]\n\n[agents.github-copilot.subagents]\nconfig_path = \".copilot/agents\"\nconfig_format = \"copilot_markdown\"\n\n[agents.github-copilot.mcp]\nconfig_path = \".copilot/mcp-config.json\"\nconfig_format = \"copilot_json\"\nname_style = \"verbatim\"\nlive_command = [\"copilot\", \"mcp\", \"list\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps/codex-only.toml": "agents = [\"codex\"]\ncommand = \"oc\"\n",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents/helper.md": "---\ndescription: \"helps\"\nagents: [\"github-copilot\"]\ngithub-copilot: {}\n---\nHelp body\n"
+  }
+ },
+ "mcp_secrets": {
+  "files": {
+   ".claude": null,
+   ".claude.json": "{\"mcpServers\": {\"stdio-s\": {\"command\": \"npx\", \"args\": [\"-y\", \"srv\"], \"env\": {\"API_KEY\": \"fake-value-for-tests-0000000000\", \"PLAIN\": \"x\", \"REF\": \"${ALREADY}\", \"N\": 3}}, \"http-s\": {\"type\": \"http\", \"url\": \"https://example.com/mcp\", \"headers\": {\"Authorization\": \"Bearer fake-value-for-tests-0000000000\", \"X-Plain\": \"y\", \"X-Api-Key\": \"${MY_KEY}\"}}}}"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  2 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n--- MCP Servers Adoption ---\n[ADOPT MCP] Server 'stdio-s' (agents: [claude-code])\n[WRITE FILE] Created H/aikito/mcps/stdio-s.toml\n[ADOPT MCP] Server 'http-s' (agents: [claude-code])\n[WRITE FILE] Created H/aikito/mcps/http-s.toml\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude": "<dir>",
+   ".claude.json": "{\"mcpServers\": {\"stdio-s\": {\"command\": \"npx\", \"args\": [\"-y\", \"srv\"], \"env\": {\"API_KEY\": \"fake-value-for-tests-0000000000\", \"PLAIN\": \"x\", \"REF\": \"${ALREADY}\", \"N\": 3}}, \"http-s\": {\"type\": \"http\", \"url\": \"https://example.com/mcp\", \"headers\": {\"Authorization\": \"Bearer fake-value-for-tests-0000000000\", \"X-Plain\": \"y\", \"X-Api-Key\": \"${MY_KEY}\"}}}}",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps/http-s.toml": "agents = [\"claude-code\"]\nurl = \"https://example.com/mcp\"\ntransport = \"remote\"\nheaders = { Authorization = \"${AIKITO_HTTP_S_AUTHORIZATION}\", X-Api-Key = \"${MY_KEY}\", X-Plain = \"y\" }\n",
+   "aikito/mcps/stdio-s.toml": "agents = [\"claude-code\"]\ncommand = \"npx\"\nargs = [\"-y\", \"srv\"]\nenv = { API_KEY = \"${API_KEY}\", N = \"${N}\", PLAIN = \"${PLAIN}\", REF = \"${ALREADY}\" }\n",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "no_workspace": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "adopt",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n[DRY-RUN] No files were modified.\n"
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/global/AGENTS.md": "# My rules\n\nBe nice."
+  }
+ },
+ "nothing_to_adopt": {
+  "files": {
+   ".claude": null
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--dry-run"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude": "<dir>",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "old_layout_workspace": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/agents.toml": "[agents]\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Workspace needs migration: H/aikito\nRun: aikito migrate workspace-resources --dry-run\nThen: aikito migrate workspace-resources\n",
+    "stdout": ""
+   }
+  ],
+  "tree": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/agents.toml": "[agents]\n"
+  }
+ },
+ "plain_claude_md": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "# My rules\n\nBe nice.\n\n## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "plain_verbose": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- Global Instructions Adoption ---\n[MERGE] Instructions from claude-code match perfectly.\n[SOURCE] claude-code: H/.claude/CLAUDE.md\n[WRITE FILE] Updated H/aikito/global/AGENTS.md\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "# My rules\n\nBe nice.\n\n## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "relative_target": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose",
+     "./rel-ws/"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 1 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- Global Instructions Adoption ---\n[MERGE] Instructions from claude-code match perfectly.\n[SOURCE] claude-code: H/.claude/CLAUDE.md\n[WRITE FILE] Updated rel-ws/global/AGENTS.md\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>",
+   "rel-ws/global/AGENTS.md": "# My rules\n\nBe nice."
+  }
+ },
+ "skip_everything": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "instructions",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      1\n  [SKIP] instructions (explicitly requested)\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "skip_unknown": {
+  "files": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "bogus",
+     "--skip",
+     "mcp/nope"
+    ],
+    "exit": 1,
+    "stderr": "[ERROR] Failed to adopt local agent configurations: Unknown adoption skip target(s): bogus, mcp/nope. Available targets: instructions\n",
+    "stdout": ""
+   }
+  ],
+  "tree": {
+   ".claude/CLAUDE.md": "# My rules\n\nBe nice.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "subagent_frontmatter_forms": {
+  "files": {
+   ".claude": null,
+   ".claude/agents/listdesc.md": "---\ndescription: [a, b]\n---\nbody text\n",
+   ".copilot": null,
+   ".copilot/agents/badtools.agent.md": "---\ndescription: x\ntools: [1, 2]\n---\nbody\n",
+   ".copilot/agents/folded.agent.md": "---\ndescription: >-\n  Folded line one\n  and two\nmodel: 'gpt-5'\ntools:\n  - read\n  - 'edit'\nuser-invocable: false\n# a comment\n---\n\n  Body with indent\n\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] Subagent 'badtools' cannot be adopted\n      Resource: subagent/badtools\n      Source: H/.copilot/agents/badtools.agent.md\n      Reason: [SKIP SUBAGENT] Skipping invalid subagent name/config 'badtools': Subagent 'badtools' field 'tools' for platform 'github-copilot' has invalid value (tools)\n    -> Repair or remove the definition in the source file\n      Skip: aikito adopt --skip subagent/badtools\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    2 import(s)\n  Conflicts:    0\n  Errors:       1\n  Skipped:      0\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "subagent/badtools",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    2 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      1\n  [SKIP] subagent/badtools (explicitly requested)\n\nSafe to apply\n\n[BACKUP] Saved 2 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- Subagents Adoption ---\n[ADOPT SUBAGENT] Subagent 'listdesc' from H/.claude/agents/listdesc.md\n[ADOPT SUBAGENT] Subagent 'folded' from H/.copilot/agents/folded.agent.md\n[WRITE FILE] Created H/aikito/subagents/listdesc.md\n[WRITE FILE] Created H/aikito/subagents/folded.md\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/agents/listdesc.md": "---\ndescription: [a, b]\n---\nbody text\n",
+   ".aikito/backups/adopt_TS/.copilot/agents/folded.agent.md": "---\ndescription: >-\n  Folded line one\n  and two\nmodel: 'gpt-5'\ntools:\n  - read\n  - 'edit'\nuser-invocable: false\n# a comment\n---\n\n  Body with indent\n\n",
+   ".claude/agents/listdesc.md": "---\ndescription: [a, b]\n---\nbody text\n",
+   ".copilot/agents/badtools.agent.md": "---\ndescription: x\ntools: [1, 2]\n---\nbody\n",
+   ".copilot/agents/folded.agent.md": "---\ndescription: >-\n  Folded line one\n  and two\nmodel: 'gpt-5'\ntools:\n  - read\n  - 'edit'\nuser-invocable: false\n# a comment\n---\n\n  Body with indent\n\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/github-copilot.toml": "# =============================================================================\n# GitHub Copilot CLI\n# =============================================================================\n[agents.github-copilot]\ndisplay_name = \"GitHub Copilot CLI\"\ninstruction_path = \".copilot/copilot-instructions.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.github-copilot.detect]\ncommands = [\"copilot\"]\npaths = [\".copilot\"]\n\n[agents.github-copilot.runner]\ncommand = [\"copilot\", \"-C\", \"{workdir}\", \"-i\", \"{prompt}\"]\n\n[agents.github-copilot.subagents]\nconfig_path = \".copilot/agents\"\nconfig_format = \"copilot_markdown\"\n\n[agents.github-copilot.mcp]\nconfig_path = \".copilot/mcp-config.json\"\nconfig_format = \"copilot_json\"\nname_style = \"verbatim\"\nlive_command = [\"copilot\", \"mcp\", \"list\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents/folded.md": "---\ndescription: \"Folded line one and two\"\nagents: [\"github-copilot\"]\ngithub-copilot: {\"model\": \"gpt-5\", \"tools\": [\"read\", \"edit\"], \"user-invocable\": false}\n---\nBody with indent\n",
+   "aikito/subagents/listdesc.md": "---\ndescription: \"['a', 'b']\"\nagents: [\"claude-code\"]\n---\nbody text\n"
+  }
+ },
+ "subagent_invalid": {
+  "files": {
+   ".claude/agents/Bad_Name.md": "---\ndescription: x\n---\nbody\n",
+   ".claude/agents/empty-body.md": "---\ndescription: x\n---\n\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt"
+    ],
+    "exit": 1,
+    "stderr": "\n  [FAIL] Subagent 'empty-body' cannot be adopted\n      Resource: subagent/empty-body\n      Source: H/.claude/agents/empty-body.md\n      Reason: [SKIP SUBAGENT] Skipping invalid subagent name/config 'empty-body': Missing description, target Agent, or instructions\n    -> Repair or remove the definition in the source file\n      Skip: aikito adopt --skip subagent/empty-body\n[ERROR] Adoption blocked; no files were modified. Resolve the problems above and rerun 'aikito adopt'.\n",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       1\n  Skipped:      0\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--skip",
+     "subagent/Bad_Name",
+     "--skip",
+     "subagent/empty-body"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      2\n  [SKIP] subagent/Bad_Name (explicitly requested)\n  [SKIP] subagent/empty-body (explicitly requested)\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".claude/agents/Bad_Name.md": "---\ndescription: x\n---\nbody\n",
+   ".claude/agents/empty-body.md": "---\ndescription: x\n---\n\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents": "<dir>"
+  }
+ },
+ "subagents": {
+  "files": {
+   ".claude": null,
+   ".claude/agents/plain.md": "Just a body with no frontmatter.\n",
+   ".claude/agents/reviewer.md": "---\nname: reviewer\ndescription: Reviews code carefully\nmodel: opus\n---\n\nYou review code.\n\nBe thorough.\n",
+   ".copilot/agents/helper.agent.md": "---\ndescription: helps\nuser-invocable: false\n---\nHelp body\n",
+   ".copilot/agents/reviewer.agent.md": "---\nname: reviewer\ndescription: Copilot reviewer\nmodel: gpt-5\ntools: ['read', 'search']\ndisable-model-invocation: true\ntarget: vscode\n---\nCopilot review body.\n"
+  },
+  "steps": [
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0
+   },
+   {
+    "args": [
+     "adopt",
+     "--dry-run",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    3 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n--- Subagents Adoption ---\n[DRY-RUN SUBAGENT] Would import Subagent 'plain' from H/.claude/agents/plain.md\n[DRY-RUN SUBAGENT] Would import Subagent 'reviewer' from H/.claude/agents/reviewer.md\n[DRY-RUN SUBAGENT] Would import Subagent 'helper' from H/.copilot/agents/helper.agent.md\n\n[DRY-RUN] No files were modified.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    3 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 3 local agent config backup(s) to: H/.aikito/backups/adopt_TS\n\n--- Subagents Adoption ---\n[ADOPT SUBAGENT] Subagent 'plain' from H/.claude/agents/plain.md\n[ADOPT SUBAGENT] Subagent 'reviewer' from H/.claude/agents/reviewer.md\n[ADOPT SUBAGENT] Subagent 'helper' from H/.copilot/agents/helper.agent.md\n[WRITE FILE] Created H/aikito/subagents/plain.md\n[WRITE FILE] Created H/aikito/subagents/reviewer.md\n[WRITE FILE] Created H/aikito/subagents/helper.md\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n"
+   },
+   {
+    "args": [
+     "adopt",
+     "--verbose"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    0 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\n[OK] No adoptable Agent configuration found. No files were modified.\n"
+   }
+  ],
+  "tree": {
+   ".aikito/backups/adopt_TS/.claude/agents/plain.md": "Just a body with no frontmatter.\n",
+   ".aikito/backups/adopt_TS/.claude/agents/reviewer.md": "---\nname: reviewer\ndescription: Reviews code carefully\nmodel: opus\n---\n\nYou review code.\n\nBe thorough.\n",
+   ".aikito/backups/adopt_TS/.copilot/agents/helper.agent.md": "---\ndescription: helps\nuser-invocable: false\n---\nHelp body\n",
+   ".claude/agents/plain.md": "Just a body with no frontmatter.\n",
+   ".claude/agents/reviewer.md": "---\nname: reviewer\ndescription: Reviews code carefully\nmodel: opus\n---\n\nYou review code.\n\nBe thorough.\n",
+   ".copilot/agents/helper.agent.md": "---\ndescription: helps\nuser-invocable: false\n---\nHelp body\n",
+   ".copilot/agents/reviewer.agent.md": "---\nname: reviewer\ndescription: Copilot reviewer\nmodel: gpt-5\ntools: ['read', 'search']\ndisable-model-invocation: true\ntarget: vscode\n---\nCopilot review body.\n",
+   "aikito/.gitignore": "# Aikito Git Ignore Rules\n# Note: Rules use leading slashes to strictly match top-level workspace items.\n/.DS_Store\n/__pycache__/\n/*.pyc\n/.venv/\n/.local/\n",
+   "aikito/agents/claude-code.toml": "# =============================================================================\n# Claude Code CLI\n# =============================================================================\n[agents.claude-code]\ndisplay_name = \"Claude Code\"\ninstruction_path = \".claude/CLAUDE.md\"\nproject_instruction_path = \".claude/CLAUDE.md\"\nskills_path = \".claude/skills\"\n\n[agents.claude-code.detect]\ncommands = [\"claude\"]\npaths = [\".claude\"]\n\n[agents.claude-code.runner]\ncommand = [\"claude\", \"{prompt}\"]\n\n[agents.claude-code.subagents]\nconfig_path = \".claude/agents\"\nconfig_format = \"claude_markdown\"\n\n[agents.claude-code.mcp]\nconfig_path = \".claude.json\"\nconfig_format = \"claude_json\"\nname_style = \"verbatim\"\nlive_command = [\"claude\", \"mcp\", \"list\"]\nauth_command = [\"claude\", \"mcp\", \"login\", \"{target}\"]\n",
+   "aikito/agents/github-copilot.toml": "# =============================================================================\n# GitHub Copilot CLI\n# =============================================================================\n[agents.github-copilot]\ndisplay_name = \"GitHub Copilot CLI\"\ninstruction_path = \".copilot/copilot-instructions.md\"\nproject_instruction_path = \"AGENTS.md\"\nskills_path = \".agents/skills\"\n\n[agents.github-copilot.detect]\ncommands = [\"copilot\"]\npaths = [\".copilot\"]\n\n[agents.github-copilot.runner]\ncommand = [\"copilot\", \"-C\", \"{workdir}\", \"-i\", \"{prompt}\"]\n\n[agents.github-copilot.subagents]\nconfig_path = \".copilot/agents\"\nconfig_format = \"copilot_markdown\"\n\n[agents.github-copilot.mcp]\nconfig_path = \".copilot/mcp-config.json\"\nconfig_format = \"copilot_json\"\nname_style = \"verbatim\"\nlive_command = [\"copilot\", \"mcp\", \"list\"]\n",
+   "aikito/config.toml": "# Aikito Workspace Configuration\n\n[memory]\n# Number of days after which an untouched durable memory note is flagged as stale.\nstale_days = 30\n\n[inbox]\n# Staging directory for incoming distilled notes.\npath = \"inbox\"\n\n[update]\n# Enable or disable automatic background update checks and CLI upgrade notifications.\ncheck = true\n",
+   "aikito/global/AGENTS.md": "## Persistent Memory\n\n- All tasks must follow the `durable-memory` skill as the single source of truth for durable memory boundaries, retrieval, evaluation, and persistence.\n",
+   "aikito/layout.toml": "version = 2\n",
+   "aikito/mcps": "<dir>",
+   "aikito/memory/notes": "<dir>",
+   "aikito/projects": "<dir>",
+   "aikito/skills.toml": "skills = [\n    \"aikito\",\n    \"durable-memory\"\n]\n",
+   "aikito/subagents/helper.md": "---\ndescription: \"helps\"\nagents: [\"github-copilot\"]\ngithub-copilot: {\"user-invocable\": false}\n---\nHelp body\n",
+   "aikito/subagents/plain.md": "---\ndescription: \"Adopted subagent plain from Claude Code\"\nagents: [\"claude-code\"]\n---\nJust a body with no frontmatter.\n",
+   "aikito/subagents/reviewer.md": "---\ndescription: \"Reviews code carefully\"\nagents: [\"claude-code\", \"github-copilot\"]\ngithub-copilot: {\"disable-model-invocation\": true, \"model\": \"gpt-5\", \"name\": \"reviewer\", \"target\": \"vscode\", \"tools\": [\"read\", \"search\"]}\n---\nYou review code.\n\nBe thorough.\n"
+  }
+ }
+}
