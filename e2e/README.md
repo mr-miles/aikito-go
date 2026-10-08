@@ -82,3 +82,40 @@ captures them from Python into `testdata/workspace_sync_*`, and
 `go test -tags e2e_generate -run TestGenerateWorkspaceSyncGoldens ./e2e/... -v`.
 The full matrix (conflicts in every domain, broken configuration, bundled
 refresh, parent flags) is in `internal/cli/syncall_test.go`.
+
+## Interoperability (`interop_*_test.go`)
+
+These check that Python and Go can take over each other's workspace and
+runtime state. `generate_interop_test.go` builds each scenario in
+`ioScenarios` twice, with Python and with the Go binary, and snapshots the
+home into `testdata/interop/<scenario>/{python_state,go_state}/`. A
+snapshot is relocatable: the home directory becomes `<HOME>`, project-skill
+state file names and binding hashes (hashes of absolute paths) become
+`<BINDING:project:checkout>`, transaction ids and backup timestamps are
+fixed, and the workspace's `.git` is replaced by a fresh `git init` on
+restore. Python's journal `affected_skills` (built from a set) is sorted,
+and runs of migration "Target already exists" lines are sorted (Python
+lists `agents/` in filesystem order). Restored files get a fixed mtime and
+commands run with `TZ=UTC`.
+
+The generator then restores each snapshot into a fresh home and runs the
+scenario's commands with Python, recording `python_on_python.txt` and
+`python_on_go.txt` (transcripts) and the resulting homes. The tests, which
+need no Python:
+
+- `TestInteropGoOnPythonState` restores `python_state`, runs the commands
+  with Go, and requires Python's transcript and resulting home; scenarios
+  marked `clean` must also be left unchanged.
+- `TestInteropGoWritesPythonState` builds each scenario with Go and requires
+  Python's build transcript and an identical home, checks the recorded
+  `go_state` is still what Go builds (otherwise regenerate), and checks
+  Python's recorded view of the Go-built home equals its view of its own.
+
+Interrupted scenarios stop the last build step part-way: Python through
+`testdata/interop/python_fault.py`, Go through a binary built with
+`-tags aikito_faultinject` (see `internal/faultinject`), both driven by
+`AIKITO_FAULT=<point>:<n>`.
+
+```bash
+AIKITO_PYTHON_SRC=../aikito/src go test -tags e2e_generate -run TestGenerateInteropGoldens ./e2e/... -v
+```

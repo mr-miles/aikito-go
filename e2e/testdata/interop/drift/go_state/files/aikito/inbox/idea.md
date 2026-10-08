@@ -1,0 +1,3 @@
+# Idea
+
+Try this.

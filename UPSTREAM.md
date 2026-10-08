@@ -112,6 +112,7 @@ diff.
 | `internal/projectsync/testdata/vectors.json` (`plan_single_skill`, `plan_link_target`, fingerprints, binding hash, state JSON) | `python3 internal/projectsync/testdata/gen_vectors.py` |
 | `e2e/testdata/project_sync_*` (whole-command transcripts and trees) | `AIKITO_PYTHON_SRC=../aikito/src go test -tags e2e_generate -run TestGenerateProjectSyncGoldens ./e2e/... -v` |
 | `e2e/testdata/workspace_sync_*` (bare `aikito sync` transcripts and trees) | `AIKITO_PYTHON_SRC=../aikito/src go test -tags e2e_generate -run TestGenerateWorkspaceSyncGoldens ./e2e/... -v` |
+| `e2e/testdata/interop/*` (Python- and Go-built homes, each implementation's commands on the other's, interrupted transactions; see e2e/README.md) | `AIKITO_PYTHON_SRC=../aikito/src go test -tags e2e_generate -run TestGenerateInteropGoldens ./e2e/... -v` |
 | `internal/cli/testdata/options_vectors.json` (add/rm/maintain/edit/diff options, run from inside projects) | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/cli/testdata/gen_options_vectors.py` |
 | `internal/workspace/testdata/frontmatter_update_vectors.json` | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/workspace/testdata/gen_frontmatter_update_vectors.py` |
 | `internal/mcp/testdata/toml_order_vectors.json` (tomllib key order) | `python3 internal/mcp/testdata/gen_toml_order_vectors.py` |

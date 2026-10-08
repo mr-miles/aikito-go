@@ -105,6 +105,13 @@ time it was applied.
   same home path (recreated between runs) to compare state files byte for
   byte. Python must also run with `PYTHONUNBUFFERED=1` if stdout and stderr
   share a pipe.
+- **Journals are shared state.** Python must be able to recover a journal
+  Go left half-done and vice versa. Write workspace and project-skill
+  journals with `workspace.PyDumps` (Python's `json.dumps(sort_keys=True)`,
+  `[]` not `null`), and keep the recorded `PathPolicy` identical to
+  Python's (`create_parents` included). `e2e/interop_test.go` interrupts
+  both engines through `internal/faultinject` (`-tags aikito_faultinject`)
+  and `e2e/testdata/interop/python_fault.py`.
 - **JSON error text.** Python prints `json.loads` errors to users
   ("Expecting ',' delimiter: line 3 column 8 (char 19)"). Go's decoder
   wording differs; use `mcp.PythonJSONDecodeError(text)` after a failed

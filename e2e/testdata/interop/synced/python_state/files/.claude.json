@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "http-s": {
+      "type": "http",
+      "url": "https://example.com/mcp",
+      "headers": {
+        "Authorization": "${AIKITO_HTTP_S_AUTHORIZATION}",
+        "X-Plain": "y"
+      }
+    },
+    "docs": {
+      "type": "http",
+      "url": "https://docs.example.com/mcp"
+    }
+  }
+}

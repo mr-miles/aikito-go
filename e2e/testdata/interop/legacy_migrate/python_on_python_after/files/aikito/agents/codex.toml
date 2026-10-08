@@ -1,0 +1,5 @@
+# Codex agent
+# second line
+[agents.codex]
+display_name = "Codex"
+instruction_path = ".codex/AGENTS.md"

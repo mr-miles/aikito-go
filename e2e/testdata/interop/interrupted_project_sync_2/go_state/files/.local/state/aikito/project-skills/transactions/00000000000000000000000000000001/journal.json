@@ -1,0 +1,106 @@
+{
+  "affected_skills": [
+    "alpha",
+    "beta",
+    "gamma"
+  ],
+  "checkout_paths": [
+    "<HOME>/p2"
+  ],
+  "files": [],
+  "kind": "runtime_apply",
+  "phase": "pending",
+  "project_names": [
+    "p2"
+  ],
+  "recovery_dirs": [
+    {
+      "created": false,
+      "post_fingerprint": "v1:d88917f2fe0054866d581b9340241c744e79fb09bb89a7716d2c8d4f70c00ddb",
+      "pre_fingerprint": "v1:080d48892f0cbfd6b793a319e0f41b5d075bef285ff697f92a40395068f2a40c",
+      "recovery_dir": "<HOME>/p2/.agents/.aikito-tx/00000000000000000000000000000001/prev-alpha",
+      "staging_dir": "<HOME>/p2/.agents/.aikito-tx/00000000000000000000000000000001/stage-alpha",
+      "target_path": "<HOME>/p2/.agents/skills/alpha"
+    },
+    {
+      "created": false,
+      "post_fingerprint": "v1:09cbf807d939fd122b1661ca999eca63cff10c01429c4637e8e7f59c4a9cf777",
+      "pre_fingerprint": "v1:4aedabeb49e2551d1d0bc6cad390ed51e7450c762c373acf67bce471239a0081",
+      "recovery_dir": "<HOME>/p2/.agents/.aikito-tx/00000000000000000000000000000001/prev-beta",
+      "staging_dir": "<HOME>/p2/.agents/.aikito-tx/00000000000000000000000000000001/stage-beta",
+      "target_path": "<HOME>/p2/.agents/skills/beta"
+    },
+    {
+      "created": true,
+      "post_fingerprint": "v1:942f07e9478a346f38df0766db5e59b2bfa94d527cc52f61eb8465ec2bc4ec44",
+      "pre_fingerprint": null,
+      "recovery_dir": "",
+      "staging_dir": "<HOME>/p2/.agents/.aikito-tx/00000000000000000000000000000001/stage-gamma",
+      "target_path": "<HOME>/p2/.agents/skills/gamma"
+    }
+  ],
+  "state_transitions": [
+    {
+      "binding_hash": "<BINDING:p2:p2>",
+      "physical_checkout": "<HOME>/p2",
+      "post_docs": [
+        {
+          "physical_checkout": "<HOME>/p2",
+          "project_name": "p2",
+          "records": {
+            "alpha": {
+              "baseline_fingerprint": "v1:d88917f2fe0054866d581b9340241c744e79fb09bb89a7716d2c8d4f70c00ddb",
+              "baseline_origin": "write",
+              "last_observed_selected": true,
+              "lifecycle": "active",
+              "representation": "copy",
+              "skill_name": "alpha"
+            },
+            "beta": {
+              "baseline_fingerprint": "v1:4aedabeb49e2551d1d0bc6cad390ed51e7450c762c373acf67bce471239a0081",
+              "baseline_origin": "write",
+              "last_observed_selected": true,
+              "lifecycle": "active",
+              "representation": "copy",
+              "skill_name": "beta"
+            }
+          },
+          "revision": 3,
+          "version": 1,
+          "workspace_root": "<HOME>/aikito"
+        }
+      ],
+      "pre_doc": {
+        "physical_checkout": "<HOME>/p2",
+        "project_name": "p2",
+        "records": {
+          "alpha": {
+            "baseline_fingerprint": "v1:080d48892f0cbfd6b793a319e0f41b5d075bef285ff697f92a40395068f2a40c",
+            "baseline_origin": "write",
+            "last_observed_selected": true,
+            "lifecycle": "active",
+            "representation": "copy",
+            "skill_name": "alpha"
+          },
+          "beta": {
+            "baseline_fingerprint": "v1:4aedabeb49e2551d1d0bc6cad390ed51e7450c762c373acf67bce471239a0081",
+            "baseline_origin": "write",
+            "last_observed_selected": true,
+            "lifecycle": "active",
+            "representation": "copy",
+            "skill_name": "beta"
+          }
+        },
+        "revision": 2,
+        "version": 1,
+        "workspace_root": "<HOME>/aikito"
+      },
+      "pre_revision": 2,
+      "project_name": "p2",
+      "workspace_root": "<HOME>/aikito"
+    }
+  ],
+  "symlinks": [],
+  "tx_id": "00000000000000000000000000000001",
+  "workspace_root": "<HOME>/aikito"
+}

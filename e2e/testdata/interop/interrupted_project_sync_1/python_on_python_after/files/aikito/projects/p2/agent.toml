@@ -1,0 +1,4 @@
+name = "p2"
+path = "~/p2"
+sync_mode = "copy"
+skills = ["alpha", "beta", "gamma"]

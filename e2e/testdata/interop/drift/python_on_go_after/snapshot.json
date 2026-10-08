@@ -1,0 +1,411 @@
+{
+ "entries": {
+  ".agents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".agents/skills": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".agents/skills/aikito": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/skills/aikito"
+  },
+  ".agents/skills/alpha": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/skills/alpha"
+  },
+  ".agents/skills/beta": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/skills/beta"
+  },
+  ".agents/skills/durable-memory": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/skills/durable-memory"
+  },
+  ".aikito": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".aikito/backups": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".aikito/backups/adopt_20260101_000000": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".aikito/backups/adopt_20260101_000000/.claude": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".aikito/backups/adopt_20260101_000000/.claude/CLAUDE.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  ".aikito/backups/adopt_20260101_000000/.claude/agents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".aikito/backups/adopt_20260101_000000/.claude/agents/reviewer.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  ".claude": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".claude.json": {
+   "kind": "file",
+   "mode": "600"
+  },
+  ".claude/CLAUDE.md": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/global/AGENTS.md"
+  },
+  ".claude/agents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".claude/agents/helper.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  ".claude/agents/reviewer.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  ".claude/skills": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/.agents/skills"
+  },
+  ".codex": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".codex/AGENTS.md": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/global/AGENTS.md"
+  },
+  ".codex/agents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".codex/agents/helper.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  ".codex/config.toml": {
+   "kind": "file",
+   "mode": "600"
+  },
+  ".local": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".local/state": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".local/state/aikito": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".local/state/aikito/mcp-state.json": {
+   "kind": "file",
+   "mode": "600"
+  },
+  ".local/state/aikito/project-skills": {
+   "kind": "dir",
+   "mode": "700"
+  },
+  ".local/state/aikito/project-skills/\u003cBINDING:p2:p2\u003e.json": {
+   "kind": "file",
+   "mode": "600"
+  },
+  ".local/state/aikito/project-skills/transactions": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  ".local/state/aikito/project-skills/writer.lock": {
+   "kind": "file",
+   "mode": "600"
+  },
+  "aikito": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/.git": {
+   "kind": "dir"
+  },
+  "aikito/.gitignore": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/agents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/agents/claude-code.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/agents/codex.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/config.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/global": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/global/AGENTS.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/inbox": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/inbox/idea.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/layout.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/mcps": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/mcps/docs.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/mcps/http-s.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/memory": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/memory/notes": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/memory/notes/global-note.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/projects": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects/p1": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects/p1/AGENTS.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/projects/p1/agent.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/projects/p1/memory": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects/p1/memory/notes": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects/p1/memory/notes/p1-note.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/projects/p2": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects/p2/AGENTS.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/projects/p2/agent.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/projects/p2/memory": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects/p2/memory/notes": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects/p3": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects/p3/AGENTS.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/projects/p3/agent.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/projects/p3/memory": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/projects/p3/memory/notes": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/skills": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/skills.toml": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/skills/aikito": {
+   "kind": "dir"
+  },
+  "aikito/skills/aikito/SKILL.md": {
+   "kind": "file"
+  },
+  "aikito/skills/aikito/references": {
+   "kind": "dir"
+  },
+  "aikito/skills/aikito/references/adoption.md": {
+   "kind": "file"
+  },
+  "aikito/skills/aikito/references/installation.md": {
+   "kind": "file"
+  },
+  "aikito/skills/aikito/references/projects.md": {
+   "kind": "file"
+  },
+  "aikito/skills/alpha": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/skills/alpha/SKILL.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/skills/beta": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/skills/beta/SKILL.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/skills/durable-memory": {
+   "kind": "dir"
+  },
+  "aikito/skills/durable-memory/SKILL.md": {
+   "kind": "file"
+  },
+  "aikito/subagents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "aikito/subagents/helper.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "aikito/subagents/reviewer.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "p1": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p1/.agents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p1/.agents/memory": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p1/.agents/memory/notes": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/projects/p1/memory/notes"
+  },
+  "p1/.agents/skills": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p1/.agents/skills/alpha": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/skills/alpha"
+  },
+  "p2": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p2/.agents": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p2/.agents/.aikito-tx": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p2/.agents/memory": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p2/.agents/memory/notes": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/projects/p2/memory/notes"
+  },
+  "p2/.agents/skills": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p2/.agents/skills/alpha": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p2/.agents/skills/alpha/SKILL.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "p2/.agents/skills/beta": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p2/.agents/skills/beta/SKILL.md": {
+   "kind": "file",
+   "mode": "644"
+  },
+  "p2/.claude": {
+   "kind": "dir",
+   "mode": "755"
+  },
+  "p2/.claude/CLAUDE.md": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/projects/p2/AGENTS.md"
+  },
+  "p2/AGENTS.md": {
+   "kind": "symlink",
+   "target": "\u003cHOME\u003e/aikito/projects/p2/AGENTS.md"
+  }
+ }
+}

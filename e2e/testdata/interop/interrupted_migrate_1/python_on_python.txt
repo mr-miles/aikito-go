@@ -1,0 +1,45 @@
+$ () aikito status
+--- stdout
+--- stderr
+[ERROR] Workspace migration is incomplete: <HOME>/aikito
+Run: aikito migrate workspace-resources
+--- exit 1
+$ () aikito migrate workspace-resources --dry-run
+--- stdout
+[CREATE] agents/codex.toml
+[CREATE] agents/claude-code.toml
+[UPDATE] subagents/reviewer.md
+[REMOVE] agents.toml
+[REMOVE] subagents.toml
+[DRY RUN] No files changed
+--- stderr
+--- exit 0
+$ () aikito migrate workspace-resources
+--- stdout
+[RECOVER] Interrupted workspace migration recovered
+[CREATE] agents/codex.toml
+[CREATE] agents/claude-code.toml
+[UPDATE] subagents/reviewer.md
+[REMOVE] agents.toml
+[REMOVE] subagents.toml
+[SUCCESS] Workspace resource layout migrated
+--- stderr
+--- exit 0
+$ () aikito migrate workspace-resources
+--- stdout
+[SUCCESS] Workspace resource layout migrated
+--- stderr
+--- exit 0
+$ () aikito show subagents
+--- stdout
++----------+-------------+-------+
+| Subagent | Claude Code | Codex |
++----------+-------------+-------+
++----------+-------------+-------+
+--- stderr
+--- exit 0
+$ () aikito sync subagents --dry-run
+--- stdout
+--- stderr
+[ERROR] Subagent 'reviewer' targets agent 'codex', but 'codex' has no [agents.codex.subagents] configuration in agents/<name>.toml
+--- exit 1

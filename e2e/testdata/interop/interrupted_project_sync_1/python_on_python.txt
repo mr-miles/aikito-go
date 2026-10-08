@@ -1,0 +1,56 @@
+$ () aikito status
+--- stdout
++---------+-------+--------+--------+---------+-------+------+-----------+
+| Project | Instr | Skills | Memory | Context | Paths | Mode | Status    |
++---------+-------+--------+--------+---------+-------+------+-----------+
+| p2      | -     | 3      | 0      | ~1.6k   | 1/1   | copy | ! missing |
++---------+-------+--------+--------+---------+-------+------+-----------+
+
+Global: ! 4 issues · Instr - · Skills 2 · Memory 0 · MCP - · Sub -
+Consumers (2): claude · codex
+All in one workspace: ~/aikito (default)
+--- stderr
+--- exit 0
+$ () aikito diff --all
+--- stdout
+No drift detected.
+--- stderr
+--- exit 0
+$ () aikito sync project p2 --dry-run
+--- stdout
+[INFO] Previewing sync for project 'p2' (mode: copy)
+[DRY RUN COPY] <HOME>/aikito/skills/alpha -> <HOME>/p2/.agents/skills/alpha
+[DRY RUN COPY] <HOME>/aikito/skills/beta -> <HOME>/p2/.agents/skills/beta
+[DRY RUN COPY] <HOME>/aikito/skills/gamma -> <HOME>/p2/.agents/skills/gamma
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[OK] Codex instructions: <HOME>/p2/AGENTS.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[SUCCESS] Project 'p2' sync preview completed.
+--- stderr
+--- exit 0
+$ () aikito sync project p2
+--- stdout
+[INFO] Syncing project 'p2' (mode: copy)
+[COPY DIR] <HOME>/aikito/skills/alpha -> <HOME>/p2/.agents/skills/alpha
+[COPY DIR] <HOME>/aikito/skills/beta -> <HOME>/p2/.agents/skills/beta
+[COPY DIR] <HOME>/aikito/skills/gamma -> <HOME>/p2/.agents/skills/gamma
+--- stderr
+[ERROR] Pending transaction recovered: Rolled back interrupted transaction 00000000000000000000000000000001. Please re-run command.
+--- exit 1
+$ () aikito status
+--- stdout
++---------+-------+--------+--------+---------+-------+------+-----------+
+| Project | Instr | Skills | Memory | Context | Paths | Mode | Status    |
++---------+-------+--------+--------+---------+-------+------+-----------+
+| p2      | -     | 3      | 0      | ~1.6k   | 1/1   | copy | ! missing |
++---------+-------+--------+--------+---------+-------+------+-----------+
+
+Global: ! 4 issues · Instr - · Skills 2 · Memory 0 · MCP - · Sub -
+Consumers (2): claude · codex
+All in one workspace: ~/aikito (default)
+--- stderr
+--- exit 0
+$ () aikito diff --all
+--- stdout
+No drift detected.
+--- stderr
+--- exit 0

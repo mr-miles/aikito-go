@@ -1,0 +1,4 @@
+# reviewer comment
+[subagents.reviewer]
+description = "Reviews code"
+agents = ["codex"]

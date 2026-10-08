@@ -22,6 +22,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/mr-miles/aikito-go/internal/faultinject"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
@@ -346,6 +347,7 @@ func atomicText(path, content string) (err error) {
 	if err := os.Rename(tmp, path); err != nil {
 		return err
 	}
+	faultinject.Point("workspace-rename")
 	return fsyncDir(dir)
 }
 
@@ -590,6 +592,52 @@ type journalData struct {
 // reproduced — there are no pre-existing journals from a from-scratch Go
 // install to be compatible with.
 const journalSchemaVersion = 2
+
+// marshal writes the journal as transactions.py does,
+// json.dumps(data, sort_keys=True): sorted keys, ", "/": " separators,
+// ASCII escapes and [] (never null) for empty lists, so either
+// implementation can recover the other's interrupted transaction.
+func (jd journalData) marshal() ([]byte, error) {
+	strs := func(in []string) []any {
+		out := make([]any, len(in))
+		for i, s := range in {
+			out[i] = s
+		}
+		return out
+	}
+	opt := func(s *string) any {
+		if s == nil {
+			return nil
+		}
+		return *s
+	}
+	changes := make([]any, len(jd.Changes))
+	for i, c := range jd.Changes {
+		changes[i] = map[string]any{
+			"target": c.Target, "path": c.Path, "destination": c.Destination,
+			"created_parents": strs(c.CreatedParents), "kind": c.Kind,
+			"before": opt(c.Before), "after": opt(c.After),
+		}
+	}
+	states := make([]any, len(jd.States))
+	for i, st := range jd.States {
+		states[i] = map[string]any{"target": st.Target, "path": st.Path, "before": opt(st.Before), "after": st.After}
+	}
+	resources := make([]any, len(jd.Policy.Resources))
+	for i, r := range jd.Policy.Resources {
+		resources[i] = []any{r[0], r[1]}
+	}
+	data := map[string]any{
+		"version": jd.Version, "roots": strs(jd.Roots), "txid": jd.TxID, "phase": jd.Phase,
+		"changes": changes, "states": states,
+		"policy": map[string]any{
+			"resources": resources, "states": strs(jd.Policy.States),
+			"create_parents": jd.Policy.CreateParents, "inbox_prefix": jd.Policy.InboxPrefix,
+			"extra_inbox_prefixes": strs(jd.Policy.ExtraInboxPrefixes),
+		},
+	}
+	return []byte(workspace.PyDumps(data, -1)), nil
+}
 
 func policyToJournal(p PathPolicy) journalPolicyData {
 	resources := make([][2]string, len(p.Resources))
@@ -1009,6 +1057,7 @@ func Recover(roots []string, policy PathPolicy, classify Classifier) (bool, erro
 				if err := os.Rename(r.source, dest); err != nil {
 					return false, err
 				}
+				faultinject.Point("workspace-rename")
 			} else {
 				if err := copyResource(r.source, dest, r.kind); err != nil {
 					return false, err
@@ -1072,7 +1121,7 @@ func Recover(roots []string, policy PathPolicy, classify Classifier) (bool, erro
 	}
 
 	jd.Phase = "committed"
-	data, err := json.Marshal(jd)
+	data, err := jd.marshal()
 	if err != nil {
 		return false, err
 	}
@@ -1231,7 +1280,7 @@ func Apply(roots []string, changes []Change, states []StateUpdate, verify func()
 		return err
 	}
 
-	data, err := json.Marshal(jd)
+	data, err := jd.marshal()
 	if err != nil {
 		return commitFail(err)
 	}
@@ -1281,6 +1330,7 @@ func Apply(roots []string, changes []Change, states []StateUpdate, verify func()
 			if err := os.Rename(dest, moved); err != nil {
 				return commitFail(err)
 			}
+			faultinject.Point("workspace-rename")
 		}
 		if item.After != nil {
 			if policy.CreateParents {
@@ -1296,6 +1346,7 @@ func Apply(roots []string, changes []Change, states []StateUpdate, verify func()
 			if err := os.Rename(stage, dest); err != nil {
 				return commitFail(err)
 			}
+			faultinject.Point("workspace-rename")
 		}
 	}
 
@@ -1332,7 +1383,7 @@ func Apply(roots []string, changes []Change, states []StateUpdate, verify func()
 	}
 
 	jd.Phase = "committed"
-	data, err = json.Marshal(jd)
+	data, err = jd.marshal()
 	if err != nil {
 		return commitFail(err)
 	}

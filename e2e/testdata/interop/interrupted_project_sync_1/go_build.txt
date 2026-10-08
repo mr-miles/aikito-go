@@ -1,0 +1,61 @@
+$ () aikito init workspace
+--- stdout
+[INFO] Initializing Aikito workspace in: <HOME>/aikito
+[CREATE DIR] <HOME>/aikito
+[CREATE DIR] <HOME>/aikito/global
+[CREATE DIR] <HOME>/aikito/projects
+[CREATE DIR] <HOME>/aikito/mcps
+[CREATE DIR] <HOME>/aikito/skills
+[CREATE DIR] <HOME>/aikito/subagents
+[CREATE DIR] <HOME>/aikito/agents
+[CREATE DIR] <HOME>/aikito/memory/notes
+[CREATE FILE] <HOME>/aikito/config.toml (Workspace config template)
+[CREATE FILE] <HOME>/aikito/skills.toml (Global skills config)
+[CREATE FILE] <HOME>/aikito/global/AGENTS.md (Global agent instructions)
+[CREATE FILE] <HOME>/aikito/.gitignore (Workspace .gitignore with leading slashes)
+[CREATE FILE] <HOME>/aikito/agents/codex.toml (codex Agent definition)
+[CREATE FILE] <HOME>/aikito/agents/claude-code.toml (claude-code Agent definition)
+[CREATE FILE] <HOME>/aikito/layout.toml (Workspace resource layout version)
+[CREATE DIR] <HOME>/aikito/skills/aikito (Bundled aikito skill)
+[CREATE DIR] <HOME>/aikito/skills/durable-memory (Bundled durable-memory skill)
+[GIT INIT] Initialized Git repository in <HOME>/aikito
+
+[SUCCESS] Aikito workspace initialization complete!
+
+[INFO] Detected installed Agent(s):
+  - Codex (<HOME>/.codex)
+  - Claude Code (<HOME>/.claude)
+
+Next step: Run 'aikito sync'. It checks the complete plan for conflicts before changing managed configuration on this host.
+--- stderr
+--- exit 0
+$ () aikito init project p2 {H}/p2
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p2/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p2/AGENTS.md
+[SUCCESS] Project 'p2' initialized in Aikito workspace.
+[INFO] Syncing project 'p2' (mode: link)
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[OK] Codex instructions: <HOME>/p2/AGENTS.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[LINK] <HOME>/p2/.agents/memory/notes -> <HOME>/aikito/projects/p2/memory/notes
+[SUCCESS] Project 'p2' synced successfully at <HOME>/p2.
+--- stderr
+--- exit 0
+$ () aikito sync project p2
+--- stdout
+[INFO] Syncing project 'p2' (mode: copy)
+[COPY DIR] <HOME>/aikito/skills/alpha -> <HOME>/p2/.agents/skills/alpha
+[COPY DIR] <HOME>/aikito/skills/beta -> <HOME>/p2/.agents/skills/beta
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[OK] Codex instructions: <HOME>/p2/AGENTS.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[SUCCESS] Project 'p2' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p2
+--- stdout
+[INFO] Syncing project 'p2' (mode: copy)
+[COPY DIR] <HOME>/aikito/skills/alpha -> <HOME>/p2/.agents/skills/alpha
+[COPY DIR] <HOME>/aikito/skills/beta -> <HOME>/p2/.agents/skills/beta
+[COPY DIR] <HOME>/aikito/skills/gamma -> <HOME>/p2/.agents/skills/gamma
+--- stderr
+--- exit 137

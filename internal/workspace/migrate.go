@@ -136,15 +136,11 @@ func BuildMigrationPlan(root, home string) (MigrationPlan, error) {
 		if derr != nil {
 			findings = append(findings, fmt.Sprintf("agents.toml: %v", derr))
 		} else {
-			fragments, serr := splitAgentText(string(agentsText), agentsTable)
+			fragments, names, serr := splitAgentText(string(agentsText), agentsTable)
 			if serr != nil {
 				findings = append(findings, fmt.Sprintf("agents.toml: %v", serr))
 			} else {
-				names := make([]string, 0, len(fragments))
-				for n := range fragments {
-					names = append(names, n)
-				}
-				sort.Strings(names)
+				// Document order, as Python's dict of sections keeps it.
 				for _, name := range names {
 					relative := "agents/" + name + ".toml"
 					if _, err := os.Lstat(filepath.Join(root, relative)); err != nil {
@@ -392,37 +388,39 @@ func standaloneComments(content string) string {
 // document into one TOML fragment per [agents.<name>] table (each
 // fragment's own comments + table text, trimmed and newline-terminated),
 // verified to parse back to exactly the expected value.
-func splitAgentText(content string, expected map[string]any) (map[string]string, error) {
+func splitAgentText(content string, expected map[string]any) (map[string]string, []string, error) {
 	for name := range expected {
 		if ValidateResourceName(name, "agent") != "" {
-			return nil, fmt.Errorf("Unsupported Agent name in agents.toml")
+			return nil, nil, fmt.Errorf("Unsupported Agent name in agents.toml")
 		}
 	}
 	sections := resourceSections(content, legacyAgentHeaderRe)
 	fragments := map[string]string{}
+	var order []string
 	for _, s := range sections {
 		if _, exists := fragments[s.Name]; exists {
-			return nil, fmt.Errorf("Duplicate Agent table: %s", s.Name)
+			return nil, nil, fmt.Errorf("Duplicate Agent table: %s", s.Name)
 		}
 		fragment := strings.TrimSpace(s.Comments+s.TableText) + "\n"
 		parsedDoc, err := DecodeTOML([]byte(fragment))
 		if err != nil {
-			return nil, fmt.Errorf("Cannot preserve Agent table text: %s", s.Name)
+			return nil, nil, fmt.Errorf("Cannot preserve Agent table text: %s", s.Name)
 		}
 		parsed, _ := parsedDoc["agents"].(map[string]any)
 		if len(parsed) != 1 {
-			return nil, fmt.Errorf("Cannot preserve Agent table text: %s", s.Name)
+			return nil, nil, fmt.Errorf("Cannot preserve Agent table text: %s", s.Name)
 		}
 		val, ok := parsed[s.Name]
 		if !ok || CanonicalJSON(val) != CanonicalJSON(expected[s.Name]) {
-			return nil, fmt.Errorf("Cannot preserve Agent table text: %s", s.Name)
+			return nil, nil, fmt.Errorf("Cannot preserve Agent table text: %s", s.Name)
 		}
 		fragments[s.Name] = fragment
+		order = append(order, s.Name)
 	}
 	if len(fragments) != len(expected) {
-		return nil, fmt.Errorf("Unsupported Agent table header in agents.toml")
+		return nil, nil, fmt.Errorf("Unsupported Agent table header in agents.toml")
 	}
-	return fragments, nil
+	return fragments, order, nil
 }
 
 // marker_version mirrors _marker_version: nil (no error) if layout.toml is

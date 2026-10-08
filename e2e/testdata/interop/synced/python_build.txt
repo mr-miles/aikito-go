@@ -1,0 +1,167 @@
+$ () aikito init workspace
+--- stdout
+[INFO] Initializing Aikito workspace in: <HOME>/aikito
+[CREATE DIR] <HOME>/aikito
+[CREATE DIR] <HOME>/aikito/global
+[CREATE DIR] <HOME>/aikito/projects
+[CREATE DIR] <HOME>/aikito/mcps
+[CREATE DIR] <HOME>/aikito/skills
+[CREATE DIR] <HOME>/aikito/subagents
+[CREATE DIR] <HOME>/aikito/agents
+[CREATE DIR] <HOME>/aikito/memory/notes
+[CREATE FILE] <HOME>/aikito/config.toml (Workspace config template)
+[CREATE FILE] <HOME>/aikito/skills.toml (Global skills config)
+[CREATE FILE] <HOME>/aikito/global/AGENTS.md (Global agent instructions)
+[CREATE FILE] <HOME>/aikito/.gitignore (Workspace .gitignore with leading slashes)
+[CREATE FILE] <HOME>/aikito/agents/codex.toml (codex Agent definition)
+[CREATE FILE] <HOME>/aikito/agents/claude-code.toml (claude-code Agent definition)
+[CREATE FILE] <HOME>/aikito/layout.toml (Workspace resource layout version)
+[CREATE DIR] <HOME>/aikito/skills/aikito (Bundled aikito skill)
+[CREATE DIR] <HOME>/aikito/skills/durable-memory (Bundled durable-memory skill)
+[GIT INIT] Initialized Git repository in <HOME>/aikito
+
+[SUCCESS] Aikito workspace initialization complete!
+
+[INFO] Detected installed Agent(s):
+  - Codex (<HOME>/.codex)
+  - Claude Code (<HOME>/.claude)
+
+Next step: Run 'aikito adopt'. It checks the complete import plan before changing the workspace.
+--- stderr
+--- exit 0
+$ () aikito adopt
+--- stdout
+Adoption plan
+
+  Instructions: 1 update(s)
+  MCP servers:  1 import(s)
+  Subagents:    1 import(s)
+  Conflicts:    0
+  Errors:       0
+  Skipped:      0
+
+Safe to apply
+
+[BACKUP] Saved 2 local agent config backup(s) to: <HOME>/.aikito/backups/adopt_20260101_000000
+
+[SUCCESS] Adoption executed successfully!
+Next step: Run 'aikito sync' to check and apply runtime changes.
+--- stderr
+--- exit 0
+$ () aikito add skill alpha --description Alpha skill --global
+--- stdout
+[CREATE DIR] ~/aikito/skills/alpha
+[CREATE FILE] ~/aikito/skills/alpha/SKILL.md
+[UPDATE FILE] ~/aikito/skills.toml (registered global skill)
+
+[SUCCESS] Added global skill 'alpha'.
+💡 Next steps:
+  1. Update instructions in ~/aikito/skills/alpha/SKILL.md (or run 'aikito edit skill alpha')
+  2. Synchronize to agents: aikito sync global
+--- stderr
+--- exit 0
+$ () aikito add skill beta --description Beta skill --global
+--- stdout
+[CREATE DIR] ~/aikito/skills/beta
+[CREATE FILE] ~/aikito/skills/beta/SKILL.md
+[UPDATE FILE] ~/aikito/skills.toml (registered global skill)
+
+[SUCCESS] Added global skill 'beta'.
+💡 Next steps:
+  1. Update instructions in ~/aikito/skills/beta/SKILL.md (or run 'aikito edit skill beta')
+  2. Synchronize to agents: aikito sync global
+--- stderr
+--- exit 0
+$ () aikito add mcp docs --transport remote --url https://docs.example.com/mcp --agents claude-code,codex
+--- stdout
+[CREATE FILE] ~/aikito/mcps/docs.toml
+
+[SUCCESS] Added MCP server 'docs'.
+💡 Next steps:
+  1. Configure server in ~/aikito/mcps/docs.toml (or run 'aikito edit mcp docs')
+  2. Synchronize to agents: aikito sync mcp
+--- stderr
+--- exit 0
+$ () aikito add subagent helper --description Helps out --agents claude-code,codex
+--- stdout
+[CREATE FILE] ~/aikito/subagents/helper.md
+[SUCCESS] Added subagent 'helper'.
+Next step: aikito sync subagents
+--- stderr
+--- exit 0
+$ () aikito init project p1 {H}/p1
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p1/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' initialized in Aikito workspace.
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[OK] Codex instructions: <HOME>/p1/AGENTS.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] <HOME>/p1/.agents/memory/notes -> <HOME>/aikito/projects/p1/memory/notes
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1.
+--- stderr
+--- exit 0
+$ () aikito init project p2 {H}/p2
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p2/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p2/AGENTS.md
+[SUCCESS] Project 'p2' initialized in Aikito workspace.
+[INFO] Syncing project 'p2' (mode: link)
+[OK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[OK] Codex instructions: <HOME>/p2/AGENTS.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[LINK] <HOME>/p2/.agents/memory/notes -> <HOME>/aikito/projects/p2/memory/notes
+[SUCCESS] Project 'p2' synced successfully at <HOME>/p2.
+--- stderr
+--- exit 0
+$ () aikito init project p3 {H}/p3
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p3/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p3/AGENTS.md
+[SUCCESS] Project 'p3' initialized in Aikito workspace.
+[INFO] Syncing project 'p3' (mode: link)
+[OK] Claude Code instructions: <HOME>/p3/.claude/CLAUDE.md -> <HOME>/aikito/projects/p3/AGENTS.md
+[OK] Codex instructions: <HOME>/p3/AGENTS.md -> <HOME>/aikito/projects/p3/AGENTS.md
+[LINK] <HOME>/p3/.agents/memory/notes -> <HOME>/aikito/projects/p3/memory/notes
+[SUCCESS] Project 'p3' synced successfully at <HOME>/p3.
+--- stderr
+--- exit 0
+$ () aikito sync mcp --force
+--- stdout
+[SYNC] claude-code/docs: created <HOME>/.claude.json
+[AUTH] aikito auth mcp claude-code docs
+[SYNC] claude-code/http-s: updated <HOME>/.claude.json
+[AUTH] aikito auth mcp claude-code http-s
+[SYNC] codex/docs: created <HOME>/.codex/config.toml
+[AUTH] aikito auth mcp codex docs
+--- stderr
+--- exit 0
+$ () aikito sync
+--- stdout
+Sync plan
+
+  Changes:   16
+  Unchanged: 12
+  Offline:   0
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+[LINK] <HOME>/.agents/skills/aikito -> <HOME>/aikito/skills/aikito
+[LINK] <HOME>/.agents/skills/durable-memory -> <HOME>/aikito/skills/durable-memory
+[LINK] <HOME>/.agents/skills/alpha -> <HOME>/aikito/skills/alpha
+[LINK] <HOME>/.agents/skills/beta -> <HOME>/aikito/skills/beta
+[OK] Codex skills: shared path <HOME>/.agents/skills
+[LINK] Claude Code skills: <HOME>/.claude/skills -> <HOME>/.agents/skills
+[LINK] Claude Code instructions: <HOME>/.claude/CLAUDE.md -> <HOME>/aikito/global/AGENTS.md
+[LINK] Codex instructions: <HOME>/.codex/AGENTS.md -> <HOME>/aikito/global/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[OK] Codex instructions: <HOME>/p1/AGENTS.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] Claude Code instructions: <HOME>/p2/.claude/CLAUDE.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[LINK] Codex instructions: <HOME>/p2/AGENTS.md -> <HOME>/aikito/projects/p2/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p3/.claude/CLAUDE.md -> <HOME>/aikito/projects/p3/AGENTS.md
+[OK] Codex instructions: <HOME>/p3/AGENTS.md -> <HOME>/aikito/projects/p3/AGENTS.md
+
+[SUCCESS] Full workspace sync completed successfully.
+--- stderr
+--- exit 0
