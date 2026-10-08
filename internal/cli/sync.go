@@ -8,14 +8,14 @@ import (
 	"github.com/mr-miles/aikito-rs/internal/mcp"
 )
 
-// cmdSync dispatches `aikito sync <target> ...`. "mcp" and "global" are
-// implemented in this Go build; "project"/"subagents" (and the bare
-// `aikito sync` full-workspace form) need domain plan builders not yet
-// ported (project_sync.py, and subagent.py's sync plan) — they print a
-// clear error rather than a silent no-op.
+// cmdSync dispatches `aikito sync <target> ...`. "mcp", "global", and
+// "subagents" are implemented in this Go build; "project" (and the bare
+// `aikito sync` full-workspace form) needs project_sync.py's domain plan
+// builder, not yet ported — it prints a clear error rather than a silent
+// no-op.
 func cmdSync(args []string, stdout, stderr io.Writer, env Environment) int {
 	if len(args) == 0 {
-		fmt.Fprintln(stderr, "[ERROR] aikito sync requires a target: mcp, global (project/subagents are not yet implemented in this Go build)")
+		fmt.Fprintln(stderr, "[ERROR] aikito sync requires a target: mcp, global, subagents (project is not yet implemented in this Go build)")
 		return 2
 	}
 	switch args[0] {
@@ -23,7 +23,9 @@ func cmdSync(args []string, stdout, stderr io.Writer, env Environment) int {
 		return cmdSyncMCP(args[1:], stdout, stderr, env)
 	case "global":
 		return cmdSyncGlobal(args[1:], stdout, stderr, env)
-	case "project", "subagents", "subagent":
+	case "subagents", "subagent":
+		return cmdSyncSubagents(args[1:], stdout, stderr, env)
+	case "project":
 		fmt.Fprintf(stderr, "[ERROR] 'aikito sync %s' is not yet implemented in this Go build (needs ported domain plan builders not yet available).\n", args[0])
 		return 2
 	default:
