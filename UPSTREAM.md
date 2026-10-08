@@ -51,7 +51,7 @@ gaps; see the Go file's doc comment), **not ported**.
 | `workspace/templates.py` | — | not ported (`TEMPLATE_HISTORY` is used only by `import workspace`/reconcile, not adopt) |
 | `workspace/sync.py` (`build_workspace_sync_plan`, `execute_workspace_sync_plan`), `render.py` `render_workspace_sync_plan`, `cli.py` `cmd_sync_all` | `internal/cli/syncworkspace.go`, `sync.go` (parent-flag dispatch) | ported |
 | `observe()` of each plan (`link.py`, `global_skills.py`, `instructions.py`, `memory_runtime.py`, `skill_plan.py`, `project_sync.py`, `subagent.py`, `mcp/model.py`) | `Observe` methods in `internal/linkplan/observe.go`, `internal/projectsync/observe.go`, `internal/sync/subagents_observe.go`, `internal/mcp/observe.go` | ported |
-| `subagent.py` `execute_subagent_plan` (per-file writes, backups) | `internal/sync/subagents_apply.go` | ported (no stale-plan precondition re-check) |
+| `subagent.py` `execute_subagent_plan` (per-file writes, backups) | `internal/sync/subagents_apply.go`, `filesnapshot.go` (`FileSnapshot`, `capture_file_snapshot`) | ported |
 | `workspace/inspection.py`, `inspection.py` (and each plan's `inspect()`) | `internal/cli/inspection.go`, `internal/linkplan/inspect.go`, `internal/cli/projectmemoryviews.go` | ported |
 | `agents.py` | `internal/registry/` | ported (`resolve_targets` in `targets.go`) |
 | `registry.py` (agent schema migration) | — | not ported (`doctor --fix` backfill) |
@@ -98,6 +98,9 @@ diff.
 | `internal/cli/testdata/unified_diff_vectors.json` | `python3 internal/cli/testdata/gen_unified_diff_vectors.py` |
 | `internal/cli/testdata/completion_vectors.json` | `python3 internal/cli/testdata/gen_completion_vectors.py` |
 | `internal/cli/testdata/syncglobal_vectors.json` | `python3 internal/cli/testdata/gen_syncglobal_vectors.py` |
+| `internal/cli/testdata/initworkspace_vectors.json` (`init workspace` refusals, hints, refresh) | `python3 internal/cli/testdata/gen_initworkspace_vectors.py` |
+| `internal/cli/testdata/subagent_cli_vectors.json` (symlinked subagent files, `add`/`rm subagent --sync`) | `python3 internal/cli/testdata/gen_subagent_cli_vectors.py` |
+| `internal/sync/testdata/subagent_stale_vectors.json` (stale subagent plans) | `python3 internal/sync/testdata/gen_subagent_stale_vectors.py` |
 | `internal/cli/testdata/syncall_vectors.json` (bare `aikito sync`, parent flags, `sync subagents` backups) | `python3 internal/cli/testdata/gen_syncall_vectors.py` |
 | `internal/registry/testdata/targets_vectors.json` | `python3 internal/registry/testdata/gen_targets_vectors.py` |
 | `internal/cli/testdata/report_vectors.json` (status, doctor, show) | `python3 internal/cli/testdata/gen_report_vectors.py`; compare a binary without writing: `... --compare ./aikito [scenario...]` |

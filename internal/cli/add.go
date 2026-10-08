@@ -123,10 +123,9 @@ func parseSimpleMarkdownFrontmatter(content string) (map[string]any, string) {
 
 // --- add subagent ---
 //
-// Scope note: ports add_subagent's core (add.py:1070-1205) EXCEPT --from
-// import (_resolve_subagent_source's file/dir disambiguation heuristics,
-// add.py:887-1044) and --sync (needs sync_subagent_configs, not yet
-// built) — both print a clear error/TODO rather than silently no-op.
+// Scope note: ports add_subagent (add.py:1070-1205) EXCEPT --from import
+// (_resolve_subagent_source's file/dir disambiguation heuristics,
+// add.py:887-1044), which prints a clear error rather than silently no-op.
 func cmdAddSubagent(args []string, stdout, stderr io.Writer, env Environment) int {
 	var name, description, agentsArg string
 	var force, syncFlag, fromGiven bool
@@ -305,8 +304,10 @@ func cmdAddSubagent(args []string, stdout, stderr io.Writer, env Environment) in
 	fmt.Fprintf(stdout, "[SUCCESS] %s subagent '%s'.\n", action, nameClean)
 
 	if syncFlag {
-		fmt.Fprintln(stderr, "[ERROR] --sync is not yet implemented in this Go build (needs sync_subagent_configs); run 'aikito sync subagents' separately.")
-		return 1
+		if !syncSubagentConfigs(aikitoDir, env.Home, false, nil, false, stdout, stderr) {
+			return 1
+		}
+		return 0
 	}
 	fmt.Fprintln(stdout, "Next step: aikito sync subagents")
 	return 0

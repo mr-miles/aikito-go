@@ -193,9 +193,9 @@ debugged locally; expect path-separator and `PATH` issues there first.
   next `sync project`.
 - `import workspace` compares against current templates only, with no
   `TEMPLATE_HISTORY` (Python's `adopt` doesn't use it either).
-- `init workspace` initialises over a non-empty directory that isn't a
-  workspace; Python refuses ("Target directory is not empty and is not a
-  recognized Aikito workspace").
+- `init workspace` writes bundled skill files as 0644 (embedded files have
+  no mode). Python's `copytree` copies the installed package's modes, which
+  depend on how Aikito was installed, so vectors don't compare modes there.
 - `add.go` still has its own simplified frontmatter parser;
   `workspace.ParseMarkdownFrontmatter` is the faithful port.
 - `doctor --fix` cleans stale local state only; the registry backfill

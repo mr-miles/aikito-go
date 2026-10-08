@@ -29,20 +29,15 @@ const notImplementedNote = "  (not implemented in this build)"
 // of that path's help text (help_test.go enforces it, so an upstream
 // wording change can't silently drop a note).
 var helpAnnotations = map[string][]string{
-	"":              {"    web                 Start the read-only local Web Console"},
-	"web":           {"usage: aikito web "},
-	"version":       {"  -c, --check  ", "  --force      "},
-	"add subagent":  {"  --from FROM_SOURCE    ", "  --sync                "},
-	"add subagents": {"  --from FROM_SOURCE    ", "  --sync                "},
-
+	"":                  {"    web                 Start the read-only local Web Console"},
+	"web":               {"usage: aikito web "},
+	"version":           {"  -c, --check  ", "  --force      "},
+	"add subagent":      {"  --from FROM_SOURCE    "},
+	"add subagents":     {"  --from FROM_SOURCE    "},
 	"rm skill":          {"  --project PROJECT  "},
 	"rm skills":         {"  --project PROJECT  "},
 	"remove skill":      {"  --project PROJECT  "},
 	"remove skills":     {"  --project PROJECT  "},
-	"rm subagent":       {"  --sync      "},
-	"rm subagents":      {"  --sync      "},
-	"remove subagent":   {"  --sync      "},
-	"remove subagents":  {"  --sync      "},
 	"show mcp":          {"  --agent [AGENT]       ", "  --live                "},
 	"show mcps":         {"  --agent [AGENT]       ", "  --live                "},
 	"show subagents":    {"  --agent [AGENT]       "},
