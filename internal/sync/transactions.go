@@ -855,36 +855,16 @@ func HasPending(roots []string, policy PathPolicy, classify Classifier) (bool, e
 // without writing anything (used by RequireCurrentLayout-style preflight
 // checks to detect e.g. a pending "layout" migration).
 func PendingKinds(roots []string) (map[string]struct{}, error) {
-	kinds := map[string]struct{}{}
-	for _, root := range roots {
-		path, ok, err := journalPath(root, false)
-		if err != nil {
-			return nil, err
+	// The read-only journal scan lives in internal/workspace so that
+	// workspace.RequireCurrentLayout can reject an interrupted migration
+	// without importing this package (which imports workspace).
+	kinds, err := workspace.PendingTransactionKinds(roots)
+	if err != nil {
+		var wsErr *workspace.WorkspaceCoreError
+		if errors.As(err, &wsErr) {
+			return nil, &WorkspaceCoreError{Message: wsErr.Message}
 		}
-		if !ok {
-			continue
-		}
-		if entryTypeAt(path) == entryMissing {
-			continue
-		}
-		if entryTypeAt(path) != entryFile {
-			return nil, coreErrorf("Unsafe journal: %s", path)
-		}
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return nil, coreErrorf("Invalid workspace journal: %s", path)
-		}
-		var raw struct {
-			Changes []struct {
-				Kind string `json:"kind"`
-			} `json:"changes"`
-		}
-		if err := json.Unmarshal(data, &raw); err != nil {
-			return nil, coreErrorf("Invalid workspace journal: %s", path)
-		}
-		for _, c := range raw.Changes {
-			kinds[c.Kind] = struct{}{}
-		}
+		return nil, err
 	}
 	return kinds, nil
 }

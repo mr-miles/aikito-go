@@ -38,6 +38,21 @@ func cmdMigrate(args []string, stdout, stderr io.Writer, env Environment) int {
 		return 1
 	}
 
+	// cli.py cmd_migrate_workspace_resources: on a real run, finish or roll
+	// back an interrupted migration before planning. A pending "layout"
+	// journal makes every other command refuse to run (see
+	// workspace.RequireCurrentLayout), so this is the way out of that state.
+	if !dryRun {
+		recovered, err := sync.Recover([]string{aikitoDir}, migrationPathPolicy(), nil)
+		if err != nil {
+			fmt.Fprintf(stderr, "[ERROR] %v\n", err)
+			return 1
+		}
+		if recovered {
+			fmt.Fprintln(stdout, "[RECOVER] Interrupted workspace migration recovered")
+		}
+	}
+
 	plan, err := workspace.BuildMigrationPlan(aikitoDir, env.Home)
 	if err != nil {
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
@@ -90,6 +105,14 @@ func cmdMigrate(args []string, stdout, stderr io.Writer, env Environment) int {
 // removals as Before-only), and commit it all through the shared
 // transaction engine in one atomic batch.
 func applyMigration(plan workspace.MigrationPlan, home string) error {
+	policy := migrationPathPolicy()
+	recovered, err := sync.Recover([]string{plan.Root}, policy, nil)
+	if err != nil {
+		return err
+	}
+	if recovered {
+		return fmt.Errorf("Recovered an interrupted migration; run again")
+	}
 	fresh, err := workspace.BuildMigrationPlan(plan.Root, home)
 	if err != nil {
 		return err
@@ -103,15 +126,6 @@ func applyMigration(plan workspace.MigrationPlan, home string) error {
 		return err
 	}
 	defer os.RemoveAll(staging)
-
-	policy := sync.PathPolicy{
-		Resources: [][2]string{
-			{"legacy", "agents.toml"},
-			{"legacy", "subagents.toml"},
-			{"layout", "layout.toml"},
-		},
-		CreateParents: true,
-	}
 
 	var changes []sync.Change
 	stage := func(relative, content, kind string) error {
@@ -195,6 +209,21 @@ func applyMigration(plan workspace.MigrationPlan, home string) error {
 	}
 
 	return sync.Apply([]string{plan.Root}, changes, nil, verify, policy, nil)
+}
+
+// migrationPathPolicy mirrors layout.py migration_path_policy. The journal
+// records the policy it was written under and Recover requires the caller's
+// Resources/States to match it, so applyMigration and the pre-plan Recover
+// must share this one definition.
+func migrationPathPolicy() sync.PathPolicy {
+	return sync.PathPolicy{
+		Resources: [][2]string{
+			{"legacy", "agents.toml"},
+			{"legacy", "subagents.toml"},
+			{"layout", "layout.toml"},
+		},
+		CreateParents: true,
+	}
 }
 
 func migrationPlansEqual(a, b workspace.MigrationPlan) bool {

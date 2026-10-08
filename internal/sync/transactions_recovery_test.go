@@ -80,6 +80,15 @@ func TestAtomicUnlink(t *testing.T) {
 		}
 	})
 
+	// Python's atomic_unlink unconditionally fsyncs the parent directory,
+	// so a missing parent raises FileNotFoundError (verified against the
+	// reference implementation). Kept for parity rather than made a no-op.
+	t.Run("missing_parent_is_error_like_python", func(t *testing.T) {
+		if err := atomicUnlink(filepath.Join(dir, "no-such-dir", "state.json")); !os.IsNotExist(err) {
+			t.Fatalf("expected a not-exist error for a missing parent, got %v", err)
+		}
+	})
+
 	t.Run("refuses_directory", func(t *testing.T) {
 		d := filepath.Join(dir, "a-dir")
 		if err := os.Mkdir(d, 0o700); err != nil {

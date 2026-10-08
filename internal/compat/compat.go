@@ -4,6 +4,7 @@
 package compat
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -59,6 +60,9 @@ func SecureDirectoryPermissions(dir string) error {
 	}
 	if err != nil {
 		return err
+	}
+	if !info.IsDir() {
+		return fmt.Errorf("not a directory: %s", dir)
 	}
 	if !IsWindows() {
 		mode := info.Mode().Perm()

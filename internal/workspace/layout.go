@@ -27,61 +27,46 @@ const (
 	CurrentLayoutVersion = 2
 )
 
-// CheckLayoutMarker validates <root>/layout.toml is exactly the v2 marker
-// file: a regular (non-symlink) file whose content is the literal string
-// "version = 2\n". Any other shape is a hard error, matching Python's
-// decision not to round-trip this file through a generic TOML encoder.
-func CheckLayoutMarker(root string) error {
-	path := filepath.Join(root, LayoutFile)
-	info, err := os.Lstat(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return layoutErrorf("Workspace needs migration: %s", root)
-		}
-		return err
-	}
-	if info.Mode()&os.ModeSymlink != 0 || !info.Mode().IsRegular() {
-		return layoutErrorf("Unsafe workspace layout marker: %s", path)
-	}
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return err
-	}
-	if string(data) != LayoutContent {
-		return layoutErrorf("Invalid workspace layout marker: %s", path)
-	}
-	return nil
-}
-
-// RequireCurrentLayout rejects a workspace that needs migration or has an
-// unsafe/missing agents|subagents directory. This is a simplified port of
-// require_current_layout: legacy-format migration is out of scope for this
-// Go port (phased-scope decision), so a legacy-looking workspace just gets a
-// clear error pointing at the still-available Python tool, rather than a
-// ported migration planner.
-//
-// TODO(phase2 transactions): also check for a pending "layout"-kind
-// migration journal entry once the transaction engine exists, matching
-// Python's pending_kinds((root,)) check that runs before the marker check.
+// RequireCurrentLayout mirrors layout.py require_current_layout: reject a
+// workspace whose layout migration was interrupted (a pending "layout"-kind
+// transaction journal — checked first, as in Python), one that still needs
+// migrating from the legacy agents.toml/subagents.toml layout, one with an
+// unsupported layout version, or one whose agents/subagents directories are
+// missing or unsafe. `aikito migrate workspace-resources` (internal/cli
+// migrate.go) recovers an interrupted migration and performs the migration.
 func RequireCurrentLayout(root string) error {
-	if err := CheckLayoutMarker(root); err != nil {
+	kinds, err := PendingTransactionKinds([]string{root})
+	if err != nil {
+		return layoutErrorf("Unsafe workspace transaction state: %v", err)
+	}
+	if _, ok := kinds["layout"]; ok {
+		return layoutErrorf("Workspace migration is incomplete: %s\nRun: aikito migrate workspace-resources", root)
+	}
+	version, err := marker_version(root)
+	if err != nil {
 		return err
 	}
-	for _, legacy := range []string{"agents.toml", "subagents.toml"} {
-		if _, err := os.Lstat(filepath.Join(root, legacy)); err == nil {
-			return layoutErrorf(
-				"Workspace needs migration: %s\nThis Go build does not port the legacy-layout migrator; "+
-					"run the original Python aikito's 'migrate workspace-resources' first.", root)
+	legacy := false
+	for _, name := range LegacyFiles {
+		if _, err := os.Lstat(filepath.Join(root, name)); err == nil {
+			legacy = true
 		}
 	}
-	for _, name := range []string{"agents", "subagents"} {
-		dir := filepath.Join(root, name)
-		info, err := os.Lstat(dir)
-		if err != nil || info.Mode()&os.ModeSymlink != 0 || !info.IsDir() {
-			return layoutErrorf("Workspace resource directory missing or unsafe: %s", dir)
+	if version != nil && *version == CurrentLayoutVersion && !legacy {
+		for _, name := range []string{"agents", "subagents"} {
+			dir := filepath.Join(root, name)
+			info, err := os.Lstat(dir)
+			if err != nil || info.Mode()&os.ModeSymlink != 0 || !info.IsDir() {
+				return layoutErrorf("Workspace resource directory missing or unsafe: %s", dir)
+			}
 		}
+		return nil
 	}
-	return nil
+	const command = "aikito migrate workspace-resources"
+	if version == nil || legacy {
+		return layoutErrorf("Workspace needs migration: %s\nRun: %s --dry-run\nThen: %s", root, command, command)
+	}
+	return layoutErrorf("Unsupported workspace layout version %d: %s", *version, root)
 }
 
 // ReadAgentDocuments mirrors layout.py's _read_agent_files: reads every
