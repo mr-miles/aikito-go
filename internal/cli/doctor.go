@@ -39,10 +39,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pelletier/go-toml/v2"
+
 	"github.com/mr-miles/aikito-go/internal/compat"
+	"github.com/mr-miles/aikito-go/internal/linkplan"
 	"github.com/mr-miles/aikito-go/internal/mcp"
 	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/registry"
+	"github.com/mr-miles/aikito-go/internal/subagent"
 	"github.com/mr-miles/aikito-go/internal/sync"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
@@ -57,6 +61,12 @@ type Finding struct {
 	Resource string `json:"resource"`
 	Source   string `json:"source"`
 	Reason   string `json:"reason"`
+	Actions  []FindingAction
+}
+
+// FindingAction ports diagnostics.py's FindingAction.
+type FindingAction struct {
+	Label, Command string
 }
 
 func ok(message string) Finding { return Finding{Status: "OK", Message: message} }
@@ -145,13 +155,9 @@ func cmdDoctor(args []string, stdout, stderr io.Writer, env Environment) int {
 			return 2
 		}
 	}
-	isTTY := isStdoutTTY()
-	if colorOpt != "auto" {
-		isTTY = colorOpt == "always"
-	}
-	noColor := noColorFlag || (env.Env.Getenv("NO_COLOR") != "")
-	useUnicode := isTTY
-	useColor := isTTY && !noColor
+	// render_doctor_report is called without use_unicode, so the symbols and
+	// boxes are always unicode; only colour follows the terminal.
+	_, useColor := resolveColorFlags(colorOpt, noColorFlag, env)
 
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {
@@ -165,7 +171,7 @@ func cmdDoctor(args []string, stdout, stderr io.Writer, env Environment) int {
 
 	var fixes []string
 	if fixFlag {
-		fixes = runDoctorFixes(aikitoDir, env.Home)
+		fixes = runDoctorFixes(aikitoDir, env)
 		if len(fixes) > 0 && !jsonFlag {
 			for _, f := range fixes {
 				fmt.Fprintf(stdout, "[FIX] %s\n", f)
@@ -174,18 +180,22 @@ func cmdDoctor(args []string, stdout, stderr io.Writer, env Environment) int {
 		}
 	}
 
-	report := runDoctor(aikitoDir, env.Home, staleDays)
+	report := runDoctor(aikitoDir, env, staleDays)
 
 	if jsonFlag {
+		type jsonAction struct {
+			Label   string `json:"label"`
+			Command string `json:"command"`
+		}
 		type jsonFinding struct {
-			Status   string `json:"status"`
-			Message  string `json:"message"`
-			FixHint  string `json:"fix_hint"`
-			Code     string `json:"code"`
-			Resource string `json:"resource"`
-			Source   string `json:"source"`
-			Reason   string `json:"reason"`
-			Actions  []any  `json:"actions"`
+			Status   string       `json:"status"`
+			Message  string       `json:"message"`
+			FixHint  string       `json:"fix_hint"`
+			Code     string       `json:"code"`
+			Resource string       `json:"resource"`
+			Source   string       `json:"source"`
+			Reason   string       `json:"reason"`
+			Actions  []jsonAction `json:"actions"`
 		}
 		type jsonSection struct {
 			Name     string        `json:"name"`
@@ -203,25 +213,34 @@ func cmdDoctor(args []string, stdout, stderr io.Writer, env Environment) int {
 		for _, s := range report.Sections {
 			js := jsonSection{Name: s.Name}
 			for _, f := range s.Findings {
-				js.Findings = append(js.Findings, jsonFinding{
+				jf := jsonFinding{
 					Status: f.Status, Message: f.Message, FixHint: f.FixHint,
 					Code: f.Code, Resource: f.Resource, Source: f.Source, Reason: f.Reason,
-					Actions: []any{},
-				})
+					Actions: []jsonAction{},
+				}
+				for _, a := range f.Actions {
+					jf.Actions = append(jf.Actions, jsonAction{a.Label, a.Command})
+				}
+				js.Findings = append(js.Findings, jf)
 			}
 			if js.Findings == nil {
 				js.Findings = []jsonFinding{}
 			}
 			out.Sections = append(out.Sections, js)
 		}
-		data, merr := json.MarshalIndent(out, "", "  ")
-		if merr != nil {
+		// json.dumps(ensure_ascii=False, indent=2): no HTML escaping.
+		var buf strings.Builder
+		enc := json.NewEncoder(&buf)
+		enc.SetEscapeHTML(false)
+		enc.SetIndent("", "  ")
+		if merr := enc.Encode(out); merr != nil {
 			fmt.Fprintf(stderr, "[ERROR] %v\n", merr)
 			return 1
 		}
-		fmt.Fprintln(stdout, string(data))
+		fmt.Fprint(stdout, buf.String())
 	} else {
-		fmt.Fprintln(stdout, renderDoctorReport(report, useUnicode, useColor))
+		fmt.Fprintln(stdout, renderDoctorReport(report, true, useColor))
+		printBundledSkillNotice(aikitoDir, stderr)
 	}
 
 	if report.FailCount() > 0 {
@@ -238,8 +257,8 @@ func renderDoctorReport(report DoctorReport, useUnicode, useColor bool) string {
 		okSym, failSym, warnSym = "[OK]", "[FAIL]", "[WARN]"
 	}
 	maxTitleW := 10
-	for _, s := range report.Sections {
-		if w := displayWidth(s.Name); w > maxTitleW {
+	for i, s := range report.Sections {
+		if w := displayWidth(s.Name); i == 0 || w > maxTitleW {
 			maxTitleW = w
 		}
 	}
@@ -295,10 +314,10 @@ func renderTitleBox(title string, useUnicode, useColor bool, innerWidth int) str
 	}
 	titleText := " " + title + " "
 	width := innerWidth
-	if width < displayWidth(titleText)+3 {
+	if width <= 0 {
 		width = displayWidth(titleText) + 3
 	}
-	padding := strings.Repeat(" ", width-displayWidth(titleText))
+	padding := strings.Repeat(" ", max(0, width-displayWidth(titleText)))
 	return fmt.Sprintf("%s%s%s\n%s%s%s%s\n%s%s%s",
 		tl, strings.Repeat(horiz, width), tr,
 		vert, colorize(titleText, colorBold, useColor), padding, vert,
@@ -319,16 +338,21 @@ func renderFindingLines(f Finding, symbol string, useUnicode, useColor bool) []s
 		}
 		lines = append(lines, prefix+colorize(f.FixHint, colorDim, useColor))
 	}
+	for _, a := range f.Actions {
+		lines = append(lines, fmt.Sprintf("      %s: %s", a.Label, colorize(a.Command, colorDim, useColor)))
+	}
 	return lines
 }
 
 // --- Orchestration ---
 
-func runDoctor(aikitoDir, home string, staleDays int) DoctorReport {
+func runDoctor(aikitoDir string, env Environment, staleDays int) DoctorReport {
+	home := env.Home
+	ctx := newInspectionContext(aikitoDir, home)
 	return DoctorReport{Sections: []DoctorSection{
-		checkSymlinks(aikitoDir, home),
+		checkSymlinks(ctx),
 		checkOrphans(aikitoDir, home),
-		checkLocalStateStub(),
+		checkLocalState(home, env.Env.Getenv),
 		checkMemory(aikitoDir, home, staleDays),
 		checkDrift(aikitoDir, home),
 		checkSecurity(aikitoDir, home),
@@ -340,23 +364,27 @@ func runDoctor(aikitoDir, home string, staleDays int) DoctorReport {
 	}}
 }
 
-func runDoctorFixes(aikitoDir, home string) []string {
-	// Python's run_doctor_fixes also cleans abandoned local-sync state
-	// (clean_local_state) — phase 2 territory, not ported. Only the
-	// "registered-but-stale bundled agent field backfill" half is in
-	// scope here, and even that is reported (Configuration section) but
-	// not auto-applied yet — see the package doc comment.
-	return nil
+// runDoctorFixes ports run_doctor_fixes' local-state cleanup. The agent
+// registry backfill (add_missing_agent_fields) is not ported.
+func runDoctorFixes(aikitoDir string, env Environment) []string {
+	fixes, _ := cleanLocalState(env.Home, env.Env.Getenv)
+	return fixes
 }
 
+// homeRel is doctor.py's _home_rel (compat.safe_relative_path).
 func homeRel(path, home string) string {
 	if home == "" {
-		return path
+		return filepath.ToSlash(path)
 	}
-	if rel, err := filepath.Rel(home, path); err == nil && !strings.HasPrefix(rel, "..") {
-		return filepath.ToSlash(rel)
+	return safeRelativePath(path, home)
+}
+
+func checkLocalState(home string, getenv func(string) string) DoctorSection {
+	findings := inspectLocalState(home, getenv)
+	if len(findings) == 0 {
+		findings = append(findings, ok("No stale or unverifiable local skill state"))
 	}
-	return path
+	return DoctorSection{Name: "LocalState", Findings: findings}
 }
 
 // --- Configuration (TOML syntax + agent registration) ---
@@ -411,6 +439,11 @@ func checkConfigSyntax(aikitoDir, home string) DoctorSection {
 			for _, n := range names {
 				findings = append(findings, ok(fmt.Sprintf("agents/%s: valid TOML", n)))
 			}
+			for _, d := range detectExistingAgents(home) {
+				if _, registered := docs[d.name]; !registered {
+					findings = append(findings, warn(fmt.Sprintf("agents/%s.toml: installed Agent is not registered", d.name), "aikito doctor --fix"))
+				}
+			}
 			defs, _ := registry.LoadAgentDefinitions(aikitoDir, home)
 			registered := make([]string, 0, len(docs))
 			for name := range docs {
@@ -423,6 +456,9 @@ func checkConfigSyntax(aikitoDir, home string) DoctorSection {
 						findings = append(findings, ok(fmt.Sprintf("agents/%s.toml: registered Agent is offline on this host", name)))
 					}
 				}
+			}
+			for _, m := range missingAgentFields(agentsDir) {
+				findings = append(findings, warn(fmt.Sprintf("agents/%s.toml: missing bundled fields: %s", m.agent, strings.Join(m.fields, ", ")), "aikito doctor --fix"))
 			}
 		}
 	}
@@ -450,16 +486,122 @@ func checkConfigSyntax(aikitoDir, home string) DoctorSection {
 	}
 
 	projectsDir := filepath.Join(aikitoDir, "projects")
-	if entries, derr := os.ReadDir(projectsDir); derr == nil {
-		for _, e := range entries {
-			if !e.IsDir() {
+	for _, name := range sortedDirEntries(projectsDir) {
+		if !isDirPath(filepath.Join(projectsDir, name)) {
+			continue
+		}
+		agentToml := filepath.Join(projectsDir, name, "agent.toml")
+		if _, serr := os.Stat(agentToml); serr != nil {
+			continue
+		}
+		label := fmt.Sprintf("projects/%s/agent.toml", name)
+		data, _ := os.ReadFile(agentToml)
+		if hasAnyConflictMarker(string(data)) {
+			continue
+		}
+		var cfg map[string]any
+		if derr := toml.Unmarshal(data, &cfg); derr != nil {
+			findings = append(findings, fail(fmt.Sprintf("%s: TOML parse error — %v", label, derr), ""))
+			continue
+		}
+		findings = append(findings, ok(label+": valid TOML"))
+		binding := project.ResolveProjectBinding(cfg, home)
+		active, offline := binding.ActiveEntries(), binding.OfflineEntries()
+		switch {
+		case len(binding.Entries) == 0:
+			findings = append(findings, warn(label+": missing 'path' or 'paths' field", ""))
+		case len(active) == 0:
+			var parts []string
+			for _, e := range offline {
+				if e.Label != "default" {
+					parts = append(parts, fmt.Sprintf("[%s] %s", e.Label, e.RawPath))
+				} else {
+					parts = append(parts, e.RawPath)
+				}
+			}
+			findings = append(findings, ok(fmt.Sprintf("%s: offline on this host (%s)", label, strings.Join(parts, ", "))))
+		default:
+			text := fmt.Sprintf("%d active path(s)", len(active))
+			if len(offline) > 0 {
+				text = fmt.Sprintf("%d active path(s), %d offline", len(active), len(offline))
+			}
+			findings = append(findings, ok(label+": "+text))
+		}
+	}
+
+	// Agent-native MCP config files.
+	if reg, err := registry.LoadStrict(aikitoDir, home); err != nil {
+		findings = append(findings, warn(fmt.Sprintf("Cannot load agents for config check: %v", err), ""))
+	} else {
+		defs, _ := registry.LoadAgentDefinitions(aikitoDir, home)
+		for _, a := range reg.InFileOrder().Values() {
+			def := defs[a.Name]
+			if def.MCP == nil {
 				continue
 			}
-			agentToml := filepath.Join(projectsDir, e.Name(), "agent.toml")
-			if _, serr := os.Stat(agentToml); serr != nil {
+			cfg := def.MCP.ConfigPath
+			if _, err := os.Stat(cfg); err != nil {
 				continue
 			}
-			checkTOML(agentToml, fmt.Sprintf("projects/%s/agent.toml", e.Name()))
+			display := homeRel(cfg, home)
+			data, rerr := os.ReadFile(cfg)
+			if rerr == nil && strings.TrimSpace(string(data)) == "" {
+				findings = append(findings, warn(fmt.Sprintf("%s config: empty file (%s)", def.DisplayName, display), "aikito sync mcp"))
+				continue
+			}
+			adapter, aerr := mcp.GetMCPAdapter(def.MCP.Adapter)
+			if rerr == nil && aerr == nil {
+				_, rerr = adapter.ReadAllEntries(string(data))
+			} else if aerr != nil {
+				rerr = aerr
+			}
+			if rerr != nil {
+				findings = append(findings, fail(fmt.Sprintf("%s config: read/parse error — %v (%s)", def.DisplayName, rerr, display), ""))
+				continue
+			}
+			findings = append(findings, ok(fmt.Sprintf("%s config: valid %s (%s)", def.DisplayName, adapter.SyntaxName, display)))
+		}
+	}
+
+	// Subagent platform option schema.
+	defs, derr := registry.LoadAgentDefinitions(aikitoDir, home)
+	subDefs, serr := sync.LoadSubagentDefinitions(aikitoDir)
+	switch {
+	case derr != nil:
+		findings = append(findings, fail(fmt.Sprintf("subagents: %v", derr), ""))
+	case serr != nil:
+		findings = append(findings, fail(fmt.Sprintf("subagents: %v", serr), ""))
+	default:
+		schemaOK := true
+		var subNames []string
+		for n := range subDefs {
+			subNames = append(subNames, n)
+		}
+		sort.Strings(subNames)
+		for _, subName := range subNames {
+			def := subDefs[subName]
+			for _, agentName := range sortedPlatformKeys(def.PlatformConfigs) {
+				ad, known := defs[agentName]
+				if !known {
+					findings = append(findings, warn(fmt.Sprintf("subagents/%s.md: platform '%s' has no Agent definition in this workspace; ignored", subName, agentName), ""))
+					continue
+				}
+				var verr error
+				if ad.Subagents == nil {
+					verr = fmt.Errorf("Subagent '%s' platform '%s' has no defined subagents capability", subName, agentName)
+				} else if adapter, aerr := subagent.GetSubagentAdapter(ad.Subagents.ConfigFormat); aerr != nil {
+					verr = aerr
+				} else {
+					_, verr = adapter.ValidateOptions(agentName, subName, def.PlatformConfigs[agentName])
+				}
+				if verr != nil {
+					findings = append(findings, fail(fmt.Sprintf("subagents/%s.md: %v", subName, verr), ""))
+					schemaOK = false
+				}
+			}
+		}
+		if schemaOK && len(subDefs) > 0 {
+			findings = append(findings, ok("Subagent platform options: all valid"))
 		}
 	}
 
@@ -633,30 +775,33 @@ func checkEnvironment(aikitoDir, home string) DoctorSection {
 	// compiled Go binary, so that sub-check is dropped entirely here, not
 	// stubbed.
 
-	defs, derr := registry.LoadAgentDefinitions(aikitoDir, home)
-	if derr != nil {
+	// Python's interpreter-consistency check (6b) compares $PATH's python3
+	// with the running interpreter; it has no meaning for a compiled binary,
+	// so its "Interpreter ..." finding is not produced.
+
+	var agents []registry.Agent
+	if reg, err := registry.LoadStrict(aikitoDir, home); err == nil {
+		agents = reg.InFileOrder().Values()
+	} else {
 		for _, name := range registry.BuiltinAgents {
 			if a, aerr := registry.BundledAgent(name, home); aerr == nil {
-				if defs == nil {
-					defs = map[string]registry.AgentDefinition{}
-				}
-				defs[name] = registry.AgentDefinition{Agent: a}
+				agents = append(agents, a)
 			}
 		}
 	}
 	commandSet := map[string]bool{}
-	for _, def := range defs {
-		if def.Detect != nil {
-			for _, c := range def.Detect.Commands {
-				commandSet[c] = true
+	var commands []string
+	for _, a := range agents {
+		if a.Detect == nil {
+			continue
+		}
+		for _, cmd := range a.Detect.Commands {
+			if !commandSet[cmd] {
+				commandSet[cmd] = true
+				commands = append(commands, cmd)
 			}
 		}
 	}
-	var commands []string
-	for c := range commandSet {
-		commands = append(commands, c)
-	}
-	sort.Strings(commands)
 	var foundAny bool
 	for _, bin := range commands {
 		if _, err := exec.LookPath(bin); err == nil {
@@ -665,7 +810,9 @@ func checkEnvironment(aikitoDir, home string) DoctorSection {
 		}
 	}
 	if !foundAny {
-		findings = append(findings, warn(fmt.Sprintf("No supported agent CLI found in $PATH (install at least one: %s)", strings.Join(commands, ", ")), ""))
+		sorted := append([]string(nil), commands...)
+		sort.Strings(sorted)
+		findings = append(findings, warn(fmt.Sprintf("No supported agent CLI found in $PATH (install at least one: %s)", strings.Join(sorted, ", ")), ""))
 	}
 
 	return DoctorSection{Name: "Environment", Findings: findings}
@@ -683,11 +830,9 @@ func checkMemory(aikitoDir, home string, staleDaysOverride int) DoctorSection {
 	}
 	var scopes []scopeDir
 	scopes = append(scopes, scopeDir{filepath.Join(aikitoDir, "memory"), "Global", ""})
-	if entries, derr := os.ReadDir(filepath.Join(aikitoDir, "projects")); derr == nil {
-		for _, e := range entries {
-			if e.IsDir() {
-				scopes = append(scopes, scopeDir{filepath.Join(aikitoDir, "projects", e.Name(), "memory"), e.Name(), filepath.Join(aikitoDir, "projects", e.Name())})
-			}
+	for _, name := range sortedDirEntries(filepath.Join(aikitoDir, "projects")) {
+		if p := filepath.Join(aikitoDir, "projects", name); isDirPath(p) {
+			scopes = append(scopes, scopeDir{filepath.Join(p, "memory"), "Project:" + name, p})
 		}
 	}
 
@@ -795,12 +940,12 @@ func checkMemory(aikitoDir, home string, staleDaysOverride int) DoctorSection {
 			if !strings.HasSuffix(e.Name(), ".md") {
 				continue
 			}
+			checkedAny = true
 			notePath := filepath.Join(notesDir, e.Name())
 			lastCommit, hasCommit := gitLastCommitEpoch(aikitoDir, notePath)
 			if !hasCommit {
 				continue
 			}
-			checkedAny = true
 			ageDays := (now - lastCommit) / 86400
 			if now-lastCommit > threshold {
 				staleFound = true
@@ -817,11 +962,15 @@ func checkMemory(aikitoDir, home string, staleDaysOverride int) DoctorSection {
 				findings = append(findings, ok(fmt.Sprintf("No memory notes older than %d days", d)))
 			}
 		} else {
-			var ds []string
+			var days []int
 			for d := range staleDaysUsed {
+				days = append(days, d)
+			}
+			sort.Ints(days)
+			var ds []string
+			for _, d := range days {
 				ds = append(ds, strconv.Itoa(d))
 			}
-			sort.Strings(ds)
 			findings = append(findings, ok(fmt.Sprintf("No memory notes older than configured thresholds (%s days)", strings.Join(ds, ", "))))
 		}
 	} else if !checkedAny {
@@ -1050,45 +1199,86 @@ func checkConflictMarkers(aikitoDir, home string) DoctorSection {
 
 // --- Projects ---
 
+// checkProjects ports doctor.py check_projects.
 func checkProjects(aikitoDir, home string) DoctorSection {
 	var findings []Finding
-	entries, derr := os.ReadDir(filepath.Join(aikitoDir, "projects"))
-	if derr != nil {
-		findings = append(findings, ok("No projects registered"))
-		return DoctorSection{Name: "Projects", Findings: findings}
-	}
-	count := 0
-	for _, e := range entries {
-		if !e.IsDir() {
-			continue
-		}
-		agentToml := filepath.Join(aikitoDir, "projects", e.Name(), "agent.toml")
-		if _, serr := os.Stat(agentToml); serr != nil {
-			continue
-		}
-		count++
-		cfg, lerr := project.LoadConfig(aikitoDir, home, e.Name())
-		if lerr != nil {
-			findings = append(findings, fail(fmt.Sprintf("projects/%s: %v", e.Name(), lerr), ""))
-			continue
-		}
-		if verr := project.ValidateProjectConfig(agentToml, cfg.Raw); verr != nil {
-			findings = append(findings, fail(fmt.Sprintf("projects/%s: %v", e.Name(), verr), ""))
-			continue
-		}
-		binding := project.ResolveProjectBinding(cfg.Raw, home)
-		candidates := binding.Entries
-		existing := len(binding.ActiveEntries())
-		if len(candidates) == 0 {
-			findings = append(findings, warn(fmt.Sprintf("projects/%s: no path candidates configured", e.Name()), "aikito show project "+e.Name()))
-		} else if existing == 0 {
-			findings = append(findings, fail(fmt.Sprintf("projects/%s: no configured path exists on this host (%d candidate(s))", e.Name(), len(candidates)), ""))
-		} else {
-			findings = append(findings, ok(fmt.Sprintf("projects/%s: %d/%d path(s) available", e.Name(), existing, len(candidates))))
+	projects := collectProjectSummaries(aikitoDir, home)
+	activeOK := 0
+	var failing []projectSummary
+	for _, p := range projects {
+		switch p.RuntimeStatus {
+		case "OK":
+			activeOK++
+		case "OFFLINE":
+			var parts []string
+			for _, c := range p.CandidatePaths {
+				if c.Exists {
+					continue
+				}
+				if c.Label != "default" {
+					parts = append(parts, fmt.Sprintf("[%s] %s", c.Label, c.Display))
+				} else {
+					parts = append(parts, c.Display)
+				}
+			}
+			cand := strings.Join(parts, ", ")
+			if cand == "" {
+				cand = p.Path
+			}
+			findings = append(findings, ok(fmt.Sprintf("Project '%s': offline on this host (%s)", p.Name, cand)))
+		default:
+			failing = append(failing, p)
 		}
 	}
-	if count == 0 {
-		findings = append(findings, ok("No projects registered"))
+	var fixable []int
+	for i, p := range failing {
+		if p.isSyncFixable() {
+			fixable = append(fixable, i)
+		}
+	}
+	multiple := len(fixable) > 1
+	for i, p := range failing {
+		message := fmt.Sprintf("Project '%s': %s", p.Name, p.RuntimeStatus)
+		if len(p.Details) > 0 {
+			counts := map[string]int{}
+			for _, d := range p.Details {
+				if d.Status != "OK" {
+					counts[d.Status]++
+				}
+			}
+			var parts []string
+			for _, st := range []string{"MISSING", "DRIFT", "CONFLICT"} {
+				if n := counts[st]; n > 0 {
+					parts = append(parts, fmt.Sprintf("%d %s", n, strings.ToLower(st)))
+				}
+			}
+			if len(parts) > 0 {
+				message += " — " + strings.Join(parts, ", ")
+			}
+		} else if p.Error != "" {
+			message += " — " + p.Error
+		}
+		action := p.fixAction()
+		if p.isSyncFixable() && multiple {
+			action = ""
+			if i == fixable[len(fixable)-1] {
+				action = "aikito sync"
+			}
+		}
+		findings = append(findings, fail(message, action))
+	}
+	if len(findings) == 0 {
+		findings = append(findings, ok(fmt.Sprintf("Project runtimes OK (%d projects)", len(projects))))
+	} else if activeOK > 0 {
+		anyFail := false
+		for _, f := range findings {
+			if f.Status == "FAIL" {
+				anyFail = true
+			}
+		}
+		if !anyFail {
+			findings = append(findings, ok(fmt.Sprintf("Project runtimes OK (%d active project(s))", activeOK)))
+		}
 	}
 	return DoctorSection{Name: "Projects", Findings: findings}
 }
@@ -1098,43 +1288,164 @@ func checkProjects(aikitoDir, home string) DoctorSection {
 // also covers project-scope skill links via project_sync.py, not yet
 // ported) ---
 
-func checkSymlinks(aikitoDir, home string) DoctorSection {
+// checkSymlinks ports doctor.py check_symlinks.
+func checkSymlinks(c *inspectionContext) DoctorSection {
+	home := c.home
 	var findings []Finding
-	checked, broken := 0, 0
-
-	defs, derr := registry.LoadAgentDefinitions(aikitoDir, home)
-	if derr != nil {
-		findings = append(findings, fail(fmt.Sprintf("Cannot load agent definitions: %v", derr), ""))
+	const hint = "aikito sync global"
+	if _, _, err := c.agents(); err != nil {
+		findings = append(findings, fail(fmt.Sprintf("Cannot load Agent definitions: %v", err), ""))
 		return DoctorSection{Name: "Symlinks", Findings: findings}
 	}
-	var names []string
-	for n := range defs {
-		names = append(names, n)
+
+	// Global instruction links.
+	instrFail, instrTotal, instrTargets := 0, 0, 0
+	plan, views, ierr := c.instructionPlan()
+	if ierr == nil {
+		formal := map[string]registry.Target{}
+		for _, t := range plan.Batch.Targets {
+			formal[compat.PhysicalPath(t.Path)] = t
+		}
+		for _, t := range plan.Batch.Targets {
+			if !registry.CheckTargetAvailability(t, home).IsInstalled() {
+				continue
+			}
+			instrTotal += len(t.Consumers)
+			instrTargets++
+		}
+		for _, v := range views {
+			if v.TargetPath == "" {
+				continue
+			}
+			t, isFormal := formal[compat.PhysicalPath(v.TargetPath)]
+			if !isFormal || !registry.CheckTargetAvailability(t, home).IsInstalled() {
+				continue
+			}
+			if v.Status == linkplan.StatusOK || v.Status == linkplan.StatusSkip {
+				continue
+			}
+			display := homeRel(v.TargetPath, home)
+			instrFail++
+			switch {
+			case v.Status == linkplan.StatusMissing:
+				findings = append(findings, fail(fmt.Sprintf("%s: missing (%s)", v.ResourceName, display), hint))
+			case v.Status == linkplan.StatusConflict && v.ExpectedRepresentation == "symlink":
+				if _, err := os.Stat(v.TargetPath); isSymlinkPath(v.TargetPath) && err != nil {
+					findings = append(findings, fail(fmt.Sprintf("%s: dangling symlink (%s)", v.ResourceName, display), hint))
+				} else {
+					findings = append(findings, fail(fmt.Sprintf("%s: points elsewhere (%s)", v.ResourceName, display), hint))
+				}
+			case v.Status == linkplan.StatusConflict:
+				findings = append(findings, fail(fmt.Sprintf("%s: not a symlink (%s)", v.ResourceName, display), hint))
+			}
+		}
 	}
-	sort.Strings(names)
-	for _, name := range names {
-		def := defs[name]
-		if def.InstructionPath == nil {
+	if instrTotal > 0 && instrFail == 0 {
+		findings = append(findings, ok(fmt.Sprintf("Global instructions OK (%d targets across %d agents)", instrTargets, instrTotal)))
+	}
+
+	// Global skills: container, entries, consumer links.
+	checked, skillFail := 0, 0
+	globalSkills := globalSkillsList(c.aikitoDir, nil)
+	skillPlan, serr := c.skillPlan(globalSkills)
+	var skillViews []linkplan.View
+	if serr == nil {
+		skillViews = skillPlan.Inspect()
+	}
+	for _, v := range skillViews {
+		if v.ResourceType != "global_skill_container" || v.TargetPath == "" {
 			continue
 		}
-		target := *def.InstructionPath
-		info, lerr := os.Lstat(target)
-		if lerr != nil {
-			continue // not present; not this port's concern here (Drift/Configuration cover "missing")
+		display := homeRel(v.TargetPath, home)
+		switch v.Status {
+		case linkplan.StatusConflict:
+			skillFail++
+			findings = append(findings, fail(fmt.Sprintf("Global skills container: %s (%s)", v.Reason, display), hint))
+		case linkplan.StatusMissing:
+			skillFail++
+			findings = append(findings, fail(fmt.Sprintf("Global skills container: missing directory (%s)", display), hint))
+		case linkplan.StatusUpdate:
+			findings = append(findings, warn(fmt.Sprintf("Global skills container: legacy symlink (%s)", display), hint))
 		}
-		if info.Mode()&os.ModeSymlink == 0 {
-			continue // a real file, not a managed symlink
+		break
+	}
+	for _, v := range skillViews {
+		if v.ResourceType != "global_skill_entry" || v.DesiredRepresentation != "link" {
+			continue
 		}
 		checked++
-		if _, serr := os.Stat(target); serr != nil {
-			broken++
-			findings = append(findings, fail(fmt.Sprintf("%s: broken symlink at %s", name, homeRel(target, home)), "aikito sync global --force"))
+		display := ""
+		if v.TargetPath != "" {
+			display = homeRel(v.TargetPath, home)
+		}
+		switch v.Status {
+		case linkplan.StatusMissing:
+			skillFail++
+			findings = append(findings, fail(fmt.Sprintf("Global skill '%s': missing symlink (%s)", v.ResourceName, display), hint))
+		case linkplan.StatusConflict:
+			skillFail++
+			findings = append(findings, fail(fmt.Sprintf("Global skill '%s': %s (%s)", v.ResourceName, v.Reason, display), hint))
 		}
 	}
-	if checked == 0 {
-		findings = append(findings, ok("No managed symlinks to check"))
-	} else if broken == 0 {
-		findings = append(findings, ok(fmt.Sprintf("Symlinks OK (%d checked)", checked)))
+	for _, v := range skillViews {
+		if v.ResourceType != "global_skill_consumer" || v.SharedTarget || v.Status == linkplan.StatusSkip {
+			continue
+		}
+		display := ""
+		if v.TargetPath != "" {
+			display = homeRel(v.TargetPath, home)
+		}
+		checked++
+		switch v.Status {
+		case linkplan.StatusMissing:
+			skillFail++
+			findings = append(findings, fail(fmt.Sprintf("%s skills: missing symlink (%s)", v.ResourceName, display), hint))
+		case linkplan.StatusConflict:
+			skillFail++
+			findings = append(findings, fail(fmt.Sprintf("%s skills: %s (%s)", v.ResourceName, v.Reason, display), hint))
+		}
+	}
+	if len(globalSkills) > 0 && skillFail == 0 && checked > 0 {
+		consumers := 0
+		for _, t := range skillPlan.Batch.Consumers {
+			if registry.CheckTargetAvailability(t, home).IsInstalled() {
+				consumers += len(t.Consumers)
+			}
+		}
+		findings = append(findings, ok(fmt.Sprintf("Global skills OK (%d skills, %d agents)", len(globalSkills), consumers)))
+	}
+
+	// Project .agents/memory and .agents/skills links.
+	for _, name := range sortedDirEntries(filepath.Join(c.aikitoDir, "projects")) {
+		agentToml := filepath.Join(c.aikitoDir, "projects", name, "agent.toml")
+		if !isDirPath(filepath.Join(c.aikitoDir, "projects", name)) || !isRegularFilePath(agentToml) {
+			continue
+		}
+		data, err := os.ReadFile(agentToml)
+		var cfg map[string]any
+		if err == nil {
+			err = toml.Unmarshal(data, &cfg)
+		}
+		if err != nil {
+			continue
+		}
+		binding := project.ResolveProjectBinding(cfg, home)
+		active := binding.ActiveEntries()
+		for _, entry := range active {
+			for _, sub := range []string{"memory", "skills"} {
+				link := filepath.Join(entry.ResolvedPath, ".agents", sub)
+				if !isSymlinkPath(link) {
+					continue
+				}
+				if _, err := filepath.EvalSymlinks(link); err != nil {
+					tag := ""
+					if len(active) > 1 {
+						tag = " [" + entry.Label + "]"
+					}
+					findings = append(findings, fail(fmt.Sprintf("Project %s/.agents/%s%s: dangling symlink", name, sub, tag), "aikito sync project "+name))
+				}
+			}
+		}
 	}
 	return DoctorSection{Name: "Symlinks", Findings: findings}
 }
@@ -1169,9 +1480,14 @@ func checkAdoption(aikitoDir, home string) DoctorSection {
 		findings = append(findings, warn(fmt.Sprintf("MCP server '%s': %s", c.Name, c.Reason), "aikito adopt --skip "+c.Name))
 	}
 	if adoptable > 0 {
-		findings = append(findings, warn(
-			fmt.Sprintf("%d local Agent resource(s) are available to adopt", adoptable),
-			"aikito adopt --dry-run --verbose"))
+		findings = append(findings, Finding{
+			Status: "WARN", Code: "adopt.pending", Resource: "adoption",
+			Message: fmt.Sprintf("%d local Agent resource(s) are available to adopt", adoptable),
+			Actions: []FindingAction{
+				{Label: "Review", Command: "aikito adopt --dry-run --verbose"},
+				{Label: "Apply", Command: "aikito adopt"},
+			},
+		})
 	}
 	if len(findings) == 0 {
 		findings = append(findings, ok("No external Agent configuration needs adoption"))
@@ -1198,23 +1514,17 @@ func checkOrphans(aikitoDir, home string) DoctorSection {
 	// canonical subagents/<name>.md counterpart. BuildSubagentPlan already
 	// computes this (the SAOrphan action, already relied on elsewhere in
 	// this file — see checkDrift's `op.Action == sync.SAOrphan` exclusion).
-	ops, serr := sync.BuildSubagentPlan(aikitoDir, home, sync.BuildSubagentPlanOptions{})
+	_, orphans, _, serr := collectSubagentsMatrix(newInspectionContext(aikitoDir, home))
 	if serr != nil {
 		findings = append(findings, warn(fmt.Sprintf("Cannot check subagent orphans: %v", serr), ""))
-	} else {
-		orphanCount := 0
-		for _, op := range ops {
-			if op.Action != sync.SAOrphan {
-				continue
-			}
-			orphanCount++
+	} else if len(orphans) > 0 {
+		for _, o := range orphans {
 			findings = append(findings, fail(
-				fmt.Sprintf("%s: orphan subagent file %s", op.Agent, homeRel(op.TargetPath, home)),
+				fmt.Sprintf("%s: orphan subagent file %s", o.AgentDisplayName, o.FilePath),
 				"aikito sync subagents --prune"))
 		}
-		if orphanCount == 0 {
-			findings = append(findings, ok("No orphan subagent files"))
-		}
+	} else {
+		findings = append(findings, ok("No orphan subagent files"))
 	}
 
 	// 2b. Orphan skill directories in <workspace>/skills/: a directory not
@@ -1393,8 +1703,3 @@ func hasUserFiles(dir string) bool {
 	return found || err != nil
 }
 
-func checkLocalStateStub() DoctorSection {
-	return DoctorSection{Name: "LocalState", Findings: []Finding{
-		warn("Local sync-state inspection is not yet implemented in this Go build (needs local_state.py's remote-sync bookkeeping — phase 2/multi-machine territory, out of scope for this phase).", ""),
-	}}
-}

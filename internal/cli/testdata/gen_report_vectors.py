@@ -186,11 +186,30 @@ def run(cli, home: Path, args):
 PY_CLI = [sys.executable, "-m", "aikito"]
 
 
+def drop_python_only(result):
+    """Remove doctor's interpreter-consistency finding, which only the
+    Python CLI can produce (the Go test applies the same filter)."""
+    out = result["stdout"]
+    if '"message": "Interpreter' in out:
+        doc = json.loads(out)
+        for section in doc["sections"]:
+            section["findings"] = [
+                f for f in section["findings"] if not f["message"].startswith("Interpreter")
+            ]
+        out = json.dumps(doc, ensure_ascii=False, indent=2) + "\n"
+    else:
+        out = "".join(
+            line for line in out.splitlines(keepends=True)
+            if not line.startswith("  ✓ Interpreter")
+        )
+    return {**result, "stdout": out}
+
+
 def capture(name, cli):
     home = Path(tempfile.mkdtemp(prefix="aikrep-")).resolve()
     try:
         apply_setup(home, SCENARIOS[name], PY_CLI)
-        return {" ".join(c): run(cli, home, c) for c in COMMON + EXTRA.get(name, [])}
+        return {" ".join(c): drop_python_only(run(cli, home, c)) for c in COMMON + EXTRA.get(name, [])}
     finally:
         shutil.rmtree(home, ignore_errors=True)
 
@@ -204,7 +223,7 @@ def main():
             home = Path(tempfile.mkdtemp(prefix="aikrep-")).resolve()
             apply_setup(home, SCENARIOS[name], PY_CLI)
             for c in COMMON + EXTRA.get(name, []):
-                want, got = run(PY_CLI, home, c), run(go, home, c)
+                want, got = drop_python_only(run(PY_CLI, home, c)), run(go, home, c)
                 if want != got:
                     bad += 1
                     print(f"##### {name}: aikito {' '.join(c)}")
