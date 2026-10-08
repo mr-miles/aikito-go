@@ -1,0 +1,50 @@
+{
+ "create_target_appears": {
+  "error": "Plan is stale: File '{H}/.claude/agents/reviewer.md' was missing at plan time but now exists",
+  "mutate": "write",
+  "phase": "create",
+  "success": false,
+  "target": ".claude/agents/reviewer.md",
+  "unchanged": true
+ },
+ "prune_target_removed": {
+  "error": "Plan is stale: File '{H}/.claude/agents/reviewer.md' existed at plan time but is now missing",
+  "mutate": "remove",
+  "phase": "prune",
+  "success": false,
+  "target": ".claude/agents/reviewer.md",
+  "unchanged": true
+ },
+ "shared_patch_edited": {
+  "error": "Plan is stale: File '{H}/.dsh/cordis.patch.yml' content has been modified externally since plan generation",
+  "mutate": "write",
+  "phase": "update",
+  "success": false,
+  "target": ".dsh/cordis.patch.yml",
+  "unchanged": true
+ },
+ "update_target_edited": {
+  "error": "Plan is stale: File '{H}/.claude/agents/reviewer.md' content has been modified externally since plan generation",
+  "mutate": "write",
+  "phase": "update",
+  "success": false,
+  "target": ".claude/agents/reviewer.md",
+  "unchanged": true
+ },
+ "update_target_removed": {
+  "error": "Plan is stale: File '{H}/.claude/agents/reviewer.md' existed at plan time but is now missing",
+  "mutate": "remove",
+  "phase": "update",
+  "success": false,
+  "target": ".claude/agents/reviewer.md",
+  "unchanged": true
+ },
+ "update_target_symlinked": {
+  "error": "Plan is stale: File '{H}/.claude/agents/reviewer.md' type changed: expected regular file/entry, found symlink",
+  "mutate": "symlink",
+  "phase": "update",
+  "success": false,
+  "target": ".claude/agents/reviewer.md",
+  "unchanged": true
+ }
+}

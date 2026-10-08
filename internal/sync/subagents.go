@@ -62,6 +62,10 @@ type SubagentOperation struct {
 	RequiresForce   bool
 	IsAuthorized    bool
 	RenderedPayload string // desired content, for CREATE/UPDATE
+	// PreImage is the target file as it was when the plan was built
+	// (aggregate_file_plans' pre_image); the executor refuses to write if
+	// it changed since.
+	PreImage *FileSnapshot
 }
 
 // BuildSubagentPlanOptions mirrors build_subagent_plan's keyword args.
@@ -412,41 +416,20 @@ func BuildSubagentPlan(aikitoDir, home string, opts BuildSubagentPlanOptions) ([
 		}
 	}
 
+	snapshots := map[string]*FileSnapshot{}
+	for i := range ops {
+		if ops[i].TargetPath == "" || ops[i].Action == SASkip {
+			continue
+		}
+		snap, ok := snapshots[ops[i].TargetPath]
+		if !ok {
+			captured := CaptureFileSnapshot(ops[i].TargetPath)
+			snap = &captured
+			snapshots[ops[i].TargetPath] = snap
+		}
+		ops[i].PreImage = snap
+	}
 	return ops, nil
-}
-
-// ApplySubagentOperation writes/removes one authorized CREATE/UPDATE/REMOVE
-// operation. NOOP/CONFLICT/SKIP/ERROR/ORPHAN are no-ops here.
-func ApplySubagentOperation(op SubagentOperation) error {
-	if !op.IsAuthorized {
-		return nil
-	}
-	switch op.Action {
-	case SACreate, SAUpdate:
-		if op.Layout == subagent.LayoutSharedPatch {
-			text := ""
-			if data, err := os.ReadFile(op.TargetPath); err == nil {
-				text = string(data)
-			}
-			updated := subagent.UpdateDSHCordisSubagent(text, op.Subagent, op.RenderedPayload)
-			return writeFileEnsureDir(op.TargetPath, updated)
-		}
-		return writeFileEnsureDir(op.TargetPath, op.RenderedPayload)
-	case SARemove:
-		if op.Layout == subagent.LayoutSharedPatch {
-			data, err := os.ReadFile(op.TargetPath)
-			if err != nil {
-				return err
-			}
-			updated := subagent.RemoveDSHCordisSubagent(string(data), op.Subagent)
-			return writeFileEnsureDir(op.TargetPath, updated)
-		}
-		if err := os.Remove(op.TargetPath); err != nil && !os.IsNotExist(err) {
-			return err
-		}
-		return nil
-	}
-	return nil
 }
 
 func writeFileEnsureDir(path, content string) error {
