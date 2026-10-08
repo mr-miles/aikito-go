@@ -1,0 +1,537 @@
+{
+  "jsonc_update": [
+    {
+      "name": "empty_file",
+      "in": "",
+      "server": "myserver",
+      "desired": {
+        "type": "remote",
+        "url": "https://example.com",
+        "enabled": true,
+        "timeout": 30000
+      },
+      "out": "{\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com\",\n      \"enabled\": true,\n      \"timeout\": 30000\n    }\n  }\n}\n",
+      "error": null
+    },
+    {
+      "name": "no_mcp_key",
+      "in": "{\n  \"other\": 1\n}\n",
+      "server": "myserver",
+      "desired": {
+        "type": "remote",
+        "url": "https://example.com",
+        "enabled": true,
+        "timeout": 30000
+      },
+      "out": "{\n  \"other\": 1\n,\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com\",\n      \"enabled\": true,\n      \"timeout\": 30000\n    }\n  }\n}\n",
+      "error": null
+    },
+    {
+      "name": "no_mcp_key_empty_root",
+      "in": "{}\n",
+      "server": "myserver",
+      "desired": {
+        "type": "remote",
+        "url": "https://example.com",
+        "enabled": true,
+        "timeout": 30000
+      },
+      "out": "{\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com\",\n      \"enabled\": true,\n      \"timeout\": 30000\n    }\n  }\n}\n",
+      "error": null
+    },
+    {
+      "name": "existing_mcp_empty",
+      "in": "{\n  \"mcp\": {}\n}\n",
+      "server": "myserver",
+      "desired": {
+        "type": "remote",
+        "url": "https://example.com",
+        "enabled": true,
+        "timeout": 30000
+      },
+      "out": "{\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com\",\n      \"enabled\": true,\n      \"timeout\": 30000\n    }\n  }\n}\n",
+      "error": null
+    },
+    {
+      "name": "existing_server_same_shape",
+      "in": "{\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://old.com\"\n    }\n  }\n}\n",
+      "server": "myserver",
+      "desired": {
+        "type": "remote",
+        "url": "https://example.com",
+        "enabled": true,
+        "timeout": 30000
+      },
+      "out": "{\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com\",\n      \"enabled\": true,\n      \"timeout\": 30000\n    }\n  }\n}\n",
+      "error": null
+    },
+    {
+      "name": "existing_server_with_comment",
+      "in": "{\n  // keep me\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://old.com\"\n    },\n    \"other\": {\"type\": \"remote\", \"url\": \"https://x.com\"}\n  }\n}\n",
+      "server": "myserver",
+      "desired": {
+        "type": "remote",
+        "url": "https://example.com",
+        "enabled": true,
+        "timeout": 30000
+      },
+      "out": "{\n  // keep me\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com\",\n      \"enabled\": true,\n      \"timeout\": 30000\n    },\n    \"other\": {\"type\": \"remote\", \"url\": \"https://x.com\"}\n  }\n}\n",
+      "error": null
+    },
+    {
+      "name": "add_second_server",
+      "in": "{\n  \"mcp\": {\n    \"existing\": {\n      \"type\": \"remote\",\n      \"url\": \"https://e.com\"\n    }\n  }\n}\n",
+      "server": "myserver",
+      "desired": {
+        "type": "remote",
+        "url": "https://example.com",
+        "enabled": true,
+        "timeout": 30000
+      },
+      "out": "{\n  \"mcp\": {\n    \"existing\": {\n      \"type\": \"remote\",\n      \"url\": \"https://e.com\"\n    }\n  ,\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://example.com\",\n      \"enabled\": true,\n      \"timeout\": 30000\n    }\n  }\n}\n",
+      "error": null
+    }
+  ],
+  "jsonc_remove": [
+    {
+      "name": "remove_only_entry",
+      "in": "{\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://x.com\"\n    }\n  }\n}\n",
+      "server": "myserver",
+      "out": "{\n  \"mcp\": {\n  }\n}\n",
+      "error": null
+    },
+    {
+      "name": "remove_first_of_two",
+      "in": "{\n  \"mcp\": {\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://x.com\"\n    },\n    \"other\": {\n      \"type\": \"remote\",\n      \"url\": \"https://y.com\"\n    }\n  }\n}\n",
+      "server": "myserver",
+      "out": "{\n  \"mcp\": {\n    \"other\": {\n      \"type\": \"remote\",\n      \"url\": \"https://y.com\"\n    }\n  }\n}\n",
+      "error": null
+    },
+    {
+      "name": "remove_last_of_two",
+      "in": "{\n  \"mcp\": {\n    \"other\": {\n      \"type\": \"remote\",\n      \"url\": \"https://y.com\"\n    },\n    \"myserver\": {\n      \"type\": \"remote\",\n      \"url\": \"https://x.com\"\n    }\n  }\n}\n",
+      "server": "myserver",
+      "out": "{\n  \"mcp\": {\n    \"other\": {\n      \"type\": \"remote\",\n      \"url\": \"https://y.com\"\n    }  }\n}\n",
+      "error": null
+    },
+    {
+      "name": "remove_missing_mcp_key",
+      "in": "{\n  \"other\": 1\n}\n",
+      "server": "myserver",
+      "out": "{\n  \"other\": 1\n}\n",
+      "error": null
+    },
+    {
+      "name": "remove_missing_server",
+      "in": "{\n  \"mcp\": {\n    \"other\": {\"type\": \"remote\", \"url\": \"https://y.com\"}\n  }\n}\n",
+      "server": "myserver",
+      "out": "{\n  \"mcp\": {\n    \"other\": {\"type\": \"remote\", \"url\": \"https://y.com\"}\n  }\n}\n",
+      "error": null
+    }
+  ],
+  "toml_update": [
+    {
+      "name": "empty",
+      "in": "",
+      "server": "myserver",
+      "desired": {
+        "url": "https://x.com"
+      },
+      "out": "[mcp_servers.myserver]\nurl = \"https://x.com\"\n",
+      "error": null
+    },
+    {
+      "name": "append_after_content_no_nl",
+      "in": "foo",
+      "server": "myserver",
+      "desired": {
+        "url": "https://x.com"
+      },
+      "out": "foo\n\n\n[mcp_servers.myserver]\nurl = \"https://x.com\"\n",
+      "error": null
+    },
+    {
+      "name": "append_after_content_nl",
+      "in": "foo\n",
+      "server": "myserver",
+      "desired": {
+        "url": "https://x.com"
+      },
+      "out": "foo\n\n\n[mcp_servers.myserver]\nurl = \"https://x.com\"\n",
+      "error": null
+    },
+    {
+      "name": "append_after_section",
+      "in": "[mcp_servers.other]\nurl = \"y\"\n",
+      "server": "myserver",
+      "desired": {
+        "url": "https://x.com",
+        "headers": {
+          "a": "b"
+        }
+      },
+      "out": "[mcp_servers.other]\nurl = \"y\"\n\n\n[mcp_servers.myserver]\nurl = \"https://x.com\"\nheaders = { \"a\" = \"b\" }\n",
+      "error": null
+    },
+    {
+      "name": "update_existing_mid_doc",
+      "in": "[mcp_servers.myserver]\nurl = \"old\"\nextra = 1\n\n[mcp_servers.other]\nurl = \"y\"\n",
+      "server": "myserver",
+      "desired": {
+        "url": "new",
+        "timeout": 30
+      },
+      "out": "[mcp_servers.myserver]\nurl = \"new\"\ntimeout = 30\n[mcp_servers.other]\nurl = \"y\"\n",
+      "error": null
+    }
+  ],
+  "toml_remove": [
+    {
+      "name": "remove_only",
+      "in": "[mcp_servers.myserver]\nurl = \"x\"\n",
+      "server": "myserver",
+      "out": "",
+      "error": null
+    },
+    {
+      "name": "remove_mid",
+      "in": "[mcp_servers.myserver]\nurl = \"x\"\n\n[mcp_servers.other]\nurl = \"y\"\n",
+      "server": "myserver",
+      "out": "[mcp_servers.other]\nurl = \"y\"\n",
+      "error": null
+    },
+    {
+      "name": "remove_missing",
+      "in": "[mcp_servers.other]\nurl = \"y\"\n",
+      "server": "myserver",
+      "out": "[mcp_servers.other]\nurl = \"y\"\n",
+      "error": null
+    }
+  ],
+  "cordis_update": [
+    {
+      "name": "empty_file",
+      "in": "",
+      "server": "myserver",
+      "desired": {
+        "serverName": "myserver",
+        "transport": "streamable-http",
+        "url": "https://x.com"
+      },
+      "out": "- id: aikito-mcp-myserver\n  name: '@deepseek-ai/dsh-mcp-client'\n  config:\n    serverName: myserver\n    transport: streamable-http\n    url: https://x.com\n",
+      "error": null
+    },
+    {
+      "name": "append_no_trailing_nl",
+      "in": "- id: other\n  name: 'x'\n  config:\n    serverName: other",
+      "server": "myserver",
+      "desired": {
+        "serverName": "myserver",
+        "transport": "streamable-http",
+        "url": "https://x.com",
+        "headers": {
+          "Authorization": "!!js process.env.FOO",
+          "z-custom": "val"
+        }
+      },
+      "out": "- id: other\n  name: 'x'\n  config:\n    serverName: other\n\n- id: aikito-mcp-myserver\n  name: '@deepseek-ai/dsh-mcp-client'\n  config:\n    serverName: myserver\n    transport: streamable-http\n    url: https://x.com\n    headers:\n      Authorization: !!js process.env.FOO\n      z-custom: \"val\"\n",
+      "error": null
+    },
+    {
+      "name": "append_with_trailing_blank",
+      "in": "- id: other\n  name: 'x'\n  config:\n    serverName: other\n\n",
+      "server": "myserver",
+      "desired": {
+        "serverName": "myserver",
+        "transport": "streamable-http",
+        "url": "https://x.com"
+      },
+      "out": "- id: other\n  name: 'x'\n  config:\n    serverName: other\n- id: aikito-mcp-myserver\n  name: '@deepseek-ai/dsh-mcp-client'\n  config:\n    serverName: myserver\n    transport: streamable-http\n    url: https://x.com\n",
+      "error": null
+    },
+    {
+      "name": "update_existing_by_id",
+      "in": "- id: aikito-mcp-myserver\n  name: '@deepseek-ai/dsh-mcp-client'\n  config:\n    serverName: myserver\n    url: old\n",
+      "server": "myserver",
+      "desired": {
+        "serverName": "myserver",
+        "transport": "streamable-http",
+        "url": "https://new.com",
+        "args": [
+          "a",
+          "b"
+        ]
+      },
+      "out": "- id: aikito-mcp-myserver\n  name: '@deepseek-ai/dsh-mcp-client'\n  config:\n    serverName: myserver\n    transport: streamable-http\n    url: https://new.com\n    args:\n      - \"a\"\n      - \"b\"",
+      "error": null
+    },
+    {
+      "name": "update_existing_legacy_no_id",
+      "in": "- name: '@deepseek-ai/dsh-mcp-client'\n  config:\n    serverName: myserver\n    url: old\n",
+      "server": "myserver",
+      "desired": {
+        "serverName": "myserver",
+        "transport": "streamable-http",
+        "url": "https://new.com"
+      },
+      "out": "- id: aikito-mcp-myserver\n  name: '@deepseek-ai/dsh-mcp-client'\n  config:\n    serverName: myserver\n    transport: streamable-http\n    url: https://new.com",
+      "error": null
+    }
+  ],
+  "cordis_remove": [
+    {
+      "name": "remove_only",
+      "in": "- id: aikito-mcp-myserver\n  name: '@deepseek-ai/dsh-mcp-client'\n  config:\n    serverName: myserver\n",
+      "server": "myserver",
+      "out": "",
+      "error": null
+    },
+    {
+      "name": "remove_one_of_several",
+      "in": "- id: aikito-mcp-myserver\n  name: '@deepseek-ai/dsh-mcp-client'\n  config:\n    serverName: myserver\n\n- id: other\n  name: 'x'\n  config:\n    serverName: other\n",
+      "server": "myserver",
+      "out": "- id: other\n  name: 'x'\n  config:\n    serverName: other\n",
+      "error": null
+    }
+  ],
+  "fingerprint": [
+    {
+      "value": {
+        "url": "https://x.com",
+        "headers": {
+          "b": 1,
+          "a": "two",
+          "nested": {
+            "z": true,
+            "y": [
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      },
+      "fingerprint": "1e1ab48d38c0b5e118ca93b22a10147a85fb9da977a684617db830ff378dea63"
+    },
+    {
+      "value": {},
+      "fingerprint": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "value": {
+        "a": 1.5
+      },
+      "fingerprint": "3b1cb40b22933d83e9242f8ac724f114d812ddd49909917b365375c24b69a455"
+    }
+  ],
+  "build_desired": [
+    {
+      "name": "toml_no_auth_no_headers",
+      "desired": {
+        "url": "https://x.com"
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "toml_with_auth",
+      "desired": {
+        "url": "https://x.com",
+        "env_http_headers": {
+          "Authorization": "MY_AUTH_ENV"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "toml_with_headers_mixed",
+      "desired": {
+        "url": "https://x.com",
+        "headers": {
+          "X-Static": "val"
+        },
+        "env_http_headers": {
+          "X-Env": "FOO_ENV"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "grok_with_auth",
+      "desired": {
+        "url": "https://x.com",
+        "headers": {
+          "Authorization": "${MY_AUTH_ENV}"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "grok_with_headers",
+      "desired": {
+        "url": "https://x.com",
+        "headers": {
+          "X-Custom": "val"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "jsonc_default_timeout",
+      "desired": {
+        "type": "remote",
+        "url": "https://x.com",
+        "enabled": true,
+        "timeout": 30000
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "jsonc_override_timeout",
+      "desired": {
+        "type": "remote",
+        "url": "https://x.com",
+        "enabled": true,
+        "timeout": 5000
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "jsonc_with_auth",
+      "desired": {
+        "type": "remote",
+        "url": "https://x.com",
+        "enabled": true,
+        "timeout": 30000,
+        "oauth": false,
+        "headers": {
+          "Authorization": "{env:MY_AUTH_ENV}"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "jsonc_with_headers",
+      "desired": {
+        "type": "remote",
+        "url": "https://x.com",
+        "enabled": true,
+        "timeout": 30000,
+        "headers": {
+          "X-Custom": "{env:FOO_ENV}",
+          "X-Static": "val"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "claude_with_auth",
+      "desired": {
+        "type": "http",
+        "url": "https://x.com",
+        "headers": {
+          "Authorization": "${MY_AUTH_ENV}"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "claude_with_headers",
+      "desired": {
+        "type": "http",
+        "url": "https://x.com",
+        "headers": {
+          "X-Custom": "${FOO_ENV}"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "copilot_no_headers_no_auth",
+      "desired": {
+        "type": "http",
+        "url": "https://x.com",
+        "tools": [
+          "*"
+        ],
+        "headers": {}
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "copilot_with_headers",
+      "desired": {
+        "type": "http",
+        "url": "https://x.com",
+        "tools": [
+          "*"
+        ],
+        "headers": {
+          "X-Custom": "${FOO_ENV}"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "copilot_with_auth_no_headers",
+      "desired": {
+        "type": "http",
+        "url": "https://x.com",
+        "tools": [
+          "*"
+        ],
+        "headers": {
+          "Authorization": "${MY_AUTH_ENV}"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "dsh_basic",
+      "desired": {
+        "serverName": "srv",
+        "transport": "streamable-http",
+        "url": "https://x.com"
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "dsh_with_name_override",
+      "desired": {
+        "serverName": "custom-name",
+        "transport": "streamable-http",
+        "url": "https://x.com",
+        "toolCallTimeoutMs": 1000
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    },
+    {
+      "name": "dsh_with_auth",
+      "desired": {
+        "serverName": "srv",
+        "transport": "streamable-http",
+        "url": "https://x.com",
+        "headers": {
+          "Authorization": "!!js process.env.MY_AUTH_ENV"
+        }
+      },
+      "contains_secret": false,
+      "missing_env": ""
+    }
+  ]
+}

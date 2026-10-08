@@ -1,0 +1,176 @@
+{
+  "entry_matches_desired": [
+    {
+      "name": "exact_match",
+      "current": {
+        "serverUrl": "https://x.com"
+      },
+      "spec_desired": {
+        "serverUrl": "https://x.com"
+      },
+      "missing_env": "",
+      "result": true
+    },
+    {
+      "name": "no_match",
+      "current": {
+        "serverUrl": "https://y.com"
+      },
+      "spec_desired": {
+        "serverUrl": "https://x.com"
+      },
+      "missing_env": "",
+      "result": false
+    },
+    {
+      "name": "current_none",
+      "current": null,
+      "spec_desired": {
+        "serverUrl": "https://x.com"
+      },
+      "missing_env": "",
+      "result": false
+    },
+    {
+      "name": "missing_env_matches_modulo_headers",
+      "current": {
+        "serverUrl": "https://x.com",
+        "headers": {
+          "Authorization": "Basic dXNlckBleGFtcGxlLmNvbTpyZWFsdG9rZW4xMjM="
+        }
+      },
+      "spec_desired": {
+        "serverUrl": "https://x.com"
+      },
+      "missing_env": "MY_TOKEN",
+      "result": true
+    },
+    {
+      "name": "missing_env_legacy_placeholder_no_match",
+      "current": {
+        "serverUrl": "https://x.com",
+        "headers": {
+          "Authorization": "Basic dXNlckBleGFtcGxlLmNvbTpwbGFjZWhvbGRlci10b2tlbi1zZXQtZW52aXJvbm1lbnQtdmFyaWFibGU="
+        }
+      },
+      "spec_desired": {
+        "serverUrl": "https://x.com"
+      },
+      "missing_env": "MY_TOKEN",
+      "result": false
+    },
+    {
+      "name": "missing_env_no_auth_header",
+      "current": {
+        "serverUrl": "https://x.com"
+      },
+      "spec_desired": {
+        "serverUrl": "https://x.com"
+      },
+      "missing_env": "MY_TOKEN",
+      "result": false
+    },
+    {
+      "name": "missing_env_different_url",
+      "current": {
+        "serverUrl": "https://other.com",
+        "headers": {
+          "Authorization": "Basic dXNlckBleGFtcGxlLmNvbTpyZWFsdG9rZW4xMjM="
+        }
+      },
+      "spec_desired": {
+        "serverUrl": "https://x.com"
+      },
+      "missing_env": "MY_TOKEN",
+      "result": false
+    }
+  ],
+  "redact": [
+    {
+      "entry": {
+        "url": "https://x.com",
+        "headers": {
+          "Authorization": "Bearer secret123"
+        }
+      },
+      "redacted": {
+        "url": "https://x.com",
+        "headers": {
+          "Authorization": "<redacted>"
+        }
+      }
+    },
+    {
+      "entry": {
+        "url": "https://x.com",
+        "env_http_headers": {
+          "Authorization": "MY_ENV_VAR"
+        }
+      },
+      "redacted": {
+        "url": "https://x.com",
+        "env_http_headers": {
+          "Authorization": "MY_ENV_VAR"
+        }
+      }
+    },
+    {
+      "entry": {
+        "apiKey": "sk-12345",
+        "normalKey": "fine"
+      },
+      "redacted": {
+        "apiKey": "<redacted>",
+        "normalKey": "fine"
+      }
+    },
+    {
+      "entry": {
+        "url": "https://x.com?token=abc123&other=fine"
+      },
+      "redacted": {
+        "url": "https://x.com?token=<redacted>&other=fine"
+      }
+    },
+    {
+      "entry": {
+        "headers": {
+          "Authorization": "${MY_ENV}"
+        }
+      },
+      "redacted": {
+        "headers": {
+          "Authorization": "${MY_ENV}"
+        }
+      }
+    },
+    {
+      "entry": {
+        "nested": {
+          "headers": {
+            "X-Custom": "secretvalue"
+          }
+        }
+      },
+      "redacted": {
+        "nested": {
+          "headers": {
+            "X-Custom": "<redacted>"
+          }
+        }
+      }
+    },
+    {
+      "entry": {
+        "pat": "mytoken",
+        "my_key": "val",
+        "notes": "author info"
+      },
+      "redacted": {
+        "pat": "<redacted>",
+        "my_key": "<redacted>",
+        "notes": "author info"
+      }
+    }
+  ]
+}
