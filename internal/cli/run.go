@@ -41,6 +41,16 @@ func Run(args []string, stdin io.Reader, stdout, stderr io.Writer, env Environme
 		return cmdRm(args[1:], stdout, stderr, env)
 	case "diff":
 		return cmdDiff(args[1:], stdout, stderr, env)
+	case "auth":
+		return cmdAuth(args[1:], stdout, stderr, env)
+	case "rename":
+		return cmdRename(args[1:], stdout, stderr, env)
+	case "maintain":
+		return cmdMaintain(args[1:], stdout, stderr, env)
+	case "completion":
+		return cmdCompletion(args[1:], stdout, stderr, env)
+	case "doctor":
+		return cmdDoctor(args[1:], stdout, stderr, env)
 	default:
 		fmt.Fprintf(stderr, "[ERROR] Unknown command: %s\n", args[0])
 		return 2
