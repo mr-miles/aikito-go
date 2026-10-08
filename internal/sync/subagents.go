@@ -406,7 +406,7 @@ func BuildSubagentPlan(aikitoDir, home string, opts BuildSubagentPlanOptions) ([
 			}
 			ops = append(ops, SubagentOperation{
 				Agent: agentName, Subagent: subName, TargetPath: managed[subName], Layout: adapter.Layout,
-				Action: action, Reason: "Managed subagent file is no longer defined in subagents/<name>.toml",
+				Action: action, Reason: "Managed subagent is no longer defined in subagents/<name>.toml",
 				RequiresForce: true, IsAuthorized: opts.Prune,
 			})
 		}

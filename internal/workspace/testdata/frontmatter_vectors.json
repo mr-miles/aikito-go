@@ -1,0 +1,190 @@
+[
+ {
+  "content": "",
+  "platforms": [],
+  "meta": "{}",
+  "body": ""
+ },
+ {
+  "content": "no frontmatter\n",
+  "platforms": [],
+  "meta": "{}",
+  "body": "no frontmatter"
+ },
+ {
+  "content": "---\nname: a\n---\nbody\n",
+  "platforms": [],
+  "meta": "{\"name\": \"a\"}",
+  "body": "body"
+ },
+ {
+  "content": "﻿---\nname: a\n---\nbody\n",
+  "platforms": [],
+  "meta": "{\"name\": \"a\"}",
+  "body": "body"
+ },
+ {
+  "content": "  \n---\nname: a\n---\n  body  \n\n",
+  "platforms": [],
+  "meta": "{\"name\": \"a\"}",
+  "body": "body"
+ },
+ {
+  "content": "---\r\nname: a\r\ndescription: b c\r\n---\r\nbody\r\n",
+  "platforms": [],
+  "meta": "{\"description\": \"b c\", \"name\": \"a\"}",
+  "body": "body"
+ },
+ {
+  "content": "---\nname: a\n",
+  "platforms": [],
+  "meta": "{}",
+  "body": "---\nname: a"
+ },
+ {
+  "content": " ---\nname: a\n---\n",
+  "platforms": [],
+  "meta": "{\"name\": \"a\"}",
+  "body": ""
+ },
+ {
+  "content": "---  \nname: a\n---\t\nbody",
+  "platforms": [],
+  "meta": "{\"name\": \"a\"}",
+  "body": "body"
+ },
+ {
+  "content": "---\ndescription: >-\n  one\n  two\n\n  three\nx: 1\n---\nb",
+  "platforms": [],
+  "meta": "{\"description\": \"one two three\", \"x\": \"1\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\ndescription: |\n  one\n  two\n# c\n---\nb",
+  "platforms": [],
+  "meta": "{\"description\": \"one\\ntwo\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\ndesc: >\n  a\n---\nb",
+  "platforms": [],
+  "meta": "{\"desc\": \"a\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\ntools:\n  - read\n  - 'edit'\n  - \"x\"\n---\nb",
+  "platforms": [],
+  "meta": "{\"tools\": [\"read\", \"edit\", \"x\"]}",
+  "body": "b"
+ },
+ {
+  "content": "---\ntools: [read, edit]\n---\nb",
+  "platforms": [],
+  "meta": "{\"tools\": [\"read\", \"edit\"]}",
+  "body": "b"
+ },
+ {
+  "content": "---\ntools: [\"read\", \"edit\"]\n---\nb",
+  "platforms": [],
+  "meta": "{\"tools\": [\"read\", \"edit\"]}",
+  "body": "b"
+ },
+ {
+  "content": "---\ntools: []\n---\nb",
+  "platforms": [],
+  "meta": "{\"tools\": []}",
+  "body": "b"
+ },
+ {
+  "content": "---\nopts: {a: 1, 'b': x}\n---\nb",
+  "platforms": [],
+  "meta": "{\"opts\": {\"a\": \"1\", \"b\": \"x\"}}",
+  "body": "b"
+ },
+ {
+  "content": "---\nopts: {\"a\": 1, \"b\": [true, null]}\n---\nb",
+  "platforms": [],
+  "meta": "{\"opts\": {\"a\": 1, \"b\": [true, null]}}",
+  "body": "b"
+ },
+ {
+  "content": "---\nopts: {}\n---\nb",
+  "platforms": [],
+  "meta": "{\"opts\": {}}",
+  "body": "b"
+ },
+ {
+  "content": "---\nflag: TRUE\nother: False\nnone: ~\nnul: null\nnum: 42\nflt: 1.5\n---\nb",
+  "platforms": [],
+  "meta": "{\"flag\": true, \"flt\": \"1.5\", \"none\": null, \"nul\": null, \"num\": \"42\", \"other\": false}",
+  "body": "b"
+ },
+ {
+  "content": "---\nquoted: \"hello: world\"\nsingle: 'it''s'\n---\nb",
+  "platforms": [],
+  "meta": "{\"quoted\": \"hello: world\", \"single\": \"it''s\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\nempty:\nnext: v\n---\nb",
+  "platforms": [],
+  "meta": "{\"empty\": \"\", \"next\": \"v\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\nnested:\n  plain text\n  more text\n---\nb",
+  "platforms": [],
+  "meta": "{\"nested\": \"plain text more text\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\nclaude-code:\n  model: opus\n  effort: high\n---\nb",
+  "platforms": [
+   "claude-code"
+  ],
+  "meta": "{\"claude-code\": {\"effort\": \"high\", \"model\": \"opus\"}}",
+  "body": "b"
+ },
+ {
+  "content": "---\nclaude-code:\n  model: opus\n---\nb",
+  "platforms": [],
+  "meta": "{\"claude-code\": \"model: opus\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\n# comment\n  indented: no\nkey without colon\nk: v\n---\nb",
+  "platforms": [],
+  "meta": "{\"k\": \"v\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\nk: v\n---\n---\nsecond block\n",
+  "platforms": [],
+  "meta": "{\"k\": \"v\"}",
+  "body": "---\nsecond block"
+ },
+ {
+  "content": "---\nk: a:b:c\n---\nb",
+  "platforms": [],
+  "meta": "{\"k\": \"a:b:c\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\nk: [1, 2\n---\nb",
+  "platforms": [],
+  "meta": "{\"k\": \"[1, 2\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\nk: v still\n---\nb",
+  "platforms": [],
+  "meta": "{\"k\": \"v\"}",
+  "body": "b"
+ },
+ {
+  "content": "---\nk: v\n---\n　body　\n",
+  "platforms": [],
+  "meta": "{\"k\": \"v\"}",
+  "body": "body"
+ }
+]

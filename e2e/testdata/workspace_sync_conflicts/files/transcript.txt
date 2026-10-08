@@ -1,0 +1,102 @@
+$ () aikito sync --dry-run
+--- stdout
+Sync plan
+
+  Changes:   3
+  Unchanged: 2
+  Offline:   0
+  Warnings:  0
+  Conflicts: 2
+  Errors:    1
+
+Needs attention:
+  Cannot switch copy to link for skill 'Claude Code': <HOME>/.claude/skills is not an unchanged active copy
+  Pre-existing regular instruction file: <HOME>/.claude/CLAUDE.md
+  Conflicts detected in global plan.
+
+Blocked; no changes were made
+--- stderr
+--- exit 1
+$ () aikito sync --verbose
+--- stdout
+Sync plan
+
+  Changes:   3
+  Unchanged: 2
+  Offline:   0
+  Warnings:  0
+  Conflicts: 2
+  Errors:    1
+
+Needs attention:
+  Cannot switch copy to link for skill 'Claude Code': <HOME>/.claude/skills is not an unchanged active copy
+  Pre-existing regular instruction file: <HOME>/.claude/CLAUDE.md
+  Conflicts detected in global plan.
+
+Blocked; no changes were made
+
+Details
+
+  [CREATE] <HOME>/aikito/skills -> <HOME>/.agents/skills
+  [CREATE] <HOME>/aikito/skills/aikito -> <HOME>/.agents/skills/aikito
+  [CREATE] <HOME>/aikito/skills/durable-memory -> <HOME>/.agents/skills/durable-memory
+  [CONFLICT] <HOME>/.agents/skills -> <HOME>/.claude/skills
+  [CONFLICT] <HOME>/aikito/global/AGENTS.md -> <HOME>/.claude/CLAUDE.md
+--- stderr
+--- exit 1
+$ () aikito sync
+--- stdout
+Sync plan
+
+  Changes:   4
+  Unchanged: 2
+  Offline:   0
+  Warnings:  0
+  Conflicts: 1
+  Errors:    1
+
+Needs attention:
+  Pre-existing regular instruction file: <HOME>/.claude/CLAUDE.md
+  Conflicts detected in global plan.
+
+Blocked; no changes were made
+--- stderr
+--- exit 1
+$ () aikito sync
+--- stdout
+Sync plan
+
+  Changes:   5
+  Unchanged: 2
+  Offline:   0
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+[LINK] <HOME>/.agents/skills/aikito -> <HOME>/aikito/skills/aikito
+[LINK] <HOME>/.agents/skills/durable-memory -> <HOME>/aikito/skills/durable-memory
+[LINK] Claude Code skills: <HOME>/.claude/skills -> <HOME>/.agents/skills
+[LINK] Claude Code instructions: <HOME>/.claude/CLAUDE.md -> <HOME>/aikito/global/AGENTS.md
+
+[SUCCESS] Full workspace sync completed successfully.
+--- stderr
+--- exit 0
+$ () aikito sync
+--- stdout
+Sync plan
+
+  Changes:   0
+  Unchanged: 7
+  Offline:   0
+  Warnings:  0
+  Conflicts: 0
+  Errors:    0
+
+Safe to apply
+[OK] Claude Code skills: <HOME>/.claude/skills -> <HOME>/.agents/skills
+[OK] Claude Code instructions: <HOME>/.claude/CLAUDE.md -> <HOME>/aikito/global/AGENTS.md
+
+[SUCCESS] Full workspace sync completed successfully.
+--- stderr
+--- exit 0

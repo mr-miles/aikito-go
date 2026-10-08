@@ -1452,37 +1452,29 @@ func checkSymlinks(c *inspectionContext) DoctorSection {
 
 // --- Stub sections (honestly not yet implemented; see package doc comment) ---
 
-// checkAdoption reuses buildAdoptPlan (adopt.go) read-only — it never
-// writes anything, it just reports how many agent-native resources (global
-// instructions, MCP servers, subagents) `aikito adopt` would currently
-// bring into the canonical workspace, plus any adoption conflicts found.
+// checkAdoption ports doctor.py's check_adoption: the adopt plan's blocking
+// findings as warnings, then the pending-change count. It never writes.
 func checkAdoption(aikitoDir, home string) DoctorSection {
-	defs, err := registry.LoadAgentDefinitions(aikitoDir, home)
+	plan, err := buildAdoptPlan(aikitoDir, home, io.Discard)
 	if err != nil {
 		return DoctorSection{Name: "Adoption", Findings: []Finding{
 			warn(fmt.Sprintf("Cannot check adoptable resources: %v", err), ""),
 		}}
 	}
-	plan := buildAdoptPlan(aikitoDir, home, defs, map[string]bool{})
-
-	adoptable := len(plan.MCPServers) + len(plan.Subagents)
-	if plan.Instructions != nil && plan.Instructions.Action == "CREATE" {
-		adoptable++
-	}
-	// Mirrors doctor.py's check_adoption: per-resource blockers first, then
-	// the pending-count summary, and the OK line only when there is nothing
-	// at all to report.
 	var findings []Finding
-	if plan.Instructions != nil && plan.Instructions.Action == "CONFLICT" {
-		findings = append(findings, warn("Global instructions: canonical content diverges from agent-native source(s)", "aikito adopt --verbose"))
+	for _, f := range plan.Findings {
+		w := f.Finding
+		w.Status = "WARN"
+		w.Actions = nil
+		for _, a := range f.Actions {
+			w.Actions = append(w.Actions, FindingAction{Label: a.Label, Command: a.Command})
+		}
+		findings = append(findings, w)
 	}
-	for _, c := range plan.MCPConflicts {
-		findings = append(findings, warn(fmt.Sprintf("MCP server '%s': %s", c.Name, c.Reason), "aikito adopt --skip "+c.Name))
-	}
-	if adoptable > 0 {
+	if total := summarizeAdoptPlan(plan).totalChanges(); total > 0 {
 		findings = append(findings, Finding{
 			Status: "WARN", Code: "adopt.pending", Resource: "adoption",
-			Message: fmt.Sprintf("%d local Agent resource(s) are available to adopt", adoptable),
+			Message: fmt.Sprintf("%d local Agent resource(s) are available to adopt", total),
 			Actions: []FindingAction{
 				{Label: "Review", Command: "aikito adopt --dry-run --verbose"},
 				{Label: "Apply", Command: "aikito adopt"},

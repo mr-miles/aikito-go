@@ -1,0 +1,226 @@
+{
+  ".agents": {
+    "kind": "dir"
+  },
+  ".agents/skills": {
+    "kind": "dir"
+  },
+  ".agents/skills/aikito": {
+    "kind": "symlink",
+    "target": "aikito/skills/aikito"
+  },
+  ".agents/skills/durable-memory": {
+    "kind": "symlink",
+    "target": "aikito/skills/durable-memory"
+  },
+  ".agents/skills/gskill": {
+    "kind": "symlink",
+    "target": "aikito/skills/gskill"
+  },
+  ".claude": {
+    "kind": "dir"
+  },
+  ".claude.json": {
+    "kind": "file"
+  },
+  ".claude/CLAUDE.md": {
+    "kind": "symlink",
+    "target": "aikito/global/AGENTS.md"
+  },
+  ".claude/agents": {
+    "kind": "dir"
+  },
+  ".claude/agents/verifier.md": {
+    "kind": "file"
+  },
+  ".claude/skills": {
+    "kind": "symlink",
+    "target": ".agents/skills"
+  },
+  ".local": {
+    "kind": "dir"
+  },
+  ".local/state": {
+    "kind": "dir"
+  },
+  ".local/state/aikito": {
+    "kind": "dir"
+  },
+  ".local/state/aikito/mcp-state.json": {
+    "kind": "file"
+  },
+  ".local/state/aikito/project-skills": {
+    "kind": "dir"
+  },
+  ".local/state/aikito/project-skills/state-of-p2.json": {
+    "kind": "file"
+  },
+  ".local/state/aikito/project-skills/transactions": {
+    "kind": "dir"
+  },
+  ".local/state/aikito/project-skills/writer.lock": {
+    "kind": "file"
+  },
+  "aikito": {
+    "kind": "dir"
+  },
+  "aikito/.gitignore": {
+    "kind": "file"
+  },
+  "aikito/agents": {
+    "kind": "dir"
+  },
+  "aikito/agents/claude-code.toml": {
+    "kind": "file"
+  },
+  "aikito/config.toml": {
+    "kind": "file"
+  },
+  "aikito/global": {
+    "kind": "dir"
+  },
+  "aikito/global/AGENTS.md": {
+    "kind": "file"
+  },
+  "aikito/layout.toml": {
+    "kind": "file"
+  },
+  "aikito/mcps": {
+    "kind": "dir"
+  },
+  "aikito/mcps/remote-s.toml": {
+    "kind": "file"
+  },
+  "aikito/memory": {
+    "kind": "dir"
+  },
+  "aikito/memory/notes": {
+    "kind": "dir"
+  },
+  "aikito/projects": {
+    "kind": "dir"
+  },
+  "aikito/projects/p1": {
+    "kind": "dir"
+  },
+  "aikito/projects/p1/AGENTS.md": {
+    "kind": "file"
+  },
+  "aikito/projects/p1/agent.toml": {
+    "kind": "file"
+  },
+  "aikito/projects/p1/memory": {
+    "kind": "dir"
+  },
+  "aikito/projects/p1/memory/notes": {
+    "kind": "dir"
+  },
+  "aikito/projects/p2": {
+    "kind": "dir"
+  },
+  "aikito/projects/p2/AGENTS.md": {
+    "kind": "file"
+  },
+  "aikito/projects/p2/agent.toml": {
+    "kind": "file"
+  },
+  "aikito/projects/p2/memory": {
+    "kind": "dir"
+  },
+  "aikito/projects/p2/memory/notes": {
+    "kind": "dir"
+  },
+  "aikito/projects/p3": {
+    "kind": "dir"
+  },
+  "aikito/projects/p3/AGENTS.md": {
+    "kind": "file"
+  },
+  "aikito/projects/p3/agent.toml": {
+    "kind": "file"
+  },
+  "aikito/projects/p3/memory": {
+    "kind": "dir"
+  },
+  "aikito/projects/p3/memory/notes": {
+    "kind": "dir"
+  },
+  "aikito/projects/p4": {
+    "kind": "dir"
+  },
+  "aikito/projects/p4/agent.toml": {
+    "kind": "file"
+  },
+  "aikito/skills": {
+    "kind": "dir"
+  },
+  "aikito/skills.toml": {
+    "kind": "file"
+  },
+  "aikito/skills/gskill": {
+    "kind": "dir"
+  },
+  "aikito/skills/gskill/SKILL.md": {
+    "kind": "file"
+  },
+  "aikito/skills/pskill": {
+    "kind": "dir"
+  },
+  "aikito/skills/pskill/SKILL.md": {
+    "kind": "file"
+  },
+  "aikito/subagents": {
+    "kind": "dir"
+  },
+  "aikito/subagents/verifier.md": {
+    "kind": "file"
+  },
+  "p1": {
+    "kind": "dir"
+  },
+  "p1/.agents": {
+    "kind": "dir"
+  },
+  "p1/.agents/memory": {
+    "kind": "dir"
+  },
+  "p1/.agents/memory/notes": {
+    "kind": "symlink",
+    "target": "aikito/projects/p1/memory/notes"
+  },
+  "p1/.agents/skills": {
+    "kind": "dir"
+  },
+  "p1/.agents/skills/pskill": {
+    "kind": "symlink",
+    "target": "aikito/skills/pskill"
+  },
+  "p2": {
+    "kind": "dir"
+  },
+  "p2/.agents": {
+    "kind": "dir"
+  },
+  "p2/.agents/.aikito-tx": {
+    "kind": "dir"
+  },
+  "p2/.agents/memory": {
+    "kind": "dir"
+  },
+  "p2/.agents/memory/notes": {
+    "kind": "symlink",
+    "target": "aikito/projects/p2/memory/notes"
+  },
+  "p2/.agents/skills": {
+    "kind": "dir"
+  },
+  "p2/.agents/skills/pskill": {
+    "kind": "dir"
+  },
+  "p2/.agents/skills/pskill/SKILL.md": {
+    "kind": "file"
+  },
+  "transcript.txt": {
+    "kind": "file"
+  }
+}

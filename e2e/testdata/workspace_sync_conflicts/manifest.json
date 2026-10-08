@@ -1,0 +1,93 @@
+{
+  ".agents": {
+    "kind": "dir"
+  },
+  ".agents/skills": {
+    "kind": "dir"
+  },
+  ".agents/skills/aikito": {
+    "kind": "symlink",
+    "target": "aikito/skills/aikito"
+  },
+  ".agents/skills/durable-memory": {
+    "kind": "symlink",
+    "target": "aikito/skills/durable-memory"
+  },
+  ".claude": {
+    "kind": "dir"
+  },
+  ".claude/CLAUDE.md": {
+    "kind": "symlink",
+    "target": "aikito/global/AGENTS.md"
+  },
+  ".claude/skills": {
+    "kind": "symlink",
+    "target": ".agents/skills"
+  },
+  ".local": {
+    "kind": "dir"
+  },
+  ".local/state": {
+    "kind": "dir"
+  },
+  ".local/state/aikito": {
+    "kind": "dir"
+  },
+  ".local/state/aikito/mcp-state.json": {
+    "kind": "file"
+  },
+  ".local/state/aikito/project-skills": {
+    "kind": "dir"
+  },
+  ".local/state/aikito/project-skills/writer.lock": {
+    "kind": "file"
+  },
+  "aikito": {
+    "kind": "dir"
+  },
+  "aikito/.gitignore": {
+    "kind": "file"
+  },
+  "aikito/agents": {
+    "kind": "dir"
+  },
+  "aikito/agents/claude-code.toml": {
+    "kind": "file"
+  },
+  "aikito/config.toml": {
+    "kind": "file"
+  },
+  "aikito/global": {
+    "kind": "dir"
+  },
+  "aikito/global/AGENTS.md": {
+    "kind": "file"
+  },
+  "aikito/layout.toml": {
+    "kind": "file"
+  },
+  "aikito/mcps": {
+    "kind": "dir"
+  },
+  "aikito/memory": {
+    "kind": "dir"
+  },
+  "aikito/memory/notes": {
+    "kind": "dir"
+  },
+  "aikito/projects": {
+    "kind": "dir"
+  },
+  "aikito/skills": {
+    "kind": "dir"
+  },
+  "aikito/skills.toml": {
+    "kind": "file"
+  },
+  "aikito/subagents": {
+    "kind": "dir"
+  },
+  "transcript.txt": {
+    "kind": "file"
+  }
+}

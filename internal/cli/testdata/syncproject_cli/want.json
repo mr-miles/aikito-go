@@ -1,0 +1,56 @@
+[
+ {
+  "cwd": "elsewhere",
+  "args": [
+   "sync",
+   "project"
+  ],
+  "stdout": "",
+  "stderr": "[ERROR] Current directory is not inside a registered project: {H}/elsewhere\nPlease specify a project name, e.g. 'aikito sync project <name>'\n",
+  "exit": 1
+ },
+ {
+  "cwd": "elsewhere",
+  "args": [
+   "sync",
+   "project",
+   "."
+  ],
+  "stdout": "",
+  "stderr": "[ERROR] Current directory is not inside a registered project: {H}/elsewhere\n",
+  "exit": 1
+ },
+ {
+  "cwd": "p2/sub",
+  "args": [
+   "sync",
+   "project"
+  ],
+  "stdout": "[aikito] Target project: 'p2' (detected from cwd)\n[INFO] Syncing project 'p2' (mode: link)\n[SUCCESS] Project 'p2' synced successfully.\n",
+  "stderr": "",
+  "exit": 0
+ },
+ {
+  "cwd": ".",
+  "args": [
+   "sync",
+   "project",
+   "p1",
+   "--dry-run"
+  ],
+  "stdout": "",
+  "stderr": "[CONFLICT] notes memory: Target preserved: {H}/p1/.agents/memory/notes. Entry is a regular dir (expected symlink)\n[ERROR] Project synchronization aborted.\n",
+  "exit": 1
+ },
+ {
+  "cwd": ".",
+  "args": [
+   "sync",
+   "project",
+   "p1"
+  ],
+  "stdout": "",
+  "stderr": "[CONFLICT] notes memory: Target preserved: {H}/p1/.agents/memory/notes. Entry is a regular dir (expected symlink)\n[ERROR] Project synchronization aborted.\n",
+  "exit": 1
+ }
+]

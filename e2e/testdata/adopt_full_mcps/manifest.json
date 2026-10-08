@@ -1,0 +1,8 @@
+{
+  "http-s.toml": {
+    "kind": "file"
+  },
+  "stdio-s.toml": {
+    "kind": "file"
+  }
+}

@@ -98,6 +98,19 @@ func TestGenerateGoldens(t *testing.T) {
 		saveGolden(t, "adopt_mcp", map[string]treeEntry{"adopted.toml": {content: data}})
 	})
 
+	t.Run("adopt_full", func(t *testing.T) {
+		home := pyInitWorkspace(t, pythonSrc)
+		writeAdoptSources(t, home)
+		r := runPython(t, pythonSrc, home, "adopt", "--verbose")
+		if r.ExitCode != 0 {
+			t.Fatalf("python adopt: %s\n%s", r.Stdout, r.Stderr)
+		}
+		saveGolden(t, "adopt_full_output", adoptOutputGolden(r, home))
+		saveGolden(t, "adopt_full_mcps", treeManifest(t, home+"/aikito/mcps", home))
+		saveGolden(t, "adopt_full_instructions", treeManifest(t, home+"/aikito/global/AGENTS.md", home))
+		saveGolden(t, "adopt_full_backup", treeManifest(t, adoptBackupDir(t, home), home))
+	})
+
 	t.Run("rm_skill", func(t *testing.T) {
 		home := pyInitWorkspace(t, pythonSrc)
 		if r := runPython(t, pythonSrc, home, "add", "skill", "demo", "--description", "Demo skill"); r.ExitCode != 0 {

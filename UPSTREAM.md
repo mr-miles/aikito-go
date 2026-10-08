@@ -48,8 +48,10 @@ gaps; see the Go file's doc comment), **not ported**.
 | `workspace/resource_write.py` | `internal/sync/resourcewrite.go` | ported |
 | `workspace/toml_render.py`, TOML helpers in `add.py` | `internal/sync/tomlrender.go` | ported (top-level key order reconstructed, not preserved) |
 | `workspace/importing.py`, `import_decisions.py` | `internal/cli/importworkspace.go` | partial |
-| `workspace/templates.py` | `internal/cli/adopt.go` (`templateFingerprints`) | partial: current templates only, no `TEMPLATE_HISTORY` |
-| `workspace/sync.py` | `internal/cli/sync*.go` | partial: per-domain commands, no whole-workspace plan |
+| `workspace/templates.py` | — | not ported (`TEMPLATE_HISTORY` is used only by `import workspace`/reconcile, not adopt) |
+| `workspace/sync.py` (`build_workspace_sync_plan`, `execute_workspace_sync_plan`), `render.py` `render_workspace_sync_plan`, `cli.py` `cmd_sync_all` | `internal/cli/syncworkspace.go`, `sync.go` (parent-flag dispatch) | ported |
+| `observe()` of each plan (`link.py`, `global_skills.py`, `instructions.py`, `memory_runtime.py`, `skill_plan.py`, `project_sync.py`, `subagent.py`, `mcp/model.py`) | `Observe` methods in `internal/linkplan/observe.go`, `internal/projectsync/observe.go`, `internal/sync/subagents_observe.go`, `internal/mcp/observe.go` | ported |
+| `subagent.py` `execute_subagent_plan` (per-file writes, backups) | `internal/sync/subagents_apply.go` | ported (no stale-plan precondition re-check) |
 | `workspace/inspection.py` | `internal/cli/status.go`, `doctor.go` | partial |
 | `agents.py` | `internal/registry/` | ported (`resolve_targets` in `targets.go`) |
 | `registry.py` (agent schema migration) | — | not ported (`doctor --fix` backfill) |
@@ -59,7 +61,7 @@ gaps; see the Go file's doc comment), **not ported**.
 | `memory_runtime.py` (project runtime), `conflict.py` (`collect_resource_conflicts`) | `internal/projectsync/memory.go`, `conflict.go` | ported |
 | `init.py` `project_validation_error`/`project_sync_validation_error`, `resolve.py` `detect_current_project` | `internal/projectsync/sync.go` (`ValidationError`), `internal/project/detect.go` | ported |
 | `global_skills.py`, `instructions.py`, `link.py` | `internal/linkplan/` | ported; `build_project_instruction_batch` is in `projectinstructions.go` and drives `sync project` |
-| `workspace/sync.py` (`build_global_sync_plan`, `execute_global_sync_plan`, bundled refresh), `cli.py` `sync_global_resources` | `internal/cli/syncglobal.go`, `bundledrefresh.go` | ported |
+| `workspace/sync.py` (`build_global_sync_plan`, `execute_global_sync_plan`, bundled refresh), `cli.py` `sync_global_resources` | `internal/cli/syncglobalplan.go`, `syncglobal.go`, `bundledrefresh.go` | ported |
 | `skill_state.py` `WorkspaceWriterLock` | `internal/writerlock/` | ported |
 | `subagent.py`, `subagent_adapters.py`, `subagent_validation.py` | `internal/subagent/`, `internal/sync/subagents.go` | ported |
 | `mcp/model.py`, `mcp/adapters/*` | `internal/mcp/model.go`, `adapters.go`, `toml.go`, `jsonc.go`, `cordis.go`, `orderedjson.go` | ported |
@@ -68,7 +70,8 @@ gaps; see the Go file's doc comment), **not ported**.
 | `mcp/__init__.py` (`sync_mcp_configs`) | `internal/cli/sync.go` | ported |
 | `cli.py`, `cli_parser.py` | `internal/cli/run.go` and one file per command | ported, option gaps listed in README |
 | `cli_show.py`, `resolve.py`, `memory.py`, `inbox.py` | `internal/cli/show.go`, `edit.go`, `rm.go`, `rename.go` | ported |
-| `add.py`, `adopt.py`, `remove.py`, `init.py`, `templating.py`, `bundled_skills.py` | `internal/cli/add.go`, `sanitize.go`, `adopt.go`, `rm.go`, `init.go` | partial (see README Status) |
+| `adopt.py`, `cli.py` `cmd_adopt`, `doctor.py` `check_adoption` | `internal/cli/adopt.go`, `doctor.go` (`checkAdoption`) | ported |
+| `add.py`, `remove.py`, `init.py`, `templating.py`, `bundled_skills.py` | `internal/cli/add.go`, `sanitize.go`, `rm.go`, `init.go` | partial (see README Status) |
 | `status.py`, `render.py`, `context_footprint.py` | `internal/cli/status.go`, `table.go` | partial |
 | `diff.py`, `diff_model.py` | `internal/cli/diff.go`, `unifieddiff.go` | partial (`diff project` missing) |
 | `doctor.py`, `conflict.py`, `local_state.py` | `internal/cli/doctor.go` | partial (LocalState stub, no `--fix` fixes) |
@@ -76,7 +79,8 @@ gaps; see the Go file's doc comment), **not ported**.
 | `completion.py`, `completion_powershell.py` | `internal/cli/completion.go` | ported (hand-maintained schema) |
 | `update_notifier.py` | `internal/cli/version.go` | partial: no PyPI update check |
 | `compat.py` | `internal/compat/`, plus helpers spread across packages | partial |
-| `frontmatter.py` | `internal/cli/add.go` | partial |
+| `frontmatter.py` | `internal/workspace/frontmatter.go` (`_parse_markdown_frontmatter`); `internal/cli/add.go` (simplified parse/update for `add skill`) | partial |
+| CPython `json` error messages (`_json` scanner) | `internal/mcp/pyjsonerror.go` | ported for MCP JSON config errors |
 | `__init__.py`, `workspace/api.py` (public Python API) | — | not ported; the port is CLI-only |
 | `web_console.py` (`aikito web`) | — | not ported |
 | `workspace/remote*.py`, `reconcile*.py`, `serialized_remote.py`, `http_transport.py`, `payload*.py`, `pending_commit.py`, `commit_recovery.py`, `replica_state.py` | — | not ported (multi-machine sync, deferred) |
@@ -94,9 +98,14 @@ diff.
 | `internal/cli/testdata/unified_diff_vectors.json` | `python3 internal/cli/testdata/gen_unified_diff_vectors.py` |
 | `internal/cli/testdata/completion_vectors.json` | `python3 internal/cli/testdata/gen_completion_vectors.py` |
 | `internal/cli/testdata/syncglobal_vectors.json` | `python3 internal/cli/testdata/gen_syncglobal_vectors.py` |
+| `internal/cli/testdata/syncall_vectors.json` (bare `aikito sync`, parent flags, `sync subagents` backups) | `python3 internal/cli/testdata/gen_syncall_vectors.py` |
 | `internal/registry/testdata/targets_vectors.json` | `python3 internal/registry/testdata/gen_targets_vectors.py` |
+| `internal/cli/testdata/adopt/adopt_vectors.json` (33 whole-command `adopt` scenarios) | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/cli/testdata/adopt/gen_adopt_vectors.py`; `--compare ./aikito` diffs a built Go binary against them |
+| `internal/cli/testdata/adopt_mcp_secrets/want/` | `internal/cli/testdata/adopt_mcp_secrets/gen.sh` |
+| `internal/mcp/testdata/pyjson_errors.json` (CPython `json.loads` messages) | `python3 internal/mcp/testdata/gen_pyjson_errors.py` (captured with CPython 3.14; wording can differ between Python versions) |
 | `internal/projectsync/testdata/vectors.json` (`plan_single_skill`, `plan_link_target`, fingerprints, binding hash, state JSON) | `python3 internal/projectsync/testdata/gen_vectors.py` |
 | `e2e/testdata/project_sync_*` (whole-command transcripts and trees) | `AIKITO_PYTHON_SRC=../aikito/src go test -tags e2e_generate -run TestGenerateProjectSyncGoldens ./e2e/... -v` |
+| `e2e/testdata/workspace_sync_*` (bare `aikito sync` transcripts and trees) | `AIKITO_PYTHON_SRC=../aikito/src go test -tags e2e_generate -run TestGenerateWorkspaceSyncGoldens ./e2e/... -v` |
 | `internal/cli/helptext/help.json` (embedded `--help` text) | `python3 internal/cli/helptext/gen_help.py`, then fix any marker `help_test.go` reports in `helpAnnotations` (`help.go`) |
 
 These were generated with one-off scripts that weren't kept. Regenerate by

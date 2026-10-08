@@ -28,8 +28,12 @@ time it was applied.
 - Inspect real bytes (`.encode().hex()`), never `repr()`. Python's `repr()`
   shows ` ` escaped even though `json.dumps(..., ensure_ascii=False)`
   outputs it raw. Go's `%q` has the same problem.
-- Negative control: when adding a regression test, confirm it fails on the
-  old code (e.g. `git stash push <file>`, run, `git stash pop`).
+- Negative control (required): every behaviour change needs a test that fails
+  without it. Check with `scripts/negative-control.sh <commit> [base]`, which
+  runs the commit's tests against the old code. A compile failure only counts
+  for new internal APIs; user-visible changes need a black-box test through
+  `Run` (or e2e) that compiles against the old code and fails on behaviour
+  (see `help_run_test.go`, `syncproject_cli_test.go`).
 - Whole-command checks: run both CLIs against identical fresh `$HOME`s and
   `diff -r` the results. The e2e suite (`e2e/`) does this against golden
   fixtures captured from Python once.
@@ -89,9 +93,27 @@ time it was applied.
   same home path (recreated between runs) to compare state files byte for
   byte. Python must also run with `PYTHONUNBUFFERED=1` if stdout and stderr
   share a pipe.
+- **JSON error text.** Python prints `json.loads` errors to users
+  ("Expecting ',' delimiter: line 3 column 8 (char 19)"). Go's decoder
+  wording differs; use `mcp.PythonJSONDecodeError(text)` after a failed
+  parse.
+- **Generators reading files back.** `Path.read_text()` turns `\r\n` into
+  `\n`; open with `newline=""` when snapshotting trees for goldens.
+- **Python `str()`/`repr()` in messages.** Values interpolated with `{x!r}`
+  or `str(list)` render Python-style (`'a'`, `['a', 'b']`, `True`);
+  `cli.pyRepr`/`pyStr` (adopt.go) reproduce that.
 - **`Path / raw_link`** keeps `..` components; `filepath.Join` cleans them.
   Messages that show a symlink's destination use `linkplan`'s
   `pathlibJoin`.
+- **argparse parent flags.** `aikito sync --dry-run global` is a dry run:
+  the parent parser's `--dry-run` stays set on the shared namespace. Flags
+  are matched by unique prefix (`--dry`), and an unknown parent flag is a
+  root-level "unrecognized arguments" error.
+- **Same domain, two entry points.** Python's whole-workspace sync calls the
+  same planners as the per-domain commands but with different defaults
+  (e.g. `build_global_sync_plan` without `outdated_bundled_skills`, and
+  `AIKITO_AGENTS_DIR` for the hub). Port the shared function once with the
+  options, not two copies.
 
 ## Architecture notes
 
@@ -99,6 +121,11 @@ time it was applied.
   the reverse. That's why the transaction engine and the resource-write
   pipeline live in `sync`, not `workspace` as in Python, and why the read-only
   journal scan is duplicated in `workspace/pending.go`.
+- **Plan observation.** Every sync plan has an `Observe()` returning a
+  `sync.PlanObservation` (operation views + findings), as Python's
+  `observe()`. The bare `aikito sync` summary, "Needs attention" list and
+  `--verbose` details are computed only from these, so a new plan kind or
+  action needs its effect/finding mapping ported too.
 - **Two fingerprint functions on purpose.** `workspace.FingerprintResource`
   hashes raw bytes; `InspectResourceContent` hashes parsed values (for
   agent/mcp/subagent). Both are used in different call paths, as in Python.
@@ -164,8 +191,13 @@ debugged locally; expect path-separator and `PATH` issues there first.
   `add skill --sync` to deactivate copied-skill state) is not ported, so
   removing a skill in Go leaves its project state record active until the
   next `sync project`.
-- `adopt`/`import workspace` compare against current templates only, with no
-  `TEMPLATE_HISTORY`.
+- `import workspace` compares against current templates only, with no
+  `TEMPLATE_HISTORY` (Python's `adopt` doesn't use it either).
+- `init workspace` initialises over a non-empty directory that isn't a
+  workspace; Python refuses ("Target directory is not empty and is not a
+  recognized Aikito workspace").
+- `add.go` still has its own simplified frontmatter parser;
+  `workspace.ParseMarkdownFrontmatter` is the faithful port.
 - `doctor --fix` applies nothing yet (needs `registry.py` schema migration).
   The LocalState section is a stub.
 - `atomicUnlink` and `PendingKinds` have no callers in the write path yet. A

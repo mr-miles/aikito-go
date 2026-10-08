@@ -8,6 +8,7 @@ package mcp
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"sort"
 	"strconv"
 	"strings"
@@ -157,7 +158,8 @@ func ParseJSONOrdered(text string) (any, error) {
 	if err != nil {
 		return nil, err
 	}
-	if dec.More() {
+	// dec.More() is false before a stray '}' or ']', so require EOF instead.
+	if _, err := dec.Token(); err != io.EOF {
 		return nil, fmt.Errorf("unexpected content after JSON document")
 	}
 	return val, nil

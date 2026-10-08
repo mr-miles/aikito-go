@@ -582,23 +582,19 @@ func cmdShowSkill(sa showArgs, aikitoDir string, stdout, stderr io.Writer) int {
 	if rc := printResourceFile(skillFile, "skill file", stdout, stderr); rc != 0 {
 		return rc
 	}
-	for _, op := range planBundledRefresh(aikitoDir) {
-		if op.name == row.Name {
-			fmt.Fprintf(stderr, "\n[NOTICE] Bundled skill snapshot differs from the installed Aikito package: %s. Run 'aikito sync global' to refresh it.\n", op.name)
-		}
-	}
+	printBundledSkillNotice(aikitoDir, stderr, row.Name)
 	return 0
 }
 
 // --- instructions ---
 
-type instructionSource struct {
+type instrSource struct {
 	name, instructions, checkout string // checkout "" = None
 }
 
 // findInstructionSources ports resolve.py find_instruction_sources.
-func findInstructionSources(aikitoDir, home string, stderr io.Writer) []instructionSource {
-	sources := []instructionSource{{"global", filepath.Join(aikitoDir, "global", "AGENTS.md"), ""}}
+func findInstructionSources(aikitoDir, home string, stderr io.Writer) []instrSource {
+	sources := []instrSource{{"global", filepath.Join(aikitoDir, "global", "AGENTS.md"), ""}}
 	for _, name := range sortedDirEntries(filepath.Join(aikitoDir, "projects")) {
 		dir := filepath.Join(aikitoDir, "projects", name)
 		configPath := filepath.Join(dir, "agent.toml")
@@ -619,12 +615,12 @@ func findInstructionSources(aikitoDir, home string, stderr io.Writer) []instruct
 		switch active := binding.ActiveEntries(); {
 		case len(active) > 0:
 			for _, e := range active {
-				sources = append(sources, instructionSource{name, instructions, e.ResolvedPath})
+				sources = append(sources, instrSource{name, instructions, e.ResolvedPath})
 			}
 		case len(binding.Entries) > 0:
-			sources = append(sources, instructionSource{name, instructions, binding.Entries[0].ResolvedPath})
+			sources = append(sources, instrSource{name, instructions, binding.Entries[0].ResolvedPath})
 		default:
-			sources = append(sources, instructionSource{name, instructions, ""})
+			sources = append(sources, instrSource{name, instructions, ""})
 		}
 	}
 	return sources

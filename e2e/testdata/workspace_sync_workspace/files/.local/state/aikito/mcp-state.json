@@ -1,0 +1,10 @@
+{
+  "entries": {
+    "claude-code:remote-s": {
+      "config_path": "<HOME>/.claude.json",
+      "fingerprint": "a51a767c891b31cc3372e314f46523e6c5654a8a5572556bfda664221aef3100",
+      "target_name": "remote-s"
+    }
+  },
+  "version": 1
+}
