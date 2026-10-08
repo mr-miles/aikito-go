@@ -235,3 +235,25 @@ func TestCmdUnknownCommand(t *testing.T) {
 		t.Errorf("exit code = %d, want 2", code)
 	}
 }
+
+func TestCmdInitProjectRejectsUnknownArgsWithoutWriting(t *testing.T) {
+	env := testEnv(t)
+	var out, errOut bytes.Buffer
+	if code := Run([]string{"init", "workspace"}, nil, &out, &errOut, env); code != 0 {
+		t.Fatalf("init workspace failed: %d", code)
+	}
+	p := filepath.Join(env.Home, "p")
+	if err := os.MkdirAll(p, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	for _, extra := range []string{"--dry-run", "third"} {
+		errOut.Reset()
+		code := Run([]string{"init", "project", "p", p, extra}, nil, &out, &errOut, env)
+		if code != 2 || !strings.HasSuffix(errOut.String(), "aikito: error: unrecognized arguments: "+extra+"\n") {
+			t.Errorf("%s: exit %d, stderr %q", extra, code, errOut.String())
+		}
+	}
+	if _, err := os.Stat(filepath.Join(env.Home, "aikito", "projects", "p")); err == nil {
+		t.Error("rejected init project still registered the project")
+	}
+}

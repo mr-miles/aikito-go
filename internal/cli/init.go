@@ -384,20 +384,31 @@ func copyEmbeddedDir(embeddedDir, dest string) error {
 // --- init project ---
 
 func cmdInitProject(args []string, stdout, stderr io.Writer, env Environment) int {
-	var positional []string
+	var positional, extra []string
 	description := ""
 	for i := 0; i < len(args); i++ {
 		a := args[i]
-		if a == "--description" {
+		switch {
+		case a == "--description":
 			i++
 			if i >= len(args) {
 				fmt.Fprintln(stderr, "[ERROR] --description requires a value")
 				return 2
 			}
 			description = args[i]
-			continue
+		case strings.HasPrefix(a, "--description="):
+			description = strings.TrimPrefix(a, "--description=")
+		case strings.HasPrefix(a, "-") && a != "-":
+			extra = append(extra, a)
+		case len(positional) < 2:
+			positional = append(positional, a)
+		default:
+			extra = append(extra, a)
 		}
-		positional = append(positional, a)
+	}
+	// Python rejects anything else (e.g. --dry-run) before doing any work.
+	if len(extra) > 0 {
+		return argparseUnrecognized(stderr, extra)
 	}
 	var projectName, projectPathArg string
 	if len(positional) > 0 {
