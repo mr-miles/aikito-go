@@ -1,0 +1,4 @@
+agents = ["claude-code"]
+url = "https://example.com/mcp"
+transport = "remote"
+headers = { Authorization = "${AIKITO_HTTP_S_AUTHORIZATION}", X-Api-Key = "${MY_KEY}", X-Plain = "y" }

@@ -1,0 +1,4 @@
+agents = ["claude-code"]
+command = "npx"
+args = ["-y", "srv"]
+env = { API_KEY = "${API_KEY}", N = "${N}", PLAIN = "${PLAIN}", REF = "${ALREADY}" }

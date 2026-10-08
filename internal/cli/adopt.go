@@ -37,12 +37,15 @@
 package cli
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/pelletier/go-toml/v2"
 
 	"github.com/mr-miles/aikito-go/internal/mcp"
 	"github.com/mr-miles/aikito-go/internal/registry"
@@ -463,7 +466,7 @@ func buildMCPAdoptionPlan(aikitoDir string, defs map[string]registry.AgentDefini
 			if entry == nil {
 				continue
 			}
-			converted := adapter.ImportEntry(entry)
+			converted := adapter.ImportEntry(sanitizeAdoptedMCPEntry(rawName, entry))
 			if converted == nil {
 				continue
 			}
@@ -530,47 +533,108 @@ func canonicalMCPConfig(entry *mcp.OrderedObject) map[string]any {
 	return out
 }
 
+// sanitizeAdoptedMCPEntry is adopt.py's _sanitize: env values and
+// credential headers are replaced with environment references before the
+// entry is imported, so no plaintext secret reaches the workspace.
+func sanitizeAdoptedMCPEntry(name string, entry *mcp.OrderedObject) *mcp.OrderedObject {
+	out := entry.Clone()
+	if env, ok := out.GetOr("env", nil).(*mcp.OrderedObject); ok {
+		clean := mcp.NewOrderedObject()
+		for _, k := range env.Keys() {
+			v, _ := env.Get(k)
+			text := pyStr(v)
+			if strings.HasPrefix(text, "$") {
+				clean.Set(k, text)
+			} else {
+				clean.Set(k, "${"+k+"}")
+			}
+		}
+		out.Set("env", clean)
+	}
+	if headers, ok := out.GetOr("headers", nil).(*mcp.OrderedObject); ok {
+		safeServer := toEnvSafe(strings.ToUpper(name))
+		clean := mcp.NewOrderedObject()
+		for _, k := range headers.Keys() {
+			v, _ := headers.Get(k)
+			text := pyStr(v)
+			isReference := strings.Contains(text, "${") || strings.HasPrefix(text, "$")
+			if mcp.IsCredentialHeader(k) && !isReference {
+				text = "${AIKITO_" + safeServer + "_" + toEnvSafe(strings.ToUpper(k)) + "}"
+			}
+			clean.Set(k, text)
+		}
+		out.Set("headers", clean)
+	}
+	return out
+}
+
+// pyStr approximates Python's str() for decoded JSON scalars.
+func pyStr(v any) string {
+	switch x := v.(type) {
+	case string:
+		return x
+	case bool:
+		if x {
+			return "True"
+		}
+		return "False"
+	case nil:
+		return "None"
+	default:
+		return fmt.Sprint(x)
+	}
+}
+
+// plainTOMLValue converts decoded JSON (OrderedObject tables) into the
+// plain shapes sync.FormatTomlValue renders, which sorts table keys as
+// adopt.py's _format_toml_value does.
+func plainTOMLValue(v any) any {
+	switch x := v.(type) {
+	case *mcp.OrderedObject:
+		m := make(map[string]any, x.Len())
+		for _, k := range x.Keys() {
+			val, _ := x.Get(k)
+			m[k] = plainTOMLValue(val)
+		}
+		return m
+	case []any:
+		out := make([]any, len(x))
+		for i, item := range x {
+			out[i] = plainTOMLValue(item)
+		}
+		return out
+	case json.Number:
+		if i, err := x.Int64(); err == nil {
+			return i
+		}
+		f, _ := x.Float64()
+		return f
+	default:
+		return v
+	}
+}
+
+// applyMCPAdoption writes mcps/<name>.toml as adopt.py's
+// render_mcp_server_file does: agents first, then the known keys in a fixed
+// order.
 func applyMCPAdoption(aikitoDir string, m mcpAdoptionPlan) error {
-	var lines []string
-	isRemote := m.Config["url"] != nil
-	if isRemote {
-		rawURL := fmt.Sprint(m.Config["url"])
-		safeURL, warnings := SanitizeMCPURL(rawURL, m.Name)
-		for range warnings {
-			// Adoption runs non-interactively here; sanitization warnings
-			// are still applied (the secret is still stripped), just not
-			// re-printed per-field in this helper — the CLI prints its own
-			// summary line per adopted server.
-		}
-		lines = append(lines, `transport = "remote"`, fmt.Sprintf("url = %s", workspace.CanonicalJSON(safeURL)))
-	} else {
-		lines = append(lines, fmt.Sprintf("command = %s", workspace.CanonicalJSON(fmt.Sprint(m.Config["command"]))))
-		if args, ok := m.Config["args"]; ok {
-			lines = append(lines, fmt.Sprintf("args = %s", sync.FormatTomlValue(args)))
+	lines := []string{"agents = " + sync.FormatTomlValue(toAnySlice(m.Agents))}
+	for _, key := range []string{"command", "url", "args", "env", "transport", "headers"} {
+		if v, ok := m.Config[key]; ok && v != nil {
+			lines = append(lines, key+" = "+sync.FormatTomlValue(plainTOMLValue(v)))
 		}
 	}
-	lines = append(lines, fmt.Sprintf("agents = %s", workspace.CanonicalJSON(toAnySlice(m.Agents))))
-	if headers, ok := m.Config["headers"].(map[string]any); ok && len(headers) > 0 {
-		headersStr := make(map[string]string, len(headers))
-		for k, v := range headers {
-			headersStr[k] = fmt.Sprint(v)
-		}
-		sanitized, _ := SanitizeMCPHeaders(headersStr, m.Name)
-		sanitizedAny := make(map[string]any, len(sanitized))
-		for k, v := range sanitized {
-			sanitizedAny[k] = v
-		}
-		lines = append(lines, "headers = "+sync.FormatTomlValue(sanitizedAny))
-	}
-	if env, ok := m.Config["env"]; ok {
-		lines = append(lines, fmt.Sprintf("env = %s", sync.FormatTomlValue(env)))
+	content := strings.Join(lines, "\n") + "\n"
+	var check map[string]any
+	if err := toml.Unmarshal([]byte(content), &check); err != nil {
+		return fmt.Errorf("refusing to write invalid TOML for MCP server '%s': %v", m.Name, err)
 	}
 
 	mcpsDir := filepath.Join(aikitoDir, "mcps")
 	if err := os.MkdirAll(mcpsDir, 0o777); err != nil {
 		return err
 	}
-	return os.WriteFile(filepath.Join(mcpsDir, m.Name+".toml"), []byte(strings.Join(lines, "\n")+"\n"), 0o644)
+	return os.WriteFile(filepath.Join(mcpsDir, m.Name+".toml"), []byte(content), 0o644)
 }
 
 // --- Subagent adoption ---
