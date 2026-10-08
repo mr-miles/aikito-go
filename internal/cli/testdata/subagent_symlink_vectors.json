@@ -1,0 +1,174 @@
+{
+ "adopt_symlinked_unmanaged": {
+  "results": [
+   {
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Initializing Aikito workspace in: {H}/aikito\n[CREATE DIR] {H}/aikito\n[CREATE DIR] {H}/aikito/global\n[CREATE DIR] {H}/aikito/projects\n[CREATE DIR] {H}/aikito/mcps\n[CREATE DIR] {H}/aikito/skills\n[CREATE DIR] {H}/aikito/subagents\n[CREATE DIR] {H}/aikito/agents\n[CREATE DIR] {H}/aikito/memory/notes\n[CREATE FILE] {H}/aikito/config.toml (Workspace config template)\n[CREATE FILE] {H}/aikito/skills.toml (Global skills config)\n[CREATE FILE] {H}/aikito/global/AGENTS.md (Global agent instructions)\n[CREATE FILE] {H}/aikito/.gitignore (Workspace .gitignore with leading slashes)\n[CREATE FILE] {H}/aikito/agents/claude-code.toml (claude-code Agent definition)\n[CREATE FILE] {H}/aikito/layout.toml (Workspace resource layout version)\n[CREATE DIR] {H}/aikito/skills/aikito (Bundled aikito skill)\n[CREATE DIR] {H}/aikito/skills/durable-memory (Bundled durable-memory skill)\n[GIT INIT] Initialized Git repository in {H}/aikito\n\n[SUCCESS] Aikito workspace initialization complete!\n\n[INFO] Detected installed Agent(s):\n  - Claude Code ({H}/.claude)\n\nNext step: Run 'aikito adopt'. It checks the complete import plan before changing the workspace.\n",
+    "step": [
+     "run",
+     "init",
+     "workspace"
+    ]
+   },
+   {
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Adoption plan\n\n  Instructions: 0 update(s)\n  MCP servers:  0 import(s)\n  Subagents:    1 import(s)\n  Conflicts:    0\n  Errors:       0\n  Skipped:      0\n\nSafe to apply\n\n[BACKUP] Saved 1 local agent config backup(s) to: {H}/.aikito/backups/adopt_{TS}\n\n[SUCCESS] Adoption executed successfully!\nNext step: Run 'aikito sync' to check and apply runtime changes.\n",
+    "step": [
+     "run",
+     "adopt"
+    ]
+   },
+   {
+    "content": "---\ndescription: \"Helps out\"\nagents: [\"claude-code\"]\n---\nHelp with the task.\n",
+    "step": [
+     "read",
+     "aikito/subagents/helper.md"
+    ]
+   }
+  ],
+  "steps": [
+   [
+    "mkdir",
+    ".claude/agents"
+   ],
+   [
+    "write",
+    "elsewhere/helper.md",
+    "---\nname: helper\ndescription: \"Helps out\"\n---\nHelp with the task.\n"
+   ],
+   [
+    "symlink",
+    ".claude/agents/helper.md",
+    "elsewhere/helper.md"
+   ],
+   [
+    "run",
+    "init",
+    "workspace"
+   ],
+   [
+    "run",
+    "adopt"
+   ],
+   [
+    "read",
+    "aikito/subagents/helper.md"
+   ]
+  ]
+ },
+ "orphan_symlinked_managed": {
+  "results": [
+   {
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Initializing Aikito workspace in: {H}/aikito\n[CREATE DIR] {H}/aikito\n[CREATE DIR] {H}/aikito/global\n[CREATE DIR] {H}/aikito/projects\n[CREATE DIR] {H}/aikito/mcps\n[CREATE DIR] {H}/aikito/skills\n[CREATE DIR] {H}/aikito/subagents\n[CREATE DIR] {H}/aikito/agents\n[CREATE DIR] {H}/aikito/memory/notes\n[CREATE FILE] {H}/aikito/config.toml (Workspace config template)\n[CREATE FILE] {H}/aikito/skills.toml (Global skills config)\n[CREATE FILE] {H}/aikito/global/AGENTS.md (Global agent instructions)\n[CREATE FILE] {H}/aikito/.gitignore (Workspace .gitignore with leading slashes)\n[CREATE FILE] {H}/aikito/agents/claude-code.toml (claude-code Agent definition)\n[CREATE FILE] {H}/aikito/layout.toml (Workspace resource layout version)\n[CREATE DIR] {H}/aikito/skills/aikito (Bundled aikito skill)\n[CREATE DIR] {H}/aikito/skills/durable-memory (Bundled durable-memory skill)\n[GIT INIT] Initialized Git repository in {H}/aikito\n\n[SUCCESS] Aikito workspace initialization complete!\n\n[INFO] Detected installed Agent(s):\n  - Claude Code ({H}/.claude)\n\nNext step: Run 'aikito sync'. It checks the complete plan for conflicts before changing managed configuration on this host.\n",
+    "step": [
+     "run",
+     "init",
+     "workspace"
+    ]
+   },
+   {
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Subagent synchronization plan (dry_run=False):\n  [CREATE] claude-code/old -> {H}/.claude/agents/old.md\n[SUCCESS] Subagent synchronization completed successfully.\n",
+    "step": [
+     "run",
+     "sync",
+     "subagents"
+    ]
+   },
+   {
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Subagent synchronization plan (dry_run=False):\n  [ORPHAN] claude-code/old -> {H}/.claude/agents/old.md (Managed subagent is no longer defined in subagents/<name>.toml. Use --prune to remove)\n[SUCCESS] Subagent synchronization completed successfully.\n",
+    "step": [
+     "run",
+     "sync",
+     "subagents"
+    ]
+   },
+   {
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Subagent synchronization plan (dry_run=False):\n  [PRUNE] claude-code/old -> {H}/.claude/agents/old.md\n[SUCCESS] Subagent synchronization completed successfully.\n",
+    "step": [
+     "run",
+     "sync",
+     "subagents",
+     "--prune"
+    ]
+   },
+   {
+    "exists": false,
+    "step": [
+     "exists",
+     ".claude/agents/old.md"
+    ]
+   },
+   {
+    "exists": true,
+    "step": [
+     "exists",
+     "elsewhere/old.md"
+    ]
+   }
+  ],
+  "steps": [
+   [
+    "mkdir",
+    ".claude"
+   ],
+   [
+    "run",
+    "init",
+    "workspace"
+   ],
+   [
+    "write",
+    "aikito/subagents/old.md",
+    "---\ndescription: \"An old subagent\"\nagents: [\"claude-code\"]\n---\nDo old things.\n"
+   ],
+   [
+    "run",
+    "sync",
+    "subagents"
+   ],
+   [
+    "move",
+    ".claude/agents/old.md",
+    "elsewhere/old.md"
+   ],
+   [
+    "symlink",
+    ".claude/agents/old.md",
+    "elsewhere/old.md"
+   ],
+   [
+    "remove",
+    "aikito/subagents/old.md"
+   ],
+   [
+    "run",
+    "sync",
+    "subagents"
+   ],
+   [
+    "run",
+    "sync",
+    "subagents",
+    "--prune"
+   ],
+   [
+    "exists",
+    ".claude/agents/old.md"
+   ],
+   [
+    "exists",
+    "elsewhere/old.md"
+   ]
+  ]
+ }
+}

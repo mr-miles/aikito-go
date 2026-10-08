@@ -384,7 +384,8 @@ func scanExtensionDir(root, extension string, wantMarked bool) (map[string]strin
 			continue
 		}
 		path := filepath.Join(root, name)
-		fi, err := e.Info()
+		// Path.is_file() follows symlinks, so a symlinked file counts.
+		fi, err := os.Stat(path)
 		if err != nil || !fi.Mode().IsRegular() {
 			continue
 		}
