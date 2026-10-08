@@ -1,0 +1,59 @@
+$ () aikito init project p1 {H}/p1
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p1/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' initialized in Aikito workspace.
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] <HOME>/p1/.agents/memory/notes -> <HOME>/aikito/projects/p1/memory/notes
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1.
+--- stderr
+--- exit 0
+$ () aikito sync project p1 --dry-run
+--- stdout
+[INFO] Previewing sync for project 'p1' (mode: link)
+[DRY RUN LINK] <HOME>/aikito/skills/alpha -> <HOME>/p1/.agents/skills/alpha
+[DRY RUN LINK] <HOME>/aikito/skills/beta -> <HOME>/p1/.agents/skills/beta
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' sync preview completed.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: link)
+[LINK] <HOME>/p1/.agents/skills/alpha -> <HOME>/aikito/skills/alpha
+[LINK] <HOME>/p1/.agents/skills/beta -> <HOME>/aikito/skills/beta
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1 --dry-run
+--- stdout
+[INFO] Previewing sync for project 'p1' (mode: link)
+[DRY RUN CLEANUP] Would remove stale managed item: <HOME>/p1/.agents/skills/beta
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' sync preview completed.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' (mode: link)
+[CLEANUP] Removed stale managed item: <HOME>/p1/.agents/skills/beta
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+--- stderr
+[ERROR] Project skill source does not exist: <HOME>/aikito/skills/ghost
+[CONFLICT] Canonical skill source missing or unreadable: Canonical skill source does not exist: <HOME>/aikito/skills/ghost
+[ERROR] Project synchronization aborted.
+--- exit 1

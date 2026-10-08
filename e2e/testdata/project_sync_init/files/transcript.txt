@@ -1,0 +1,83 @@
+$ () aikito init project p1 {H}/p1
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p1/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' initialized in Aikito workspace.
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] <HOME>/p1/.agents/memory/notes -> <HOME>/aikito/projects/p1/memory/notes
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1.
+--- stderr
+--- exit 0
+$ () aikito init project p1 {H}/p2
+--- stdout
+--- stderr
+[ERROR] Project 'p1' is already registered to <HOME>/p1, not <HOME>/p2.
+--- exit 1
+$ () aikito init project p1 {H}/p1
+--- stdout
+[SKIP FILE] <HOME>/aikito/projects/p1/agent.toml (Already exists)
+[SKIP FILE] <HOME>/aikito/projects/p1/AGENTS.md (Already exists)
+[SUCCESS] Project 'p1' initialized in Aikito workspace.
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1.
+--- stderr
+--- exit 0
+$ () aikito sync project p1 --dry-run
+--- stdout
+[INFO] Previewing sync for project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' sync preview completed.
+--- stderr
+--- exit 0
+$ (p1) aikito sync project
+--- stdout
+[aikito] Target project: 'p1' (detected from cwd)
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ (p1) aikito sync project .
+--- stdout
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project
+--- stdout
+--- stderr
+[ERROR] Current directory is not inside a registered project: <HOME>
+Please specify a project name, e.g. 'aikito sync project <name>'
+--- exit 1
+$ () aikito sync project .
+--- stdout
+--- stderr
+[ERROR] Current directory is not inside a registered project: <HOME>
+--- exit 1
+$ () aikito sync project nosuch
+--- stdout
+--- stderr
+[ERROR] Project 'nosuch' not found at <HOME>/aikito/projects/nosuch.
+--- exit 1
+$ () aikito sync project p1,p1 {H}/p1
+--- stdout
+--- stderr
+[ERROR] Cannot specify explicit project_path when syncing multiple projects.
+--- exit 1
+$ () aikito sync project --prune
+--- stdout
+--- stderr
+usage: aikito [-h] [-v] [--debug]
+              {version,path,git,migrate,import,init,add,adopt,status,web,diff,maintain,auth,sync,show,edit,rename,rm,remove,doctor,completion} ...
+aikito: error: unrecognized arguments: --prune
+--- exit 2
+$ () aikito sync project --force=1 p1
+--- stdout
+--- stderr
+usage: aikito sync project [-h] [--dry-run] [--force]
+                           [project_name] [project_path]
+aikito sync project: error: argument --force: ignored explicit argument '1'
+--- exit 2

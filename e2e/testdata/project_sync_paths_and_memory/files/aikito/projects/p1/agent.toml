@@ -1,0 +1,8 @@
+name = "p1"
+paths = [
+    "~/p1",
+    "~/p1b",
+]
+sync_mode = "link"
+skills = ["alpha"]
+memory = ["shared.md", "missing.md"]

@@ -1,235 +1,106 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"io"
-	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/mr-miles/aikito-go/internal/compat"
 	"github.com/mr-miles/aikito-go/internal/project"
-	"github.com/mr-miles/aikito-go/internal/registry"
-	"github.com/mr-miles/aikito-go/internal/sync"
+	"github.com/mr-miles/aikito-go/internal/projectsync"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
-// cmdSyncProject implements `aikito sync project [name] [--dry-run]
-// [--verbose] [--force] [--prune]`, built on internal/sync's deliberately
-// simplified project-skill/memory/instructions plan builders (see
-// projectskills.go's package doc for what's NOT a full port of
-// project_sync.py here, and why). --prune is accepted but not yet
-// implemented (no stale-entry tracking), matching this build's existing
-// `sync global`/`sync subagents` convention for that flag.
+// cmdSyncProject implements `aikito sync project [--dry-run] [--force]
+// [project_name] [project_path]`, a port of cli.py's cmd_project_sync on
+// top of internal/projectsync.
 func cmdSyncProject(args []string, stdout, stderr io.Writer, env Environment) int {
-	dryRun, verbose, force, prune := false, false, false, false
-	var name string
-	for _, a := range args {
-		switch {
-		case a == "--dry-run":
-			dryRun = true
-		case a == "--verbose":
-			verbose = true
-		case a == "--force":
-			force = true
-		case a == "--prune":
-			prune = true
-		case strings.HasPrefix(a, "-"):
-			fmt.Fprintf(stderr, "[ERROR] Unknown flag: %s\n", a)
-			return 2
-		default:
-			if name == "" {
-				name = a
-			}
-		}
+	parsed, ok := parseArgparse("sync project", args, []string{"--dry-run", "--force"}, 2, stderr)
+	if !ok {
+		return 2
 	}
+	var rawNames, projectPath string
+	if len(parsed.positionals) > 0 {
+		rawNames = parsed.positionals[0]
+	}
+	if len(parsed.positionals) > 1 {
+		projectPath = parsed.positionals[1]
+	}
+	return runProjectSync(rawNames, projectPath, parsed.flags["--dry-run"], parsed.flags["--force"], stdout, stderr, env)
+}
 
+// runProjectSync is the body of cmd_project_sync, shared with init project.
+func runProjectSync(rawNames, projectPath string, dryRun, force bool, stdout, stderr io.Writer, env Environment) int {
 	aikitoDir, err := env.AikitoDir()
 	if err != nil {
 		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
 		return 1
 	}
-	if err := workspace.RequireCurrentLayout(aikitoDir); err != nil {
-		fmt.Fprintf(stderr, "[ERROR] %v\n", err)
-		return 1
-	}
-	if prune {
-		fmt.Fprintln(stdout, "[INFO] --prune is not yet implemented in this Go build (no stale-entry tracking yet); continuing without it.")
-	}
 
 	var names []string
-	if name != "" {
-		names = []string{name}
-	} else {
-		entries, _ := os.ReadDir(filepath.Join(aikitoDir, "projects"))
-		for _, e := range entries {
-			if e.IsDir() {
-				names = append(names, e.Name())
-			}
-		}
-	}
-	if len(names) == 0 {
-		fmt.Fprintln(stdout, "[INFO] No registered projects to synchronize.")
-		return 0
-	}
-
-	reg := registry.Load(aikitoDir, env.Home)
-
-	var conflicts, changes int
-
-	type planned struct {
-		projectName, checkout string
-		skillOps              []sync.ProjectSkillOperation
-		instrOps, memOps      []sync.LinkOperation
-	}
-	var plans []planned
-
-	for _, pname := range names {
-		cfg, err := project.LoadConfig(aikitoDir, env.Home, pname)
-		if err != nil {
-			fmt.Fprintf(stderr, "[ERROR] %v\n", err)
+	if rawNames == "" || rawNames == "." {
+		detected, err := project.DetectCurrentProject(aikitoDir, env.Cwd, env.Home)
+		var conflict *project.ContextConflictError
+		if errors.As(err, &conflict) {
+			fmt.Fprintf(stderr, "[CONFLICT] Multiple projects match current directory '%s': %s\n", conflict.Path, strings.Join(conflict.Projects, ", "))
 			return 1
 		}
-		binding := cfg.Binding()
-		active := binding.ActiveEntries()
-		if len(active) == 0 {
-			fmt.Fprintf(stdout, "[SKIP] %-20s no active checkout found on this host\n", pname)
-			continue
+		if detected == "" {
+			cwd, rerr := workspace.ResolvePath(env.Cwd)
+			if rerr != nil {
+				cwd = env.Cwd
+			}
+			fmt.Fprintf(stderr, "[ERROR] Current directory is not inside a registered project: %s\n", cwd)
+			if rawNames == "" {
+				fmt.Fprintln(stderr, "Please specify a project name, e.g. 'aikito sync project <name>'")
+			}
+			return 1
 		}
-
-		var skillsSel []string
-		if raw, ok := cfg.Raw["skills"].([]any); ok {
-			for _, s := range raw {
-				skillsSel = append(skillsSel, fmt.Sprint(s))
-			}
+		if rawNames == "" {
+			fmt.Fprintf(stdout, "[aikito] Target project: '%s' (detected from cwd)\n", detected)
 		}
-		syncMode := "link"
-		if sm, ok := cfg.Raw["sync_mode"].(string); ok && sm != "" {
-			syncMode = sm
-		}
-
-		for _, entry := range active {
-			p := planned{projectName: pname, checkout: entry.ResolvedPath}
-
-			skillOps, err := sync.BuildProjectSkillsPlan(aikitoDir, env.Home, pname, entry.ResolvedPath, skillsSel, syncMode, force)
-			if err != nil {
-				fmt.Fprintf(stderr, "[ERROR] %s: %v\n", pname, err)
-				return 1
+		names = []string{detected}
+	} else {
+		for _, p := range strings.Split(rawNames, ",") {
+			if p = strings.TrimSpace(p); p != "" {
+				names = append(names, p)
 			}
-			p.skillOps = skillOps
-
-			if _, serr := os.Stat(filepath.Join(aikitoDir, "projects", pname, "AGENTS.md")); serr == nil {
-				instrOps, err := sync.BuildProjectInstructionsPlan(aikitoDir, pname, entry.ResolvedPath, reg, force)
-				if err != nil {
-					fmt.Fprintf(stderr, "[ERROR] %s: %v\n", pname, err)
-					return 1
-				}
-				p.instrOps = instrOps
-			}
-
-			memOps, err := sync.BuildProjectMemoryPlan(aikitoDir, pname, entry.ResolvedPath, force)
-			if err != nil {
-				fmt.Fprintf(stderr, "[ERROR] %s: %v\n", pname, err)
-				return 1
-			}
-			p.memOps = memOps
-
-			plans = append(plans, p)
 		}
 	}
 
-	for _, p := range plans {
-		for _, op := range p.skillOps {
-			switch op.Action {
-			case "CREATE", "UPDATE":
-				changes++
-				tag := "[" + op.Action + "]"
-				if op.RequiresForce {
-					tag = "[FORCE " + op.Action + "]"
-				}
-				fmt.Fprintf(stdout, "%s skill    %-20s %s\n", tag, p.projectName+"/"+op.Skill, op.TargetPath)
-			case "NOOP":
-				if verbose {
-					fmt.Fprintf(stdout, "[OK]     skill    %-20s %s\n", p.projectName+"/"+op.Skill, op.TargetPath)
-				}
-			case "CONFLICT":
-				conflicts++
-				fmt.Fprintf(stdout, "[CONFLICT] skill  %-20s %s\n", p.projectName+"/"+op.Skill, op.Reason)
-			}
-		}
-		for _, op := range p.instrOps {
-			reportLink(stdout, "instr", p.projectName, "", op, verbose, &conflicts, &changes)
-		}
-		for _, op := range p.memOps {
-			reportLink(stdout, "memory", p.projectName, op.ResourceName, op, verbose, &conflicts, &changes)
-		}
-	}
-
-	if conflicts > 0 {
-		fmt.Fprintf(stdout, "\n[BLOCKED] %d conflict(s) found; rerun with --force to overwrite, or resolve manually.\n", conflicts)
-		if dryRun {
-			return 0
-		}
+	if len(names) > 1 && projectPath != "" {
+		fmt.Fprintln(stderr, "[ERROR] Cannot specify explicit project_path when syncing multiple projects.")
 		return 1
 	}
-	if dryRun {
-		fmt.Fprintf(stdout, "\n[DRY RUN] %d change(s) would be made.\n", changes)
-		return 0
-	}
 
-	applied := 0
-	for _, p := range plans {
-		for _, op := range p.skillOps {
-			if op.Action == "CREATE" || op.Action == "UPDATE" {
-				if err := sync.ApplyProjectSkillOperation(env.Home, p.projectName, op); err != nil {
-					fmt.Fprintf(stderr, "[ERROR] %s/%s: %v\n", p.projectName, op.Skill, err)
-					return 1
-				}
-				applied++
-			}
+	out := projectsync.Out{Stdout: stdout, Stderr: stderr}
+	for _, name := range names {
+		if !compat.CanSymlink() {
+			fmt.Fprintln(stderr, "[ERROR] This platform does not support symbolic links, which Aikito requires.")
+			return 1
 		}
-		for _, op := range p.instrOps {
-			if op.Action == sync.LinkCreate {
-				if err := sync.ApplySymlink(op); err != nil {
-					fmt.Fprintf(stderr, "[ERROR] %s: %v\n", p.projectName, err)
-					return 1
-				}
-				applied++
-			}
+		path := ""
+		if len(names) == 1 {
+			path = projectPath
 		}
-		for _, op := range p.memOps {
-			if op.Action == sync.LinkCreate {
-				if err := sync.ApplySymlink(op); err != nil {
-					fmt.Fprintf(stderr, "[ERROR] %s/%s: %v\n", p.projectName, op.ResourceName, err)
-					return 1
-				}
-				applied++
-			}
+		if path != "" {
+			path = resolveAgainstCwd(env, path)
+		}
+		if !projectsync.SyncProject(out, aikitoDir, env.Home, name, path, dryRun, force) {
+			return 1
 		}
 	}
-
-	fmt.Fprintf(stdout, "\n[SUCCESS] Synced project resources: %d change(s) applied.\n", applied)
 	return 0
 }
 
-func reportLink(stdout io.Writer, label, project, resource string, op sync.LinkOperation, verbose bool, conflicts, changes *int) {
-	name := project
-	if resource != "" {
-		name = project + "/" + resource
+// resolveAgainstCwd makes a relative path argument relative to the
+// command's working directory, as Path(arg).resolve() does in Python.
+func resolveAgainstCwd(env Environment, p string) string {
+	p = workspace.ExpandUser(env.Home, p)
+	if filepath.IsAbs(p) {
+		return p
 	}
-	switch op.Action {
-	case sync.LinkCreate:
-		*changes++
-		tag := "[CREATE]"
-		if op.RequiresForce {
-			tag = "[FORCE CREATE]"
-		}
-		fmt.Fprintf(stdout, "%s %-9s%-20s %s\n", tag, label, name, op.TargetPath)
-	case sync.LinkNoop:
-		if verbose {
-			fmt.Fprintf(stdout, "[OK]     %-9s%-20s %s\n", label, name, op.TargetPath)
-		}
-	case sync.LinkConflict:
-		*conflicts++
-		fmt.Fprintf(stdout, "[CONFLICT] %-9s%-20s %s\n", label, name, op.Reason)
-	}
+	return filepath.Join(env.Cwd, p)
 }

@@ -1,0 +1,59 @@
+$ () aikito init project p1 {H}/p1
+--- stdout
+[CREATE FILE] <HOME>/aikito/projects/p1/agent.toml
+[CREATE FILE] <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' initialized in Aikito workspace.
+[INFO] Syncing project 'p1' (mode: link)
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] <HOME>/p1/.agents/memory/notes -> <HOME>/aikito/projects/p1/memory/notes
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1.
+--- stderr
+--- exit 0
+$ (p1) aikito sync project p1 ../p1b
+--- stdout
+[INFO] Syncing project 'p1' (mode: link)
+[LINK] <HOME>/p1b/.agents/skills/alpha -> <HOME>/aikito/skills/alpha
+[INFO] Registered codebase path for project 'p1'.
+[OK] Claude Code instructions: <HOME>/p1b/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[LINK] <HOME>/p1b/.agents/memory/notes -> <HOME>/aikito/projects/p1/memory/notes
+[SUCCESS] Project 'p1' synced successfully at <HOME>/p1b.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+[INFO] Syncing project 'p1' across 2 active paths:
+
+[INFO] === [1/2] Path [1]: <HOME>/p1 ===
+[LINK] <HOME>/p1/.agents/skills/alpha -> <HOME>/aikito/skills/alpha
+
+[INFO] === [2/2] Path [2]: <HOME>/p1b ===
+[OK] Claude Code instructions: <HOME>/p1/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[OK] Claude Code instructions: <HOME>/p1b/.claude/CLAUDE.md -> <HOME>/aikito/projects/p1/AGENTS.md
+[SUCCESS] Project 'p1' synced successfully.
+--- stderr
+--- exit 0
+$ () aikito sync project p1
+--- stdout
+--- stderr
+[CONFLICT] missing.md memory: Project memory source does not exist: <HOME>/aikito/memory/missing.md
+[CONFLICT] missing.md memory: Project memory source does not exist: <HOME>/aikito/memory/missing.md
+[ERROR] Project synchronization aborted.
+--- exit 1
+$ () aikito sync project p1 --dry-run
+--- stdout
+--- stderr
+[CONFLICT] missing.md memory: Project memory source does not exist: <HOME>/aikito/memory/missing.md
+[CONFLICT] stray.md memory: Target preserved: <HOME>/p1/.agents/memory/stray.md. Unmanaged file
+[CONFLICT] missing.md memory: Project memory source does not exist: <HOME>/aikito/memory/missing.md
+[ERROR] Project synchronization aborted.
+--- exit 1
+$ () aikito sync project p1
+--- stdout
+--- stderr
+[ERROR] None of the configured paths for project 'p1' exist on this machine:
+  - [1] <HOME>/p1
+  - [2] <HOME>/p1b
+
+Please clone/create the project directory or specify the path explicitly:
+  aikito sync project p1 <project_path>
+--- exit 1

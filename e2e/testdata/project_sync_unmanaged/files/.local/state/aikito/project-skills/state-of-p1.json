@@ -1,0 +1,17 @@
+{
+  "physical_checkout": "<HOME>/p1",
+  "project_name": "p1",
+  "records": {
+    "alpha": {
+      "baseline_fingerprint": "v1:080d48892f0cbfd6b793a319e0f41b5d075bef285ff697f92a40395068f2a40c",
+      "baseline_origin": "claim",
+      "last_observed_selected": true,
+      "lifecycle": "active",
+      "representation": "copy",
+      "skill_name": "alpha"
+    }
+  },
+  "revision": 1,
+  "version": 1,
+  "workspace_root": "<HOME>/aikito"
+}

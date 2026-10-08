@@ -1,0 +1,4 @@
+name = "p1"
+path = "~/p1"
+sync_mode = "link"
+skills = []
