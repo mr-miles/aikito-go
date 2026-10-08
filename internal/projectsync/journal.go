@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/mr-miles/aikito-go/internal/faultinject"
 	"github.com/mr-miles/aikito-go/internal/project"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
@@ -137,6 +138,7 @@ func writeJournal(home string, j *Journal) string {
 	if err := os.Rename(tmp, filepath.Join(txDir, "journal.json")); err != nil {
 		return fail(err)
 	}
+	faultinject.Point("skill-journal")
 	return ""
 }
 
