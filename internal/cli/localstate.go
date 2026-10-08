@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/mr-miles/aikito-go/internal/compat"
+	"github.com/mr-miles/aikito-go/internal/mcp"
 	"github.com/mr-miles/aikito-go/internal/projectsync"
 	"github.com/mr-miles/aikito-go/internal/writerlock"
 )
@@ -73,12 +74,18 @@ func inspectStateFile(path string, cleanupAllowed bool, env func(string) string)
 	if err != nil {
 		return bad(err.Error())
 	}
-	var raw map[string]any
+	// json.loads: its error wording, trailing data rejected, and a
+	// non-object document is "invalid state metadata", not a parse error.
+	if msg := mcp.PythonJSONDecodeError(string(data)); msg != "" {
+		return bad(msg)
+	}
+	var doc any
 	dec := json.NewDecoder(strings.NewReader(string(data)))
 	dec.UseNumber()
-	if err := dec.Decode(&raw); err != nil {
+	if err := dec.Decode(&doc); err != nil {
 		return bad(err.Error())
 	}
+	raw, _ := doc.(map[string]any)
 	version, _ := raw["version"].(json.Number)
 	records, recOK := raw["records"].(map[string]any)
 	if raw == nil || version.String() != "1" || !recOK {

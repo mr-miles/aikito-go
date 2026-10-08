@@ -1,4 +1,389 @@
 {
+ "doctor_fix_deferred_by_journal": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p1' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p1/.agents/skills/pskill\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[SUCCESS] Project 'p1' synced successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p2' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p2/.agents/skills/pskill\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n[SUCCESS] Project 'p2' synced successfully.\n"
+   },
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Initializing Aikito workspace in: H/tmpws\n[CREATE DIR] H/tmpws\n[CREATE DIR] H/tmpws/global\n[CREATE DIR] H/tmpws/projects\n[CREATE DIR] H/tmpws/mcps\n[CREATE DIR] H/tmpws/skills\n[CREATE DIR] H/tmpws/subagents\n[CREATE DIR] H/tmpws/agents\n[CREATE DIR] H/tmpws/memory/notes\n[CREATE FILE] H/tmpws/config.toml (Workspace config template)\n[CREATE FILE] H/tmpws/skills.toml (Global skills config)\n[CREATE FILE] H/tmpws/global/AGENTS.md (Global agent instructions)\n[CREATE FILE] H/tmpws/.gitignore (Workspace .gitignore with leading slashes)\n[CREATE FILE] H/tmpws/agents/claude-code.toml (claude-code Agent definition)\n[CREATE FILE] H/tmpws/layout.toml (Workspace resource layout version)\n[CREATE DIR] H/tmpws/skills/aikito (Bundled aikito skill)\n[CREATE DIR] H/tmpws/skills/durable-memory (Bundled durable-memory skill)\n[GIT INIT] Initialized Git repository in H/tmpws\n\n[SUCCESS] Aikito workspace initialization complete!\n\n[INFO] Detected installed Agent(s):\n  - Claude Code (H/.claude)\n\nNext step: Run 'aikito sync'. It checks the complete plan for conflicts before changing managed configuration on this host.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "q"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'q' (mode: copy)\n[COPY DIR] H/tmpws/skills/qskill -> H/tmpq/.agents/skills/qskill\n[OK] Claude Code instructions: H/tmpq/.claude/CLAUDE.md -> H/tmpws/projects/q/AGENTS.md\n[LINK] H/tmpq/.agents/memory/notes -> H/tmpws/projects/q/memory/notes\n[SUCCESS] Project 'q' synced successfully.\n"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ⚠ H/.local/state/aikito/project-skills/transactions/tx1/journal.json: transaction journal present; local state cleanup deferred\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/transactions/tx1/journal.json\n      Reason: transaction journal present; local state cleanup deferred\n  ⚠ H/.local/state/aikito/project-skills/e01babd9b31bf0b72e7264ed5c1d4cd6a6cc03fed6b81adc22e6b076dab5f052.json: temporary workspace and checkout no longer exist\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/e01babd9b31bf0b72e7264ed5c1d4cd6a6cc03fed6b81adc22e6b076dab5f052.json\n      Reason: temporary workspace and checkout no longer exist\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (2 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: 1 active path(s)\n\nFound 5 issues, 3 warnings.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D .local/state/aikito/project-skills/transactions/tx1 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/.aikito-tx",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p1/.agents/skills/pskill",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .local/state/aikito/project-skills/7dc384015c3d9fc01351ba47bef5d3f14c000f29115b0f658e5db875e2a5cf97.json 600",
+     "F .local/state/aikito/project-skills/e01babd9b31bf0b72e7264ed5c1d4cd6a6cc03fed6b81adc22e6b076dab5f052.json 600",
+     "F .local/state/aikito/project-skills/f6fc9a5faa1598f45ea52fddfddf8d785ac24894014d7f3edc5348b93d626e47.json 600",
+     "F .local/state/aikito/project-skills/transactions/tx1/journal.json 644",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p1/.agents/skills/pskill/SKILL.md",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "env": {
+     "AIKITO_DIR": "H/tmpws"
+    },
+    "op": "run"
+   },
+   {
+    "content": "---\nname: qskill\ndescription: A qskill skill\n---\n\n# qskill\n",
+    "op": "write",
+    "path": "tmpws/skills/qskill/SKILL.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "tmpq"
+   },
+   {
+    "content": "name = \"q\"\npath = \"~/tmpq\"\nsync_mode = \"copy\"\nskills = [\"qskill\"]\n",
+    "op": "write",
+    "path": "tmpws/projects/q/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "tmpws/projects/q/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "tmpws/projects/q/memory/notes"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "q"
+    ],
+    "env": {
+     "AIKITO_DIR": "H/tmpws"
+    },
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "tmpws"
+   },
+   {
+    "op": "rm",
+    "path": "tmpq"
+   },
+   {
+    "content": "{}",
+    "op": "write",
+    "path": ".local/state/aikito/project-skills/transactions/tx1/journal.json"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
+ "doctor_fix_invalid_state_file": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p1' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p1/.agents/skills/pskill\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[SUCCESS] Project 'p1' synced successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p2' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p2/.agents/skills/pskill\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n[SUCCESS] Project 'p2' synced successfully.\n"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ⚠ H/.local/state/aikito/project-skills/0000000000000000000000000000000000000000000000000000000000000000.json: cannot verify state: Expecting value: line 1 column 1 (char 0)\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/0000000000000000000000000000000000000000000000000000000000000000.json\n      Reason: cannot verify state: Expecting value: line 1 column 1 (char 0)\n  ⚠ H/.local/state/aikito/project-skills/1111111111111111111111111111111111111111111111111111111111111111.json: cannot verify state: invalid state metadata\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/1111111111111111111111111111111111111111111111111111111111111111.json\n      Reason: cannot verify state: invalid state metadata\n  ⚠ H/.local/state/aikito/project-skills/2222222222222222222222222222222222222222222222222222222222222222.json: cannot verify state: Extra data: line 1 column 15 (char 14)\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/2222222222222222222222222222222222222222222222222222222222222222.json\n      Reason: cannot verify state: Extra data: line 1 column 15 (char 14)\n  ⚠ H/.local/state/aikito/project-skills/3333333333333333333333333333333333333333333333333333333333333333.json: cannot verify state: missing binding identity\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/3333333333333333333333333333333333333333333333333333333333333333.json\n      Reason: cannot verify state: missing binding identity\n  ⚠ H/.local/state/aikito/project-skills/notahash.json: cannot verify state: unrecognized state filename\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/notahash.json\n      Reason: cannot verify state: unrecognized state filename\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (2 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: 1 active path(s)\n\nFound 5 issues, 6 warnings.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/.aikito-tx",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p1/.agents/skills/pskill",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .local/state/aikito/project-skills/0000000000000000000000000000000000000000000000000000000000000000.json 644",
+     "F .local/state/aikito/project-skills/1111111111111111111111111111111111111111111111111111111111111111.json 644",
+     "F .local/state/aikito/project-skills/2222222222222222222222222222222222222222222222222222222222222222.json 644",
+     "F .local/state/aikito/project-skills/3333333333333333333333333333333333333333333333333333333333333333.json 644",
+     "F .local/state/aikito/project-skills/bbfbde87462ac4eb0e10615250dee5d6ef5106addf494eb4b78f9990f494f658.json 600",
+     "F .local/state/aikito/project-skills/fd4b9deb4510eb76289aabd60744183c474b2df69ca96dc0163e827256e3716c.json 600",
+     "F .local/state/aikito/project-skills/notahash.json 644",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p1/.agents/skills/pskill/SKILL.md",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "op": "run"
+   },
+   {
+    "content": "not json",
+    "op": "write",
+    "path": ".local/state/aikito/project-skills/0000000000000000000000000000000000000000000000000000000000000000.json"
+   },
+   {
+    "content": "{}",
+    "op": "write",
+    "path": ".local/state/aikito/project-skills/notahash.json"
+   },
+   {
+    "content": "[1, 2]",
+    "op": "write",
+    "path": ".local/state/aikito/project-skills/1111111111111111111111111111111111111111111111111111111111111111.json"
+   },
+   {
+    "content": "{\"version\": 1}}",
+    "op": "write",
+    "path": ".local/state/aikito/project-skills/2222222222222222222222222222222222222222222222222222222222222222.json"
+   },
+   {
+    "content": "{\"version\": 1, \"records\": {}}",
+    "op": "write",
+    "path": ".local/state/aikito/project-skills/3333333333333333333333333333333333333333333333333333333333333333.json"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   }
+  ]
+ },
  "doctor_fix_live_state_kept": {
   "expect": [
    {
@@ -28,7 +413,7 @@
     ],
     "exit": 1,
     "stderr": "",
-    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ✓ Interpreter consistent: /usr/bin/python3\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (2 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: 1 active path(s)\n\nFound 5 issues, 1 warning.\n"
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (2 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: 1 active path(s)\n\nFound 5 issues, 1 warning.\n"
    },
    {
     "tree": [
@@ -50,8 +435,8 @@
      "D p2/.agents/memory",
      "D p2/.agents/skills",
      "D p2/.agents/skills/pskill",
-     "F .local/state/aikito/project-skills/28fdd6df7ad4ffd22dcb4ffa94ca2ec7405abbbb6985e6c4425427b27c11748e.json 600",
-     "F .local/state/aikito/project-skills/7bba90d2cc7aff30247a51d5f91a868fda2a7636a1ca106bf3518d9af540bc64.json 600",
+     "F .local/state/aikito/project-skills/06d4041ce926f5e98b98f2e4f02d3ffb1854dc4ff6e58272b14756199cf9a380.json 600",
+     "F .local/state/aikito/project-skills/08de03e3bd609d26842f85e5c1ca5522f43679e1d5903534758f7484d36d081c.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/pskill/SKILL.md",
      "F p2/.agents/skills/pskill/SKILL.md",
@@ -137,6 +522,278 @@
    }
   ]
  },
+ "doctor_fix_removes_temp_binding": {
+  "expect": [
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p1' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p1/.agents/skills/pskill\n[OK] Claude Code instructions: H/p1/.claude/CLAUDE.md -> H/aikito/projects/p1/AGENTS.md\n[LINK] H/p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes\n[SUCCESS] Project 'p1' synced successfully.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'p2' (mode: copy)\n[COPY DIR] H/aikito/skills/pskill -> H/p2/.agents/skills/pskill\n[OK] Claude Code instructions: H/p2/.claude/CLAUDE.md -> H/aikito/projects/p2/AGENTS.md\n[LINK] H/p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes\n[SUCCESS] Project 'p2' synced successfully.\n"
+   },
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Initializing Aikito workspace in: H/tmpws\n[CREATE DIR] H/tmpws\n[CREATE DIR] H/tmpws/global\n[CREATE DIR] H/tmpws/projects\n[CREATE DIR] H/tmpws/mcps\n[CREATE DIR] H/tmpws/skills\n[CREATE DIR] H/tmpws/subagents\n[CREATE DIR] H/tmpws/agents\n[CREATE DIR] H/tmpws/memory/notes\n[CREATE FILE] H/tmpws/config.toml (Workspace config template)\n[CREATE FILE] H/tmpws/skills.toml (Global skills config)\n[CREATE FILE] H/tmpws/global/AGENTS.md (Global agent instructions)\n[CREATE FILE] H/tmpws/.gitignore (Workspace .gitignore with leading slashes)\n[CREATE FILE] H/tmpws/agents/claude-code.toml (claude-code Agent definition)\n[CREATE FILE] H/tmpws/layout.toml (Workspace resource layout version)\n[CREATE DIR] H/tmpws/skills/aikito (Bundled aikito skill)\n[CREATE DIR] H/tmpws/skills/durable-memory (Bundled durable-memory skill)\n[GIT INIT] Initialized Git repository in H/tmpws\n\n[SUCCESS] Aikito workspace initialization complete!\n\n[INFO] Detected installed Agent(s):\n  - Claude Code (H/.claude)\n\nNext step: Run 'aikito sync'. It checks the complete plan for conflicts before changing managed configuration on this host.\n"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "q"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "[INFO] Syncing project 'q' (mode: copy)\n[COPY DIR] H/tmpws/skills/qskill -> H/tmpq/.agents/skills/qskill\n[OK] Claude Code instructions: H/tmpq/.claude/CLAUDE.md -> H/tmpws/projects/q/AGENTS.md\n[LINK] H/tmpq/.agents/memory/notes -> H/tmpws/projects/q/memory/notes\n[SUCCESS] Project 'q' synced successfully.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/.aikito-tx",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p1/.agents/skills/pskill",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .local/state/aikito/project-skills/03c431d507210523c7d287917ca41ace046b60851db2c841bb3634f88498b3c6.json 600",
+     "F .local/state/aikito/project-skills/69ba121743196c9ae60fdb8051d6eeb6d3d5c804125ed4e083df032bef4bff2c.json 600",
+     "F .local/state/aikito/project-skills/e4316d7bf1286d432789c8c12ee46dd170ed4f7e0693fdd78ad533fa351bc926.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p1/.agents/skills/pskill/SKILL.md",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   },
+   {
+    "args": [
+     "doctor"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ⚠ H/.local/state/aikito/project-skills/e4316d7bf1286d432789c8c12ee46dd170ed4f7e0693fdd78ad533fa351bc926.json: temporary workspace and checkout no longer exist\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/e4316d7bf1286d432789c8c12ee46dd170ed4f7e0693fdd78ad533fa351bc926.json\n      Reason: temporary workspace and checkout no longer exist\n    → aikito doctor --fix\n      Clean up: aikito doctor --fix\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (2 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: 1 active path(s)\n\nFound 5 issues, 2 warnings.\n"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "[FIX] Removed stale local skill state: H/.local/state/aikito/project-skills/e4316d7bf1286d432789c8c12ee46dd170ed4f7e0693fdd78ad533fa351bc926.json\n\n╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (2 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: 1 active path(s)\n\nFound 5 issues, 1 warning.\n"
+   },
+   {
+    "tree": [
+     "D .claude",
+     "D .local 755",
+     "D .local/state 755",
+     "D .local/state/aikito 755",
+     "D .local/state/aikito/project-skills 700",
+     "D .local/state/aikito/project-skills/transactions 755",
+     "D p1",
+     "D p1/.agents",
+     "D p1/.agents/.aikito-tx",
+     "D p1/.agents/memory",
+     "D p1/.agents/skills",
+     "D p1/.agents/skills/pskill",
+     "D p2",
+     "D p2/.agents",
+     "D p2/.agents/.aikito-tx",
+     "D p2/.agents/memory",
+     "D p2/.agents/skills",
+     "D p2/.agents/skills/pskill",
+     "F .local/state/aikito/project-skills/03c431d507210523c7d287917ca41ace046b60851db2c841bb3634f88498b3c6.json 600",
+     "F .local/state/aikito/project-skills/69ba121743196c9ae60fdb8051d6eeb6d3d5c804125ed4e083df032bef4bff2c.json 600",
+     "F .local/state/aikito/project-skills/writer.lock 600",
+     "F p1/.agents/skills/pskill/SKILL.md",
+     "F p2/.agents/skills/pskill/SKILL.md",
+     "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes",
+     "L p2/.agents/memory/notes -> H/aikito/projects/p2/memory/notes"
+    ]
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "exit": 1,
+    "stderr": "",
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (2 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: 1 active path(s)\n\nFound 5 issues, 1 warning.\n"
+   }
+  ],
+  "steps": [
+   {
+    "op": "mkdir",
+    "path": ".claude"
+   },
+   {
+    "op": "init"
+   },
+   {
+    "content": "---\nname: pskill\ndescription: A pskill skill\n---\n\n# pskill\n",
+    "op": "write",
+    "path": "aikito/skills/pskill/SKILL.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "p1"
+   },
+   {
+    "content": "name = \"p1\"\npath = \"~/p1\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p1/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p1/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p1/memory/notes"
+   },
+   {
+    "op": "mkdir",
+    "path": "p2"
+   },
+   {
+    "content": "name = \"p2\"\npath = \"~/p2\"\nsync_mode = \"copy\"\nskills = [\"pskill\"]\n",
+    "op": "write",
+    "path": "aikito/projects/p2/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "aikito/projects/p2/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "aikito/projects/p2/memory/notes"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p1"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "p2"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "init",
+     "workspace"
+    ],
+    "env": {
+     "AIKITO_DIR": "H/tmpws"
+    },
+    "op": "run"
+   },
+   {
+    "content": "---\nname: qskill\ndescription: A qskill skill\n---\n\n# qskill\n",
+    "op": "write",
+    "path": "tmpws/skills/qskill/SKILL.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "tmpq"
+   },
+   {
+    "content": "name = \"q\"\npath = \"~/tmpq\"\nsync_mode = \"copy\"\nskills = [\"qskill\"]\n",
+    "op": "write",
+    "path": "tmpws/projects/q/agent.toml"
+   },
+   {
+    "content": "",
+    "op": "write",
+    "path": "tmpws/projects/q/AGENTS.md"
+   },
+   {
+    "op": "mkdir",
+    "path": "tmpws/projects/q/memory/notes"
+   },
+   {
+    "args": [
+     "sync",
+     "project",
+     "q"
+    ],
+    "env": {
+     "AIKITO_DIR": "H/tmpws"
+    },
+    "op": "run"
+   },
+   {
+    "op": "rm",
+    "path": "tmpws"
+   },
+   {
+    "op": "rm",
+    "path": "tmpq"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "args": [
+     "doctor"
+    ],
+    "op": "run"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "op": "run"
+   },
+   {
+    "op": "tree"
+   },
+   {
+    "args": [
+     "doctor",
+     "--fix"
+    ],
+    "op": "run"
+   }
+  ]
+ },
  "doctor_fix_stale_state": {
   "expect": [
    {
@@ -173,8 +830,8 @@
      "D p1/.agents/memory",
      "D p1/.agents/skills",
      "D p1/.agents/skills/pskill",
-     "F .local/state/aikito/project-skills/8b125fc46817d90c34b4c8be1abdc3faf15304465a330cf3ecb72d8cf55d0dbf.json 600",
-     "F .local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json 600",
+     "F .local/state/aikito/project-skills/5819cc287e081e4cf15dace992923d9eae82d4a62fb29ef5dcd807f42e8a480b.json 600",
+     "F .local/state/aikito/project-skills/ef4ba3faa9fc2dbcf5f5c8fb85d2c5bbd4b661a12919577da5dbad716b89ea4e.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/pskill/SKILL.md",
      "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes"
@@ -187,7 +844,7 @@
     ],
     "exit": 1,
     "stderr": "",
-    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ⚠ H/.local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json: workspace or checkout is unavailable; state retained\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json\n      Reason: workspace or checkout is unavailable; state retained\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ✓ Interpreter consistent: /usr/bin/python3\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project 'p2': offline on this host (~/p2)\n  ✓ Project runtimes OK (1 active project(s))\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: offline on this host (~/p2)\n\nFound 5 issues, 2 warnings.\n"
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ⚠ H/.local/state/aikito/project-skills/ef4ba3faa9fc2dbcf5f5c8fb85d2c5bbd4b661a12919577da5dbad716b89ea4e.json: workspace or checkout is unavailable; state retained\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/ef4ba3faa9fc2dbcf5f5c8fb85d2c5bbd4b661a12919577da5dbad716b89ea4e.json\n      Reason: workspace or checkout is unavailable; state retained\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project 'p2': offline on this host (~/p2)\n  ✓ Project runtimes OK (1 active project(s))\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: offline on this host (~/p2)\n\nFound 5 issues, 2 warnings.\n"
    },
    {
     "tree": [
@@ -203,8 +860,8 @@
      "D p1/.agents/memory",
      "D p1/.agents/skills",
      "D p1/.agents/skills/pskill",
-     "F .local/state/aikito/project-skills/8b125fc46817d90c34b4c8be1abdc3faf15304465a330cf3ecb72d8cf55d0dbf.json 600",
-     "F .local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json 600",
+     "F .local/state/aikito/project-skills/5819cc287e081e4cf15dace992923d9eae82d4a62fb29ef5dcd807f42e8a480b.json 600",
+     "F .local/state/aikito/project-skills/ef4ba3faa9fc2dbcf5f5c8fb85d2c5bbd4b661a12919577da5dbad716b89ea4e.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/pskill/SKILL.md",
      "L p1/.agents/memory/notes -> H/aikito/projects/p1/memory/notes"
@@ -217,7 +874,7 @@
     ],
     "exit": 1,
     "stderr": "",
-    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ⚠ H/.local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json: workspace or checkout is unavailable; state retained\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/aa479b78e1415a1a63bd05ba3447281543779f6175b26b73d5fab46dddca696d.json\n      Reason: workspace or checkout is unavailable; state retained\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ✓ Interpreter consistent: /usr/bin/python3\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project 'p2': offline on this host (~/p2)\n  ✓ Project runtimes OK (1 active project(s))\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: offline on this host (~/p2)\n\nFound 5 issues, 2 warnings.\n"
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ⚠ H/.local/state/aikito/project-skills/ef4ba3faa9fc2dbcf5f5c8fb85d2c5bbd4b661a12919577da5dbad716b89ea4e.json: workspace or checkout is unavailable; state retained\n      Resource: project-skill-state\n      Source: H/.local/state/aikito/project-skills/ef4ba3faa9fc2dbcf5f5c8fb85d2c5bbd4b661a12919577da5dbad716b89ea4e.json\n      Reason: workspace or checkout is unavailable; state retained\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (6 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project 'p2': offline on this host (~/p2)\n  ✓ Project runtimes OK (1 active project(s))\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n  ✓ projects/p2/agent.toml: valid TOML\n  ✓ projects/p2/agent.toml: offline on this host (~/p2)\n\nFound 5 issues, 2 warnings.\n"
    }
   ],
   "steps": [
@@ -340,7 +997,7 @@
     ],
     "exit": 1,
     "stderr": "",
-    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ✓ Interpreter consistent: /usr/bin/python3\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (5 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (1 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n\nFound 5 issues, 1 warning.\n"
+    "stdout": "╭──────────────────╮\n│ Symlinks         │\n╰──────────────────╯\n  ✗ Claude Code: missing (~/.claude/CLAUDE.md)\n    → aikito sync global\n  ✗ Global skills container: missing directory (~/.agents/skills)\n    → aikito sync global\n  ✗ Global skill 'aikito': missing symlink (~/.agents/skills/aikito)\n    → aikito sync global\n  ✗ Global skill 'durable-memory': missing symlink (~/.agents/skills/durable-memory)\n    → aikito sync global\n  ✗ Claude Code skills: missing symlink (~/.claude/skills)\n    → aikito sync global\n╭──────────────────╮\n│ Orphans          │\n╰──────────────────╯\n  ✓ No orphan subagent files\n  ✓ No orphan skill directories in skills/\n╭──────────────────╮\n│ LocalState       │\n╰──────────────────╯\n  ✓ No stale or unverifiable local skill state\n╭──────────────────╮\n│ Memory           │\n╰──────────────────╯\n  ✓ No memory notes found\n╭──────────────────╮\n│ Drift            │\n╰──────────────────╯\n  ✓ No managed MCP entries to check\n  ✓ No managed subagent entries to check\n╭──────────────────╮\n│ Security         │\n╰──────────────────╯\n  ✓ No secret-bearing credential config files detected\n  ✓ .gitignore covers .local/state/\n╭──────────────────╮\n│ Environment      │\n╰──────────────────╯\n  ✓ AIKITO_DIR not set; using configured workspace: ~/aikito\n  ⚠ No supported agent CLI found in $PATH (install at least one: claude)\n╭──────────────────╮\n│ Adoption         │\n╰──────────────────╯\n  ✓ No external Agent configuration needs adoption\n╭──────────────────╮\n│ ConflictMarkers  │\n╰──────────────────╯\n  ✓ No conflict markers detected (5 files checked)\n╭──────────────────╮\n│ Projects         │\n╰──────────────────╯\n  ✓ Project runtimes OK (1 projects)\n╭──────────────────╮\n│ Configuration    │\n╰──────────────────╯\n  ✓ config.toml: valid TOML\n  ✓ layout.toml: valid TOML\n  ✓ skills.toml: valid TOML\n  ✓ agents/claude-code.toml: valid TOML\n  ✓ mcps: directory present (empty)\n  ✓ projects/p1/agent.toml: valid TOML\n  ✓ projects/p1/agent.toml: 1 active path(s)\n\nFound 5 issues, 1 warning.\n"
    },
    {
     "tree": [
@@ -362,8 +1019,8 @@
      "D p2/.agents/memory",
      "D p2/.agents/skills",
      "D p2/.agents/skills/pskill",
-     "F .local/state/aikito/project-skills/2ecd5ca0c5bbf5b5fe303692888a675938d5d9bb9f6be7a4074b762de22e208c.json 600",
-     "F .local/state/aikito/project-skills/9079f6656e13aeadd321d6b3e8118e8ad2554cbc84b7751a1f8efe12aaf58ee8.json 600",
+     "F .local/state/aikito/project-skills/458f356cf46d6e3e15ea2e43429c7e6e6b16558189e1cef008b6454326a00d7f.json 600",
+     "F .local/state/aikito/project-skills/fa24a623f47b23ca00f4de47fa141c353262fc55df06e5e5f847456040e4dddf.json 600",
      "F .local/state/aikito/project-skills/writer.lock 600",
      "F p1/.agents/skills/pskill/SKILL.md",
      "F p2/.agents/skills/pskill/SKILL.md",
@@ -1625,7 +2282,7 @@
     ],
     "exit": 0,
     "stderr": "",
-    "stdout": "[SYNC] claude-code/remote-s: removed from H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: removed from H/.codex/config.toml\n[BACKUP] H/.local/state/aikito/backups/codex/20261008T213428074927Z-config.toml\n[AUTH] aikito auth mcp codex remote-s\n[DELETE FILE] ~/aikito/mcps/remote-s.toml\n\n[SUCCESS] Removed MCP server 'remote-s'.\n"
+    "stdout": "[SYNC] claude-code/remote-s: removed from H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: removed from H/.codex/config.toml\n[BACKUP] H/.local/state/aikito/backups/codex/20261008T213848729675Z-config.toml\n[AUTH] aikito auth mcp codex remote-s\n[DELETE FILE] ~/aikito/mcps/remote-s.toml\n\n[SUCCESS] Removed MCP server 'remote-s'.\n"
    },
    {
     "wtree": [
@@ -1950,7 +2607,7 @@
     ],
     "exit": 0,
     "stderr": "",
-    "stdout": "[SYNC] claude-code/remote-s: removed from H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: removed from H/.codex/config.toml\n[BACKUP] H/.local/state/aikito/backups/codex/20261008T213426100713Z-config.toml\n[AUTH] aikito auth mcp codex remote-s\n[DELETE FILE] ~/aikito/mcps/remote-s.toml\n\n[SUCCESS] Removed MCP server 'remote-s'.\n"
+    "stdout": "[SYNC] claude-code/remote-s: removed from H/.claude.json\n[AUTH] aikito auth mcp claude-code remote-s\n[SYNC] codex/remote-s: removed from H/.codex/config.toml\n[BACKUP] H/.local/state/aikito/backups/codex/20261008T213845395571Z-config.toml\n[AUTH] aikito auth mcp codex remote-s\n[DELETE FILE] ~/aikito/mcps/remote-s.toml\n\n[SUCCESS] Removed MCP server 'remote-s'.\n"
    },
    {
     "wtree": [

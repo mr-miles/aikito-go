@@ -225,7 +225,12 @@ func replayCLIVectors(t *testing.T, vectorsPath string) {
 				g := got[i]
 				switch {
 				case want.Exit != nil:
-					if *g.Exit != *want.Exit || g.Stdout != want.Stdout || g.Stderr != want.Stderr {
+					// Backups are named by UTC timestamp, and project skill
+					// state files by a hash of absolute paths.
+					ts := func(s string) string {
+						return stateHashRe.ReplaceAllString(subagentBackupRe.ReplaceAllString(s, "TS-"), "HASH")
+					}
+					if *g.Exit != *want.Exit || ts(g.Stdout) != ts(want.Stdout) || ts(g.Stderr) != ts(want.Stderr) {
 						t.Errorf("step %d `aikito %s`:\n--- got exit %d\nstdout:\n%s\nstderr:\n%s\n--- want exit %d\nstdout:\n%s\nstderr:\n%s",
 							i, strings.Join(want.Args, " "), *g.Exit, g.Stdout, g.Stderr, *want.Exit, want.Stdout, want.Stderr)
 					}
@@ -234,9 +239,15 @@ func replayCLIVectors(t *testing.T, vectorsPath string) {
 					// absolute paths, which differ between generator and
 					// replay homes.
 					// Subagent backups are named by UTC timestamp.
+					// Sort after normalising: real hashes sort differently
+					// in each home.
 					norm := func(tree []string) string {
-						s := stateHashRe.ReplaceAllString(strings.Join(tree, "\n"), "HASH")
-						return subagentBackupRe.ReplaceAllString(s, "TS-")
+						lines := make([]string, len(tree))
+						for i, l := range tree {
+							lines[i] = subagentBackupRe.ReplaceAllString(stateHashRe.ReplaceAllString(l, "HASH"), "TS-")
+						}
+						sort.Strings(lines)
+						return strings.Join(lines, "\n")
 					}
 					gotTree, wantTree := norm(g.Tree), norm(want.Tree)
 					if gotTree != wantTree {

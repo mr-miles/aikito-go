@@ -129,41 +129,68 @@ func cmdRmMCP(verb string, args []string, stdout, stderr io.Writer, env Environm
 		return 1
 	}
 
-	// Build the removal plan (and, if authorized, apply it to agent-native
-	// configs) WHILE the workspace file still exists: BuildMCPPlan loads
-	// specs from mcps/*.toml, and DesiredAbsentServers only takes effect
-	// for a server whose spec is still present in that load — this mirrors
-	// Python's remove_mcp, which captures specs_to_remove before moving the
-	// file aside.
+	// As remove.py's remove_mcp: capture this server's specs, move the
+	// workspace file aside, then sync the removal for those specs only (so
+	// --force can't touch other servers' hand edits), restoring the file if
+	// the sync doesn't succeed.
+	var specsToRemove []mcp.AgentSpec
 	if syncFlag {
-		plan, perr := mcp.BuildMCPPlan(aikitoDir, env.Home, mcp.BuildMCPPlanOptions{
+		all, lerr := mcp.LoadAgentSpecs(aikitoDir, env.Home)
+		if lerr != nil {
+			fmt.Fprintf(stderr, "[ERROR] Failed to inspect MCP configuration: %v\n", lerr)
+			return 1
+		}
+		for _, s := range all {
+			if s.Server == nameClean {
+				specsToRemove = append(specsToRemove, s)
+			}
+		}
+	}
+
+	backupDir, err := os.MkdirTemp(filepath.Dir(mcpFile), "."+nameClean+".rm_backup.")
+	if err != nil {
+		fmt.Fprintf(stderr, "[ERROR] Failed to remove MCP configuration file: %v\n", err)
+		return 1
+	}
+	defer os.RemoveAll(backupDir)
+	stagedBackup := filepath.Join(backupDir, filepath.Base(mcpFile))
+	if err := os.Rename(mcpFile, stagedBackup); err != nil {
+		fmt.Fprintf(stderr, "[ERROR] Failed to remove MCP configuration file: %v\n", err)
+		return 1
+	}
+	restore := func() { _ = os.Rename(stagedBackup, mcpFile) }
+
+	if syncFlag && len(specsToRemove) > 0 {
+		plan, perr := mcp.BuildMCPPlan(env.Home, env.Home, mcp.BuildMCPPlanOptions{
+			Specs:                specsToRemove,
 			Force:                force,
 			DesiredAbsentServers: map[string]bool{nameClean: true},
 		})
 		if perr != nil {
-			fmt.Fprintf(stderr, "[ERROR] Failed to inspect MCP configuration: %v\n", perr)
+			restore()
+			fmt.Fprintf(stderr, "[ERROR] Failed to synchronize MCP server removal: %v\n", perr)
 			return 1
 		}
 		if !plan.CanApply() {
-			fmt.Fprintln(stderr, "[ERROR] Cannot synchronize removal: plan has unauthorized conflicts (rerun with --force).")
+			for _, op := range plan.Operations {
+				if op.Action == "CONFLICT" && !op.IsAuthorized {
+					fmt.Fprintf(stdout, "[CONFLICT] %s/%s: existing config was not last written by aikito; review it or rerun with --force\n",
+						op.Target.Agent, op.Target.LogicalIdentity)
+				}
+			}
+			restore()
 			return 1
 		}
 		result, eerr := mcp.ExecuteMCPPlan(plan, env.Home, func(line string) { fmt.Fprintln(stdout, line) })
 		if eerr != nil {
+			restore()
 			fmt.Fprintf(stderr, "[ERROR] Failed to synchronize MCP server removal: %v\n", eerr)
 			return 1
 		}
 		if !result.Success {
-			if result.ErrorMessage != "" {
-				fmt.Fprintf(stderr, "[ERROR] %s\n", result.ErrorMessage)
-			}
+			restore()
 			return 1
 		}
-	}
-
-	if err := os.Remove(mcpFile); err != nil {
-		fmt.Fprintf(stderr, "[ERROR] Failed to remove MCP configuration file: %v\n", err)
-		return 1
 	}
 	fmt.Fprintf(stdout, "[DELETE FILE] %s\n", displayPathRelativeToHome(mcpFile, env.Home))
 	fmt.Fprintf(stdout, "\n[SUCCESS] Removed MCP server '%s'.\n", nameClean)

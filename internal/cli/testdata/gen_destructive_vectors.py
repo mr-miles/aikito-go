@@ -52,6 +52,18 @@ STATE_BASE = init(".claude") + [
 ] + project("p1", skills=("pskill",), sync_mode="copy") + project("p2", skills=("pskill",), sync_mode="copy")
 STATE_SYNCED = STATE_BASE + [run("sync", "project", "p1"), run("sync", "project", "p2")]
 
+TMPWS = {"AIKITO_DIR": "H/tmpws"}
+TEMP_BINDING = STATE_SYNCED + [
+    run("init", "workspace", env=TMPWS),
+    w("tmpws/skills/qskill/SKILL.md", SKILL.replace("pskill", "qskill")),
+    {"op": "mkdir", "path": "tmpq"},
+    w("tmpws/projects/q/agent.toml", 'name = "q"\npath = "~/tmpq"\nsync_mode = "copy"\nskills = ["qskill"]\n'),
+    w("tmpws/projects/q/AGENTS.md", ""),
+    {"op": "mkdir", "path": "tmpws/projects/q/memory/notes"},
+    run("sync", "project", "q", env=TMPWS),
+    {"op": "rm", "path": "tmpws"}, {"op": "rm", "path": "tmpq"},
+]
+
 SCENARIOS = {
     # rename memory
     "rename_memory_refactors_links": MEMORY + [run("rename", "memory", "global/beta", "beta-two"), WTREE],
@@ -103,11 +115,36 @@ SCENARIOS = {
     "doctor_fix_live_state_kept": STATE_SYNCED + [run("doctor", "--fix"), TREE],
     "doctor_fix_unregistered_project_state": STATE_SYNCED + [
         {"op": "rm", "path": "aikito/projects/p2"}, run("doctor", "--fix"), TREE],
+    # A throwaway workspace (under the temp dir, like every test home) whose
+    # workspace and checkout are both deleted: the only state Python cleans.
+    "doctor_fix_removes_temp_binding": TEMP_BINDING + [
+        TREE, run("doctor"), run("doctor", "--fix"), TREE, run("doctor", "--fix")],
+    "doctor_fix_deferred_by_journal": TEMP_BINDING + [
+        w(".local/state/aikito/project-skills/transactions/tx1/journal.json", "{}"),
+        run("doctor", "--fix"), TREE],
+    "doctor_fix_invalid_state_file": STATE_SYNCED + [
+        w(".local/state/aikito/project-skills/" + "0" * 64 + ".json", "not json"),
+        w(".local/state/aikito/project-skills/notahash.json", "{}"),
+        w(".local/state/aikito/project-skills/" + "1" * 64 + ".json", "[1, 2]"),
+        w(".local/state/aikito/project-skills/" + "2" * 64 + ".json", '{"version": 1}}'),
+        w(".local/state/aikito/project-skills/" + "3" * 64 + ".json", '{"version": 1, "records": {}}'),
+        run("doctor", "--fix"), TREE],
 }
 
 
+def drop_interpreter_line(expect):
+    """doctor's "Interpreter consistent" check compares Python interpreters;
+    it has no Go equivalent (a documented difference), so drop that line."""
+    for e in expect:
+        if "stdout" in e:
+            e["stdout"] = "".join(line for line in e["stdout"].splitlines(keepends=True)
+                                  if not line.startswith("  ✓ Interpreter consistent"))
+    return expect
+
+
 def main():
-    vectors = {name: {"steps": steps, "expect": run_scenario(steps)} for name, steps in SCENARIOS.items()}
+    vectors = {name: {"steps": steps, "expect": drop_interpreter_line(run_scenario(steps))}
+               for name, steps in SCENARIOS.items()}
     with open(os.path.join(HERE, "destructive_vectors.json"), "w") as f:
         json.dump(vectors, f, indent=1, sort_keys=True, ensure_ascii=False)
         f.write("\n")
