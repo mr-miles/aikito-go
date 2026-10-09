@@ -161,7 +161,7 @@ func cmdRmMCP(verb string, args []string, stdout, stderr io.Writer, env Environm
 	restore := func() { _ = os.Rename(stagedBackup, mcpFile) }
 
 	if syncFlag && len(specsToRemove) > 0 {
-		plan, perr := mcp.BuildMCPPlan(env.Home, env.Home, mcp.BuildMCPPlanOptions{
+		plan, perr := mcp.BuildMCPPlan(aikitoDir, env.Home, mcp.BuildMCPPlanOptions{
 			Specs:                specsToRemove,
 			Force:                force,
 			DesiredAbsentServers: map[string]bool{nameClean: true},
