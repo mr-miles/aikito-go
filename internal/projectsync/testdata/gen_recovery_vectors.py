@@ -269,6 +269,15 @@ def tamper_journal(home, key):
     return changed
 
 
+def append_trailing(home, pattern):
+    """json.loads rejects trailing data ("Extra data"); Go's decoder must too."""
+    changed = False
+    for f in sorted(Path(home, ".local/state/aikito/project-skills").glob(pattern)):
+        f.write_text(f.read_text() + "}")
+        changed = True
+    return changed
+
+
 TAMPERS = {
     "edited_target": tamper_edit_target,
     "journal_recovery_dir_outside": lambda h: tamper_journal(h, "recovery_dir"),
@@ -276,6 +285,8 @@ TAMPERS = {
     "journal_target_outside": lambda h: tamper_journal(h, "target_path"),
     "journal_checkout_unauthorized": lambda h: tamper_journal(h, "checkout_paths"),
     "journal_file_outside": lambda h: tamper_journal(h, "files"),
+    "journal_trailing_brace": lambda h: append_trailing(h, "transactions/*/journal.json"),
+    "state_trailing_brace": lambda h: append_trailing(h, "*.json"),
 }
 
 COMMANDS = [["status"], ["sync", "project", "p1"], ["sync", "project", "p1"]]
@@ -318,9 +329,9 @@ def main():
                 try:
                     setup(home, sc)
                     assert crash(home, n, sc)
+                    hashes = binding_hashes(home)  # before tampering can corrupt the JSON
                     if not fn(home):
                         continue
-                    hashes = binding_hashes(home)
                     cases[f"{name}/crash{n}/{tname}"] = {
                         "fixture": snapshot(home, hashes, blobs), "hashes": hashes,
                         "steps": record(home, hashes, TAMPER_COMMANDS.get(tname, COMMANDS))}

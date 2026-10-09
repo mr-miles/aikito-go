@@ -67,6 +67,10 @@ func (r relocate) apply(data []byte) []byte {
 	return data
 }
 
+// jsonCharRe masks json.loads' "(char N)": an absolute offset into a file
+// that embeds the home path, so it varies with the temp home's length.
+var jsonCharRe = regexp.MustCompile(`\(char \d+\)`)
+
 func (r relocate) normalize(data []byte) []byte {
 	data = bytes.ReplaceAll(data, []byte(r.home), []byte("{H}"))
 	for _, h := range r.hashes {
@@ -74,6 +78,8 @@ func (r relocate) normalize(data []byte) []byte {
 	}
 	return txidRe.ReplaceAll(data, []byte("TXID"))
 }
+
+func normalizeJSONChar(s string) string { return jsonCharRe.ReplaceAllString(s, "(char N)") }
 
 func materializeRecoveryFixture(t *testing.T, c recoveryCase, blobs map[string]string, home string) relocate {
 	t.Helper()
@@ -194,7 +200,8 @@ func TestProjectSyncRecoveryMatchesPython(t *testing.T) {
 				var out, errOut bytes.Buffer
 				code := Run(want.Args, nil, &out, &errOut, env)
 				gotOut, gotErr := string(r.normalize(out.Bytes())), string(r.normalize(errOut.Bytes()))
-				if code != want.Exit || gotOut != want.Stdout || gotErr != want.Stderr {
+				if code != want.Exit || normalizeJSONChar(gotOut) != normalizeJSONChar(want.Stdout) ||
+					normalizeJSONChar(gotErr) != normalizeJSONChar(want.Stderr) {
 					t.Errorf("step %d `aikito %s`:\n--- got exit %d\nstdout:\n%s\nstderr:\n%s\n--- want exit %d\nstdout:\n%s\nstderr:\n%s",
 						i, strings.Join(want.Args, " "), code, gotOut, gotErr, want.Exit, want.Stdout, want.Stderr)
 				}

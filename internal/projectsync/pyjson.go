@@ -3,8 +3,11 @@ package projectsync
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 
+	"github.com/mr-miles/aikito-go/internal/mcp"
 	"github.com/mr-miles/aikito-go/internal/workspace"
 )
 
@@ -15,13 +18,19 @@ func pyDumps(v any, indent int) string { return workspace.PyDumps(v, indent) }
 // decodeJSON decodes like json.loads, keeping numbers as json.Number so int
 // vs float stays visible.
 func decodeJSON(data []byte) (any, error) {
+	// json.loads' error text, which recovery and state loading show to users.
+	// It also rejects trailing data such as a stray '}', which dec.More()
+	// (false before '}' or ']') would let through.
+	if msg := mcp.PythonJSONDecodeError(string(data)); msg != "" {
+		return nil, errors.New(msg)
+	}
 	dec := json.NewDecoder(bytes.NewReader(data))
 	dec.UseNumber()
 	var v any
 	if err := dec.Decode(&v); err != nil {
 		return nil, err
 	}
-	if dec.More() {
+	if _, err := dec.Token(); err != io.EOF {
 		return nil, fmt.Errorf("Extra data")
 	}
 	return v, nil
