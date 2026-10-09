@@ -124,6 +124,8 @@ diff.
 | `internal/workspace/testdata/strictjson_vectors.json` (`json.loads` with strict hooks) | `python3 internal/workspace/testdata/gen_strictjson_vectors.py` |
 | `internal/compat/testdata/float_repr_vectors.json` (CPython `repr(float)`) | `python3 internal/compat/testdata/gen_float_repr_vectors.py` |
 | `internal/cli/testdata/mcp_float_vectors.json` | `python3 internal/cli/testdata/gen_mcp_float_vectors.py` |
+| `internal/cli/testdata/destructive_vectors.json` (rename/rm memory, rm inbox, rm mcp, doctor --fix local state) | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/cli/testdata/gen_destructive_vectors.py` |
+| `internal/projectsync/testdata/recovery_vectors.json` (crash recovery: the reference CLI killed after each journal write, plus tampered journals; replayed by `internal/cli/recovery_vectors_test.go`) | `AIKITO_PYTHON_SRC=../aikito/src python3 internal/projectsync/testdata/gen_recovery_vectors.py` (several minutes) |
 | `internal/cli/helptext/help.json` (embedded `--help` text) | `python3 internal/cli/helptext/gen_help.py`, then fix any marker `help_test.go` reports in `helpAnnotations` (`help.go`) |
 
 These were generated with one-off scripts that weren't kept. Regenerate by
